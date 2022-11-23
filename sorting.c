@@ -3,7 +3,7 @@
 
     1. Bubble Sort  -Time Complexity: O(n^2) Comparsion Basd Sorts ✅
     2. Insertion Sort  -Time Complexity: O(n^2) Comparsion Basd Sorts ✅
-    3. Selection Sort  -Time Complexity: O(n^2) Comparsion Basd Sorts 
+    3. Selection Sort  -Time Complexity: O(n^2) Comparsion Basd Sorts ✅
 
     4. Heap Sort -Time Complexity: O(nlog(n)) Comparsion Basd Sorts
     5. Merge Sort -Time Complexity: O(nlog(n)) Comparsion Basd Sorts
@@ -98,20 +98,48 @@ void insertionSort(int arry[], int size)
     }
 }
 
+/*
+    SELECTION SORT
+    Number of Comparisions= O(n^2)
+    Number of Swaps= O(1)
+    It cannot be made adaptive.
+    It is not stable.
+    It only performs one swap in any case.
+    It takes only one extra memory slot.
+    Space Complexity O(1)
+*/
+void selectionSort(int arry[], int size)
+{
+    for (int x = 0; x < size - 1; x++)
+    {
+        int indexOfMin = x;
+        for (int y = x + 1; y < size; y++)
+        {
+            if (arry[indexOfMin] > arry[y])
+            {
+                indexOfMin = y;
+            }
+        }
+        int temp = arry[indexOfMin];
+        arry[indexOfMin] = arry[x];
+        arry[x] = temp;
+    }
+}
+
 #include <stdio.h>
 
 int main()
 {
     int array[] = {3, 2, 1, 5, 6, 9, 12, 14, 15, 14, 0, 4};
-    int size = sizeof(array) / sizeof(array[0]);
-    printf("\nUnsorted array is: ");
-    for (int x = 0; x < size; x++)
+    int sizeOfArray = sizeof(array) / sizeof(array[0]);
+    printf("\nUnsorted array is : ");
+    for (int x = 0; x < sizeOfArray; x++)
     {
         printf(" %d ", array[x]);
     }
-    insertionSort(array, size);
-    printf("\nSorted array is:   ");
-    for (int x = 0; x < size; x++)
+    selectionSort(array, sizeOfArray);
+    printf("\nSorted array is   : ");
+    for (int x = 0; x < sizeOfArray; x++)
     {
         printf(" %d ", array[x]);
     }
