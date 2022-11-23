@@ -2,8 +2,8 @@
     Algorithms to be covered:
 
     1. Bubble Sort  -Time Complexity: O(n^2) Comparsion Basd Sorts ✅
-    2. Insertion Sort  -Time Complexity: O(n^2) Comparsion Basd Sorts
-    3. Selection Sort  -Time Complexity: O(n^2) Comparsion Basd Sorts
+    2. Insertion Sort  -Time Complexity: O(n^2) Comparsion Basd Sorts ✅
+    3. Selection Sort  -Time Complexity: O(n^2) Comparsion Basd Sorts 
 
     4. Heap Sort -Time Complexity: O(nlog(n)) Comparsion Basd Sorts
     5. Merge Sort -Time Complexity: O(nlog(n)) Comparsion Basd Sorts
@@ -34,41 +34,86 @@
     We can make it adaptive (i.e. Only compares one time if array is aready sorted).
     It is stable.
     It takes only one extra memory slot.
+    Space Complexity O(1)
 */
-void adaptiveBubbleSort(int arry[], int size)
+void BubbleSort(int arry[], int size)
 {
     for (int x = 0; x < size - 1; x++)
     {
-        int alreadySorted=1;
         for (int y = 0; y < size - x - 1; y++)
         {
             if (arry[y] > arry[y + 1])
             {
-                alreadySorted=0;
                 int temp = arry[y];
                 arry[y] = arry[y + 1];
                 arry[y + 1] = temp;
             }
         }
-        if(alreadySorted){
+    }
+}
+void adaptiveBubbleSort(int arry[], int size)
+{
+    for (int x = 0; x < size - 1; x++)
+    {
+        int alreadySorted = 1;
+        for (int y = 0; y < size - x - 1; y++)
+        {
+            if (arry[y] > arry[y + 1])
+            {
+                alreadySorted = 0;
+                int temp = arry[y];
+                arry[y] = arry[y + 1];
+                arry[y + 1] = temp;
+            }
+        }
+        if (alreadySorted)
+        {
             return;
         }
     }
 }
 
-#include<stdio.h>
-
-int main(){
-    int array[]={3,2,1,5,6,9,12,14,15,14,0,4};
-    int size=sizeof(array)/sizeof(array[0]);
-    printf("\nUnsorted array is: ");
-    for(int x = 0;x<size;x++){
-        printf(" %d ",array[x]);
+/*
+    INSERTION SORT
+    Number of comparisions=O(n^2)
+    Number of swaps=O(n^2)
+    It is adaptive by nature
+    In best case its time complexity is O(n)
+    It is stable
+    It takes only one extra memory slot.
+    Space Complexity O(1)
+*/
+void insertionSort(int arry[], int size)
+{
+    for (int x = 1; x < size; x++)
+    {
+        int key = arry[x];
+        int y = x - 1;
+        while (y >= 0 && arry[y] > key)
+        {
+            arry[y + 1] = arry[y];
+            y--;
+        }
+        arry[y + 1] = key;
     }
-    adaptiveBubbleSort(array,size);
+}
+
+#include <stdio.h>
+
+int main()
+{
+    int array[] = {3, 2, 1, 5, 6, 9, 12, 14, 15, 14, 0, 4};
+    int size = sizeof(array) / sizeof(array[0]);
+    printf("\nUnsorted array is: ");
+    for (int x = 0; x < size; x++)
+    {
+        printf(" %d ", array[x]);
+    }
+    insertionSort(array, size);
     printf("\nSorted array is:   ");
-    for(int x = 0;x<size;x++){
-        printf(" %d ",array[x]);
+    for (int x = 0; x < size; x++)
+    {
+        printf(" %d ", array[x]);
     }
     printf("\n");
     return 0;
