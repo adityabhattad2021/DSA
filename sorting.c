@@ -7,7 +7,7 @@
 
     4. Heap Sort -Time Complexity: O(nlog(n)) Comparsion Basd Sorts
     5. Merge Sort -Time Complexity: O(nlog(n)) Comparsion Basd Sorts
-    6. Quick Sort -Time Complexity: O(nlog(n)) Comparsion Basd Sorts
+    6. Quick Sort -Time Complexity: O(nlog(n)) Comparsion Basd Sorts ✅
 
     7. Tree Sort -Time Complexity: O(nlog(n)) Comparsion Basd Sorts
 
@@ -22,7 +22,7 @@
     Criteria on which sorts should be analized
     1.Number of comparisions
     2.Number of swaps
-    3.Adaptive
+    3.Adaptability : In a few sorting algorithms, the complexity changes based  on pre-sorted input i.e. pre-sorted array of the input affects the running  time. The algorithms that take this adaptability into account are known to be adaptive algorithms. For example – Quick sort is an adaptive sorting algorithm because the time complexity of Quick sort depends on the  initial input sequence. If input is already sorted then time complexity becomes O(n^2) and if input sequence is not sorted then time complexity becomes O(n logn).
     4.Stable: Preserves order of repeating element
     5.Extra memory
 */
@@ -126,6 +126,45 @@ void selectionSort(int arry[], int size)
     }
 }
 
+/*
+    QUICK SORT
+    It is also called Selection Exchange Sort and Partition Exchange Sort.
+    It moves smaller elements to the left of a pivot.
+    recursively divides array into two partitions.
+    It is adaptive.
+    It is not stable.
+    Best case O(n log(n))
+    Average case O(n log(n))
+    Worst case O(n^2)
+    Space Complexity O(log(n)) due to recursion
+
+*/
+void quickSort(int arr[], int startingIndex, int endingIndex)
+{
+    if (endingIndex <= startingIndex)
+    {
+        return;
+    }
+    int pivotElement = arr[endingIndex];
+    int y = startingIndex - 1;
+    for (int x = startingIndex; x < endingIndex; x++)
+    {
+        if (arr[x] < pivotElement)
+        {
+            y++;
+            int temp = arr[x];
+            arr[x] = arr[y];
+            arr[y] = temp;
+        }
+    }
+    y++;
+    int temp = arr[y];
+    arr[y] = arr[endingIndex];
+    arr[endingIndex] = temp;
+    quickSort(arr, startingIndex, y - 1);
+    quickSort(arr, y + 1, endingIndex);
+}
+
 #include <stdio.h>
 
 int main()
@@ -137,7 +176,7 @@ int main()
     {
         printf(" %d ", array[x]);
     }
-    selectionSort(array, sizeOfArray);
+    quickSort(array, 0, sizeOfArray - 1);
     printf("\nSorted array is   : ");
     for (int x = 0; x < sizeOfArray; x++)
     {
