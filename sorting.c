@@ -6,7 +6,7 @@
     3. Selection Sort  -Time Complexity: O(n^2) Comparsion Basd Sorts ✅
 
     4. Heap Sort -Time Complexity: O(nlog(n)) Comparsion Basd Sorts
-    5. Merge Sort -Time Complexity: O(nlog(n)) Comparsion Basd Sorts
+    5. Merge Sort -Time Complexity: O(nlog(n)) Comparsion Basd Sorts ✅
     6. Quick Sort -Time Complexity: O(nlog(n)) Comparsion Basd Sorts ✅
 
     7. Tree Sort -Time Complexity: O(nlog(n)) Comparsion Basd Sorts
@@ -23,7 +23,7 @@
     1.Number of comparisions
     2.Number of swaps
     3.Adaptability : In a few sorting algorithms, the complexity changes based  on pre-sorted input i.e. pre-sorted array of the input affects the running  time. The algorithms that take this adaptability into account are known to be adaptive algorithms. For example – Quick sort is an adaptive sorting algorithm because the time complexity of Quick sort depends on the  initial input sequence. If input is already sorted then time complexity becomes O(n^2) and if input sequence is not sorted then time complexity becomes O(n logn).
-    4.Stable: Preserves order of repeating element
+    4.Stable: Preserves order of repeating elements.
     5.Extra memory
 */
 
@@ -165,6 +165,106 @@ void quickSort(int arr[], int startingIndex, int endingIndex)
     quickSort(arr, y + 1, endingIndex);
 }
 
+/*
+    MERGE SORT
+    Recursively divides array in 2, sort, re-combine
+    It is not adaptive
+    It is stable
+    Time Complexity : O(n log(2))
+    Space Complexity : O(n)
+*/
+// Helper Function.(To get the idea of merge clearly)
+// void merge(int motherArry[], int leftArry[], int rightArry[], int motherArrySize)
+// {
+//     int leftArraySize = motherArrySize / 2;
+//     int rightArraySize = motherArrySize - leftArraySize;
+//     int l = 0, r = 0, main = 0;
+//     while (l < leftArraySize && r < rightArraySize)
+//     {
+//         if (leftArry[l] > rightArry[r])
+//         {
+//             motherArry[main] = rightArry[r];
+//             main++;
+//             r++;
+//         }
+//         else
+//         {
+//             motherArry[main] = leftArry[l];
+//             main++;
+//             l++;
+//         }
+//     }
+//     while (l < leftArraySize)
+//     {
+//         motherArry[main] = leftArry[l];
+//         main++;
+//         l++;
+//     }
+//     while (r < rightArraySize)
+//     {
+//         motherArry[main] = rightArry[r];
+//         main++;
+//         r++;
+//     }
+// }
+void mergeSort(int arry[], int size)
+{
+    if (size < 2)
+    {
+        return;
+    }
+    int leftArrySize=size/2;
+    int rightArrySize=size-leftArrySize;
+    int leftArry[leftArrySize];
+    int rightArry[rightArrySize];
+    int leftArryIndex = 0, rightArryIndex = 0;
+    for (int i = 0; i < size; i++)
+    {
+        if (i < (size / 2))
+        {
+            leftArry[leftArryIndex] = arry[i];
+            leftArryIndex++;
+        }else{
+            rightArry[rightArryIndex]=arry[i];
+            rightArryIndex++;
+        }
+    }
+    mergeSort(leftArry,leftArrySize);
+    mergeSort(rightArry,rightArrySize);
+    // merge(arry,leftArry,rightArry,size);
+    
+    int leftArraySize = size / 2;
+    int rightArraySize = size - leftArraySize;
+    int l = 0, r = 0, main = 0;
+    while (l < leftArraySize && r < rightArraySize)
+    {
+        if (leftArry[l] > rightArry[r])
+        {
+            arry[main] = rightArry[r];
+            main++;
+            r++;
+        }
+        else
+        {
+            arry[main] = leftArry[l];
+            main++;
+            l++;
+        }
+    }
+    while (l < leftArraySize)
+    {
+        arry[main] = leftArry[l];
+        main++;
+        l++;
+    }
+    while (r < rightArraySize)
+    {
+        arry[main] = rightArry[r];
+        main++;
+        r++;
+    }
+}
+
 #include <stdio.h>
 
 int main()
@@ -176,7 +276,7 @@ int main()
     {
         printf(" %d ", array[x]);
     }
-    quickSort(array, 0, sizeOfArray - 1);
+    mergeSort(array, sizeOfArray);
     printf("\nSorted array is   : ");
     for (int x = 0; x < sizeOfArray; x++)
     {
