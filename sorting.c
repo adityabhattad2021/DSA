@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 /*
     Algorithms to be covered:
 
@@ -14,7 +16,7 @@
     8. Shell Sort -Time Complexity: O(n^(3/2)) or O(n log(n)) Comparsion Basd Sorts  ✅
 
 
-    9. Count Sort -Time Complexity: O(n) Index Based Sorts
+    9. Count Sort -Time Complexity: O(n) Index Based Sorts ✅ (only implemented for positive integer values)
     10. Bucket Sort -Time Complexity: O(n) Index Based Sorts
     11. Radix Sort -Time Complexity: O(n) Index Based Sorts
 
@@ -293,7 +295,58 @@ void shellSort(int arry[], int size)
     }
 }
 
-#include <stdio.h>
+/*
+    COUNT SORT
+    Counting sort is a sorting algorithm that sorts the elements of an array by counting the number of occurrences of each unique element in the arry.
+
+    The count is stored in an auxillary array and the sorting is done by mapping the count as an index of auxillary array. This mapping is done by performing arithematic calculations on those counts to determine
+    the position of each key value(unique element) in the output sequence.
+
+    It is often as a subroutine in another sorting algorithm, radix sort, that can handle larger keys more efficiently.
+
+    It is NOT a comparison based sort.
+    It is not adaptive.
+    It can be made stable. (refer)
+    https://stackoverflow.com/questions/2572195/how-is-counting-sort-a-stable-sort
+    Time Complexity: O(n+k)
+    Space Complexity: O(n+k)
+    where n is the number of elements in input array and k is the range of input.
+*/
+int maxOfTwo(int a, int b)
+{
+    return a > b ? a : b;
+}
+
+// Count sort only for positive elements
+int maxInArry(int arry[],int size){
+    int max=0;
+    for(int x = 0;x<size;x++){
+        max=maxOfTwo(max,arry[x]);
+    }
+    return max;
+}
+
+void countSort(int arry[],int size){
+    int maxIntInArry=maxInArry(arry,size); 
+    int rangeOfCountArry=maxIntInArry+1;
+    int countArry[rangeOfCountArry];
+    for(int x = 0;x<rangeOfCountArry;x++){
+        countArry[x]=0;
+    }
+    for(int y = 0;y<size;y++){
+        countArry[arry[y]]++;
+    }
+    int indexForMainArry=0;
+    for(int z = 0;z<rangeOfCountArry;z++){
+        while(countArry[z]!=0){
+            arry[indexForMainArry]=z;
+            indexForMainArry++;
+            countArry[z]--;
+        }
+    }
+
+}
+
 
 int main()
 {
@@ -304,7 +357,7 @@ int main()
     {
         printf(" %d ", array[x]);
     }
-    shellSort(array, sizeOfArray);
+    countSort(array, sizeOfArray);
     printf("\nSorted array is   : ");
     for (int x = 0; x < sizeOfArray; x++)
     {
