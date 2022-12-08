@@ -18,7 +18,7 @@
 
     9. Count Sort -Time Complexity: O(n) Index Based Sorts ✅ (only implemented for positive integer values)
     10. Bucket Sort -Time Complexity: O(n) Index Based Sorts
-    11. Radix Sort -Time Complexity: O(n) Index Based Sorts
+    11. Radix Sort -Time Complexity: O(n) Index Based Sorts ✅
 
 
     Criteria on which sorts should be analized
@@ -318,35 +318,95 @@ int maxOfTwo(int a, int b)
 }
 
 // Count sort only for positive elements
-int maxInArry(int arry[],int size){
-    int max=0;
-    for(int x = 0;x<size;x++){
-        max=maxOfTwo(max,arry[x]);
+int maxInArry(int arry[], int size)
+{
+    int max = 0;
+    for (int x = 0; x < size; x++)
+    {
+        max = maxOfTwo(max, arry[x]);
     }
     return max;
 }
 
-void countSort(int arry[],int size){
-    int maxIntInArry=maxInArry(arry,size); 
-    int rangeOfCountArry=maxIntInArry+1;
+void countSort(int arry[], int size)
+{
+    int maxIntInArry = maxInArry(arry, size);
+    int rangeOfCountArry = maxIntInArry + 1;
     int countArry[rangeOfCountArry];
-    for(int x = 0;x<rangeOfCountArry;x++){
-        countArry[x]=0;
+    for (int x = 0; x < rangeOfCountArry; x++)
+    {
+        countArry[x] = 0;
     }
-    for(int y = 0;y<size;y++){
+    for (int y = 0; y < size; y++)
+    {
         countArry[arry[y]]++;
     }
-    int indexForMainArry=0;
-    for(int z = 0;z<rangeOfCountArry;z++){
-        while(countArry[z]!=0){
-            arry[indexForMainArry]=z;
+    int indexForMainArry = 0;
+    for (int z = 0; z < rangeOfCountArry; z++)
+    {
+        while (countArry[z] != 0)
+        {
+            arry[indexForMainArry] = z;
             indexForMainArry++;
             countArry[z]--;
         }
     }
-
 }
 
+/*
+    RADIX SORT
+    Radix sort is a non-competative sorting algorithm.
+    It avoids comparison by creating and distributing elements into buckets according to their radix.
+    For elements with more than one significant digit, this bucketing process is repeated for each digit, while preserving the ordering of the prior step, until all the digits have been considered. For this reason, radix sort has also been called bucket sort and digital sort.
+    Typically radix sort uses counting sort as a subroutine to sort.
+    It is not adaptive.
+    It is stable.
+    Time Complexity: O d(n+k)
+    Space Complexity: O(n+k)
+    where 'd' is the number of digits the max element in the array has and 'n' is the number of elements in the input array and 'k' is the range og input.
+*/
+
+void countSortForRadixSort(int arry[], int size, int decimal)
+{
+    int buffer[size];
+
+    int countArry[10];
+
+    for (int i = 0; i < 10; i++)
+    {
+        countArry[i] = 0;
+    }
+
+    for (int j = 0; j < size; j++)
+    {
+        countArry[(arry[j] / decimal) % 10]++;
+    }
+
+    for (int k = 1; k < 10; k++)
+    {
+        countArry[k] += countArry[k - 1];
+    }
+
+    for (int l = size - 1; l >= 0; l--)
+    {
+        buffer[countArry[(arry[l] / decimal) % 10] - 1] = arry[l];
+        countArry[(arry[l] / decimal) % 10]--;
+    }
+
+    for (int m = 0; m < size; m++)
+    {
+        arry[m] = buffer[m];
+    }
+}
+
+void radixSort(int arry[], int size)
+{
+    int max = maxInArry(arry, size);
+    for (int decimal = 1; max / decimal > 0; decimal *= 10)
+    {
+        countSortForRadixSort(arry, size, decimal);
+    }
+}
 
 int main()
 {
@@ -357,7 +417,7 @@ int main()
     {
         printf(" %d ", array[x]);
     }
-    countSort(array, sizeOfArray);
+    radixSort(array, sizeOfArray);
     printf("\nSorted array is   : ");
     for (int x = 0; x < sizeOfArray; x++)
     {
