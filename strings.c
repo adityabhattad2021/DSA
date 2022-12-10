@@ -50,8 +50,26 @@ void changeCaseOfString(){
     printf("The string is %s\n",string);
 }
 
+// Validting a string: A string will be valid if it only consists of letters,numbers
+int valid(char *string){
+    int x = 0;
+    while(string[x]!='\0'){
+        if(!(string[x]>='A' && string[x]<='Z') && !(string[x]>='a' && string[x]<='z') && !(string[x]>='1' && string[x]<='9')){
+            return 0;
+        }
+        x++;
+    }
+    return 1;
+}
+// Reversing a string 
+// Checking for palindrome
+// Checking duplicate in a string
 
 int main(){
-    changeCaseOfString();
+    if(valid("Aditya123#4")){
+        printf("String is valid\n");
+    } else{
+        printf("String is not valid\n");
+    }
     return 0;
 }
