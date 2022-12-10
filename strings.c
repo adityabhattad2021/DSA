@@ -95,12 +95,34 @@ void reverseString(char *string)
 }
 
 // Checking for palindrome
+int checkPalindrome(char *string){
+    int length=0;
+    while (string[length]!='\0')
+    {
+        length++;
+    }
+    char buffer[length+1];
+    for (int i = 0; i < length; i++)
+    {
+        buffer[i]=string[i];
+    }
+    buffer[length]='\0';
+    reverseString(buffer);
+    for(int x = 0;x<length;x++){
+        if(!(string[x]==buffer[x])){
+            return 0;
+        }
+    }
+    return 1;
+}
 // Checking duplicate in a string
 
 int main()
 {
-    char string[] = "Aditya Bhattad";
-    reverseString(string);
-    printf("Reverse of the string is %s\n",string);
+    if(checkPalindrome("aka")){
+        printf("The entered string is palindrome string\n");
+    } else {
+        printf("The entered string is not a palindrome string\n");
+    }
     return 0;
 }
