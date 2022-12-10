@@ -34,8 +34,24 @@ void findLengthOfString(){
     printf("The string you entered was %s and it is %d characters long.",string,length); 
 }
 
+void changeCaseOfString(){
+    char string[100],toConvert;
+    printf("Enter a string: ");
+    fgets(string,100,stdin);
+    fflush(stdin);
+    for(int x = 0;string[x]!='\0';x++){
+        if(string[x]>='A' && string[x]<='Z'){
+            string[x]+=' ';
+        }
+        else if(string[x]>='a' && string[x]<='z'){
+            string[x]-=' ';
+        }
+    } 
+    printf("The string is %s\n",string);
+}
+
 
 int main(){
-    findLengthOfString();
+    changeCaseOfString();
     return 0;
 }
