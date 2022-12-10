@@ -115,14 +115,31 @@ int checkPalindrome(char *string){
     }
     return 1;
 }
-// Checking duplicate in a string
+
+// Checking duplicate in a string.
+int checkDuplicateCharacter(char *string){
+    int length=0;
+    while (string[length]!='\0')
+    {
+        length++;
+    }
+    for(int x = 0;x<length;x++){
+        for(int y=x+1;y<length;y++){
+            if(string[x]==string[y]){
+                return 1;
+            }
+        }
+    }
+    return 0;
+}
+
 
 int main()
 {
-    if(checkPalindrome("aka")){
-        printf("The entered string is palindrome string\n");
+    if(checkDuplicateCharacter("akbs")){
+        printf("The entered string has a duplicate character.\n");
     } else {
-        printf("The entered string is not a palindrome string\n");
+        printf("The entered string does not have a duplicate character.\n");
     }
     return 0;
 }
