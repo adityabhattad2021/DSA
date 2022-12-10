@@ -71,6 +71,7 @@ int valid(char *string)
     }
     return 1;
 }
+
 // Reversing a string
 void reverseString(char *string)
 {
@@ -86,30 +87,33 @@ void reverseString(char *string)
         buffer[bufferIndex] = string[x];
         bufferIndex++;
     }
-    int bufferLen=0;
-    while(buffer[bufferLen]!='\0'){
-        string[bufferLen]=buffer[bufferLen];
+    int bufferLen = 0;
+    while (buffer[bufferLen] != '\0')
+    {
+        string[bufferLen] = buffer[bufferLen];
         bufferLen++;
     }
-    
 }
 
 // Checking for palindrome
-int checkPalindrome(char *string){
-    int length=0;
-    while (string[length]!='\0')
+int checkPalindrome(char *string)
+{
+    int length = 0;
+    while (string[length] != '\0')
     {
         length++;
     }
-    char buffer[length+1];
+    char buffer[length + 1];
     for (int i = 0; i < length; i++)
     {
-        buffer[i]=string[i];
+        buffer[i] = string[i];
     }
-    buffer[length]='\0';
+    buffer[length] = '\0';
     reverseString(buffer);
-    for(int x = 0;x<length;x++){
-        if(!(string[x]==buffer[x])){
+    for (int x = 0; x < length; x++)
+    {
+        if (!(string[x] == buffer[x]))
+        {
             return 0;
         }
     }
@@ -117,15 +121,28 @@ int checkPalindrome(char *string){
 }
 
 // Checking duplicate in a string.
-int checkDuplicateCharacter(char *string){
-    int length=0;
-    while (string[length]!='\0')
+int checkDuplicateCharacter(char *string)
+{
+    int length = 0;
+    while (string[length] != '\0')
     {
         length++;
     }
-    for(int x = 0;x<length;x++){
-        for(int y=x+1;y<length;y++){
-            if(string[x]==string[y]){
+    char buffer[length];
+    for (int a = 0; a < length; a++)
+    {
+        buffer[a] = string[a];
+    }
+    for (int x = 0; x < length; x++)
+    {
+        for (int y = x + 1; y < length; y++)
+        {
+            if (buffer[x] >= 'A' && buffer[x] <= 'Z')
+            {
+                buffer[x] += ' ';
+            }
+            if ((buffer[x]) == buffer[y])
+            {
                 return 1;
             }
         }
@@ -133,13 +150,44 @@ int checkDuplicateCharacter(char *string){
     return 0;
 }
 
+void checkDuplicateWithHashTable(char *string)
+{
+    int length = 0;
+    while (string[length] != '\0')
+    {
+        length++;
+    }
+    int table[26] = {0};
+    char buffer[length];
+    for (int a = 0; a < length; a++)
+    {
+        buffer[a] = string[a];
+    }
+    for (int x = 0; x < length; x++)
+    {
+        if (buffer[x] >= 'A' && buffer[x] <= 'Z')
+        {
+            buffer[x] += ' ';
+        }
+        table[buffer[x] - 'a'] += 1;
+    }
+    int duplicatePresent = 0;
+    for (int y = 0; y < 26; y++)
+    {
+        if (table[y] > 1)
+        {
+            printf("%c was found to be repeated %d times", y + 'a', table[y]);
+            duplicatePresent = 1;
+        }
+    }
+    if (!duplicatePresent)
+    {
+        printf("There was no duplicate element found in the string");
+    }
+}
 
 int main()
 {
-    if(checkDuplicateCharacter("akbs")){
-        printf("The entered string has a duplicate character.\n");
-    } else {
-        printf("The entered string does not have a duplicate character.\n");
-    }
+    checkDuplicateWithHashTable("Aaditya");
     return 0;
 }
