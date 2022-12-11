@@ -186,8 +186,39 @@ void checkDuplicateWithHashTable(char *string)
     }
 }
 
+void checkForDuplicateWithBitwiseOperator(char string[])
+{
+    long int h = 0, mask = 0;
+    int length = 0;
+    while (string[length] != '\0')
+    {
+        length++;
+    }
+    char buffer[length];
+    for(int x=0;x<length;x++){
+        buffer[x]=string[x];
+        if(buffer[x]>='A' && buffer[x]<='Z'){
+            buffer[x]+=' ';
+        }
+    }
+    for (int x=0; x < length; x++)
+    {
+        mask = 1;
+
+        mask = mask << (buffer[x] - 'a');
+        if (h & mask)
+        {
+            printf("%c at index %d, is a duplicate element.\n", buffer[x],x);
+        }
+        else
+        {
+            h = mask | h;
+        }
+    }
+}
+
 int main()
 {
-    checkDuplicateWithHashTable("Aaditya");
+    checkForDuplicateWithBitwiseOperator("Aaditya");
     return 0;
 }
