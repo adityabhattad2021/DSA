@@ -195,20 +195,22 @@ void checkForDuplicateWithBitwiseOperator(char string[])
         length++;
     }
     char buffer[length];
-    for(int x=0;x<length;x++){
-        buffer[x]=string[x];
-        if(buffer[x]>='A' && buffer[x]<='Z'){
-            buffer[x]+=' ';
+    for (int x = 0; x < length; x++)
+    {
+        buffer[x] = string[x];
+        if (buffer[x] >= 'A' && buffer[x] <= 'Z')
+        {
+            buffer[x] += ' ';
         }
     }
-    for (int x=0; x < length; x++)
+    for (int x = 0; x < length; x++)
     {
         mask = 1;
 
         mask = mask << (buffer[x] - 'a');
         if (h & mask)
         {
-            printf("%c at index %d, is a duplicate element.\n", buffer[x],x);
+            printf("%c at index %d, is a duplicate element.\n", buffer[x], x);
         }
         else
         {
@@ -217,8 +219,61 @@ void checkForDuplicateWithBitwiseOperator(char string[])
     }
 }
 
+// Anagram strings means: All the letters used two strings should be same. i.e. decimal and medical
+void checkAnagramStrings(char string1[], char string2[])
+{
+
+    // checking for length
+    int str1Len = 0, str2Len = 0;
+    while (string1[str1Len] != '\0' || string2[str2Len] != '\0')
+    {
+        if (string1[str1Len != '\0'])
+        {
+            str1Len++;
+        }
+        if (string2[str2Len != '\0'])
+        {
+            str2Len++;
+        }
+    }
+    if (str1Len != str2Len)
+    {
+        printf("Strings are not anagrams of each other");
+        return;
+    }
+    int table1[26] = {0};
+    int table2[26] = {0};
+    for (int x = 0; x < str1Len; x++)
+    {
+        if (string1[x] >= 'A' && string1[x] <= 'Z')
+        {
+            string1[x] += ' ';
+        }
+        table1[string1[x] - 'a'] += 1;
+    }
+    for (int x = 0; x < str2Len; x++)
+    {
+        if (string2[x] >= 'A' && string2[x] <= 'Z')
+        {
+            string2[x] += ' ';
+        }
+        table2[string2[x] - 'a'] += 1;
+    }
+    for (int x = 0; x < 26; x++)
+    {
+        if (table1[x] != table2[x])
+        {
+            // printf("(table1[%d]==%d) != (table2[%d]==%d)",x,table1[x],x,table2[x]);
+            printf("Strings are not anagrams of each other");
+            return;
+        }
+    }
+    printf("Strings are anagrams of each other");
+}
+
 int main()
 {
-    checkForDuplicateWithBitwiseOperator("Aaditya");
+    
+    checkAnagramStrings("decimal", "medicalasas");
     return 0;
 }
