@@ -55,49 +55,59 @@ void isEmpty(stack stack)
     printf("\nStack is not empty.\n");
 }
 
-void isFull(stack stack){
-    if(stack.topIndex>SIZE-2){
+void isFull(stack stack)
+{
+    if (stack.topIndex > SIZE - 2)
+    {
         printf("\nStack is full.\n");
         return;
     }
-    printf("\nStack is not full.\n");    
+    printf("\nStack is not full.\n");
 }
 
-void peek(stack stack){
-    int indexToPeek;
-    printf("\nEnter the index to view element present at that index: ");
-    scanf("%d",&indexToPeek);
-    if(indexToPeek>=0 && indexToPeek<=stack.topIndex){
-        printf("\nElement at index %d is %d.\n",indexToPeek,stack._[indexToPeek]);
-        return;
-    } else {
-        printf("\nInvalid index.\n");
+void peek(stack stack)
+{
+    if (stack.topIndex >= 0)
+    {
+        printf("\nElement at the top of the stack is %d\n",stack._[stack.topIndex]);
     }
+    printf("\nStack is empty\n");
 }
 
-void count(stack stack){
-    if(stack.topIndex>-1){
-        printf("\nSize of the stack is %d.\n",stack.topIndex+1);
+void count(stack stack)
+{
+    if (stack.topIndex > -1)
+    {
+        printf("\nSize of the stack is %d.\n", stack.topIndex + 1);
         return;
-    } else {
+    }
+    else
+    {
         printf("\nStack is empty\n");
     }
 }
 
-void change(stack *stack){
-    int indexToChange,newEle;
+// Not necessary
+void change(stack *stack)
+{
+    int indexToChange, newEle;
     printf("\nEnter the index to view element present at that index: ");
-    scanf("%d",&indexToChange);
-    if(indexToChange>=0 && indexToChange<=stack->topIndex){
+    scanf("%d", &indexToChange);
+    if (indexToChange >= 0 && indexToChange <= stack->topIndex)
+    {
         printf("\nEnter new element: ");
-        scanf("%d",&newEle);
-        stack->_[indexToChange]=newEle;
+        scanf("%d", &newEle);
+        stack->_[indexToChange] = newEle;
         return;
-    } else {
+    }
+    else
+    {
         printf("\nInvalid index.\n");
     }
 }
 
+
+// Not necessary
 void display(stack stack)
 {
     if (stack.topIndex == -1)
@@ -106,7 +116,7 @@ void display(stack stack)
         return;
     }
     printf("\nStack: ");
-    for (int x = 0; x < SIZE && x <= stack.topIndex; x++)
+    for (int x = 0; x < SIZE; x++)
     {
         printf("%d ", stack._[x]);
     }
