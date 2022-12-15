@@ -92,7 +92,6 @@ void add_at_end(Node *head, Node *newNode)
     ptr->next = newNode;
 }
 
-
 /*Time Complexity: O(1).*/
 void add_at_begainning(Node **head, Node *newNode)
 {
@@ -100,6 +99,71 @@ void add_at_begainning(Node **head, Node *newNode)
     ptr = newNode;
     newNode->next = *head;
     *head = ptr;
+}
+
+/*Time Complexity: O(n).*/
+void add_at_position(Node *head, Node *newNode, int position)
+{
+    int end = count_of_nodes(head);
+    if (position <= 0 || position >= end)
+    {
+        printf("\nInvalid position entered.\n");
+        return;
+    }
+    Node *ptr = NULL;
+    ptr = head;
+    for (int x = 1; x < position - 1; x++)
+    {
+        ptr = ptr->next;
+    }
+    newNode->next = ptr->next;
+    ptr->next = newNode;
+}
+
+/*Time Complexity: O(1).*/
+void delete_first_element(Node **head)
+{
+    Node *temp = NULL;
+    temp = *head;
+    *head = (*head)->next;
+    free(temp);
+    temp = NULL;
+}
+
+/*Time Complexity: O(n).*/
+void delete_last_element(Node *head)
+{
+    Node *temp = NULL, *temp2 = NULL;
+    temp = head;
+    while (temp->next != NULL)
+    {
+        temp2 = temp;
+        temp = temp->next;
+    }
+    temp2->next = NULL;
+    free(temp);
+}
+
+void delete_at_position(Node **head, int position)
+{
+    Node *nodeBeforeToDelete = NULL, *nodeToDelete = NULL;
+    nodeBeforeToDelete = *head;
+    nodeToDelete = *head;
+    if (position == 1)
+    {
+        *head = (*head)->next;
+    }
+    else
+    {
+        for (int x = 1; x < position; x++)
+        {
+            nodeBeforeToDelete = nodeToDelete;
+            nodeToDelete = nodeToDelete->next;
+        }
+        nodeBeforeToDelete->next = nodeToDelete->next;
+    }
+    free(nodeToDelete);
+    printf("\n%d\n",nodeBeforeToDelete->data);
 }
 
 void print_the_list(Node *head)
@@ -173,6 +237,40 @@ int main()
     }
     print_the_list(head);
     printf("\nThe number of elements in the current list is %d.\n", count_of_nodes(head));
-    
+    while (1)
+    {
+        int element, position;
+        printf("Enter a number to add at certain position of the already generated list linked list(-999 to quit): ");
+        scanf("%d", &element);
+
+        if (element == -999)
+        {
+            break;
+        }
+        else
+        {
+            if (head == NULL)
+            {
+                head = createNewNode(element);
+            }
+            else
+            {
+                printf("\nEnter the position where you want to add a number: ");
+                scanf("%d", &position);
+
+                current = createNewNode(element);
+                add_at_position(head, current, position);
+            }
+        }
+    }
+    print_the_list(head);
+    printf("\nThe number of elements in the current list is %d.\n", count_of_nodes(head));
+    // delete_first_element(&head);
+    // delete_first_element(&head);
+    // delete_last_element(head);
+    // delete_at_position(&head,4);
+    print_the_list(head);
+    printf("\nThe number of elements in the current list is %d.\n", count_of_nodes(head));
+
     return 0;
 }
