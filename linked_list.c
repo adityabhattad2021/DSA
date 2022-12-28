@@ -31,12 +31,12 @@
 
 
     Operations of Linked List
-    1. Traversing a list.
-    2. Append a new node(to the end) of the list.
-    3. Prepen a new node(to the start) of the list.
-    4. Inserting a new node to a specific position in the list.
-    5. Deleting a node from the list.
-    6. Updating a node in the list.
+    1. Traversing a list.  ✅
+    2. Append a new node(to the end) of the list.  ✅
+    3. Prepen a new node(to the start) of the list.  ✅
+    4. Inserting a new node to a specific position in the list.  ✅
+    5. Deleting a node from the list.  ✅
+    6. Updating a node in the list.  ✅
 
 
     Some applications of linked lists.
@@ -54,7 +54,7 @@ typedef struct node
     struct node *next;
 } Node;
 
-Node *createNewNode(int data)
+Node *create_new_node(int data)
 {
     Node *newNode = (Node *)malloc(sizeof(Node));
     newNode->data = data;
@@ -166,6 +166,37 @@ void delete_at_position(Node **head, int position)
     printf("\n%d\n",nodeBeforeToDelete->data);
 }
 
+void delete_entire_list(Node **head){
+    Node *buffer=*head;
+    while(*head!=NULL){
+        *head=(*head)->next;
+        free(buffer);
+        buffer=*head;
+    }
+    buffer=NULL;
+    printf("\nLinked List deleted successfully!\n");
+}
+
+
+void reversing_entire_linked_list(Node **head){
+    Node *firstElement=NULL,*buffer1=NULL,*buffer2=NULL;
+    firstElement=(*head);
+    buffer1=(*head)->next;
+    buffer2=(*head)->next->next;
+    firstElement->next=NULL;
+    while(buffer1->next!=NULL){
+        buffer1->next=*head;
+        *head=buffer1;
+        buffer1=buffer2;
+        buffer2=buffer2->next;
+    }
+    buffer1->next=*head;
+    *head=buffer1;
+    buffer1=NULL;
+    buffer2=NULL;
+    printf("\nLinked List reversed successfully.\n");
+}
+
 void print_the_list(Node *head)
 {
     if (head == NULL)
@@ -202,11 +233,11 @@ int main()
         {
             if (head == NULL)
             {
-                head = createNewNode(element);
+                head = create_new_node(element);
             }
             else
             {
-                current = createNewNode(element);
+                current = create_new_node(element);
                 add_at_end(head, current);
             }
         }
@@ -226,11 +257,11 @@ int main()
         {
             if (head == NULL)
             {
-                head = createNewNode(element);
+                head = create_new_node(element);
             }
             else
             {
-                current = createNewNode(element);
+                current = create_new_node(element);
                 add_at_begainning(&head, current);
             }
         }
@@ -251,14 +282,14 @@ int main()
         {
             if (head == NULL)
             {
-                head = createNewNode(element);
+                head = create_new_node(element);
             }
             else
             {
                 printf("\nEnter the position where you want to add a number: ");
                 scanf("%d", &position);
 
-                current = createNewNode(element);
+                current = create_new_node(element);
                 add_at_position(head, current, position);
             }
         }
@@ -269,6 +300,8 @@ int main()
     // delete_first_element(&head);
     // delete_last_element(head);
     // delete_at_position(&head,4);
+    // delete_entire_list(&head);
+    reversing_entire_linked_list(&head);
     print_the_list(head);
     printf("\nThe number of elements in the current list is %d.\n", count_of_nodes(head));
 
