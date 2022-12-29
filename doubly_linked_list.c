@@ -1,6 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+
+/*
+    Why do we need a doubly linked list?
+    A doubly linked list is a variation of a singly linked list where each node is also pointing to its previous node.
+    1. Deletion operation is faster in doubly linked list, if the pointer to the intermediate node (node to delete) is given.
+    2. Inserting a new node before a given node is easier in doubly linked list.
+*/
+
 typedef struct node
 {
     struct node *previous;
@@ -76,6 +84,86 @@ void add_after_position(Node **head, Node *newNode)
     }
 }
 
+void delete_first_node(Node **head)
+{
+    (*head) = (*head)->next;
+    free((*head)->previous);
+    (*head)->previous = NULL;
+}
+
+void delete_last_node(Node *head)
+{
+    Node *buffer = NULL;
+    buffer = head;
+    while (buffer->next->next != NULL)
+    {
+        buffer = buffer->next;
+    }
+    free(buffer->next);
+    buffer->next = NULL;
+}
+
+void delete_intermediate_node(Node **head)
+{
+    int position;
+    printf("\nEnter the position of the node to delete: ");
+    scanf("%d", &position);
+    if (position < 2)
+    {
+        delete_first_node(&(*head));
+        return;
+    }
+    Node *buffer1 = NULL, *buffer2 = NULL;
+    buffer1 = *head;
+    while (position > 1)
+    {
+        if (buffer1->next == NULL)
+        {
+            delete_last_node(*head);
+            return;
+        }
+        else
+        {
+            buffer1 = buffer1->next;
+            position--;
+        }
+    }
+    if (buffer1->next != NULL)
+    {
+        buffer2 = buffer1->previous;
+        buffer2->next = buffer1->next;
+        buffer1->next->previous = buffer2;
+        free(buffer1);
+        buffer1 = NULL;
+    }
+    else
+    {
+        delete_last_node(*head);
+    }
+}
+
+void reverse_the_list(Node **head)
+{
+    Node *buffer1 = NULL, *buffer2 = NULL;
+    buffer1 = *head;
+    buffer2 = buffer1->next;
+    buffer1->previous = buffer2;
+    buffer1->next = NULL;
+    while (buffer2->next != NULL)
+    {
+        buffer1 = buffer2;
+        buffer2 = buffer2->next;
+        buffer1->next = buffer1->previous;
+        buffer1->previous = buffer2;
+    }
+    buffer2->next = buffer1;
+    buffer2->previous = NULL;
+    (*head) = buffer2;
+    buffer1 = NULL;
+    buffer2 = NULL;
+    printf("\nDoubly Linked List reversed successfully.\n");
+}
+
 void print_the_list(Node *head)
 {
     if (head == NULL)
@@ -113,13 +201,19 @@ int main()
             {
                 head = create_new_node(number);
             }
-            else{
-                temporary_node=create_new_node(number);
-                add_node_at_end(&head,temporary_node);
+            else
+            {
+                temporary_node = create_new_node(number);
+                add_node_at_end(&head, temporary_node);
             }
         }
     }
 
+    print_the_list(head);
+    // delete_first_node(&head);
+    // delete_last_node(head);
+    // delete_intermediate_node(&head);
+    reverse_the_list(&head);
     print_the_list(head);
     return 0;
 }
