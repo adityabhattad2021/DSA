@@ -30,7 +30,6 @@
 
 */
 
-
 /*
     Infix to postfix conversion using stack
     Algorithm:
@@ -45,3 +44,76 @@
     9. Repeat steps 1 to 8 until the infix expression is completely scanned.
     10. Pop and output from the stack until it is empty.
 */
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct stack
+{
+    int top;
+    unsigned int size;
+    char *arry;
+} Stack;
+
+void initializeStack(int size, Stack *s)
+{
+    s->top = -1;
+    s->size = size;
+    s->arry = calloc(s->size, sizeof(char));
+}
+
+int isFull(Stack s){
+    if(s.top>s.size-2){
+        return 1;
+    }
+    return 0;
+}
+
+int isEmpty(Stack s){
+    if(s.top==-1){
+        return 1;
+    }
+    return 0;
+}
+
+
+void push(Stack *s,char toPush){
+    if(isFull(*s)){
+        printf("\nStack is full cannot push.\n");
+        return;
+    }
+    s->arry[++s->top]=toPush;
+}
+
+
+char pop(Stack *s){
+    if(isEmpty(*s)){
+        printf("\nStack is already empty.\n");
+        return;
+    }
+    return s->arry[s->top--];
+}
+
+char peek(Stack s){
+    if(isEmpty(s)){
+        printf("\nNo element present in the stack.\n");
+        return;
+    }
+    return s.arry[s.top];
+}
+
+
+int main()
+{
+    Stack s;
+    initializeStack(10, &s);
+
+
+
+
+    for (int x = 0; x < s.size; x++)
+    {
+        printf("%d=>%c \n",x, s.arry[x]);
+    }
+    // free(s.arry);
+    return 0;
+}
