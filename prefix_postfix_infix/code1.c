@@ -61,59 +61,133 @@ void initializeStack(int size, Stack *s)
     s->arry = calloc(s->size, sizeof(char));
 }
 
-int isFull(Stack s){
-    if(s.top>s.size-2){
+int isFull(Stack s)
+{
+    if (s.top == s.size - 1)
+    {
+        printf("\nakdjdkasd\n");
         return 1;
     }
     return 0;
 }
 
-int isEmpty(Stack s){
-    if(s.top==-1){
+int isEmpty(Stack s)
+{
+    if (s.top == -1)
+    {
         return 1;
     }
     return 0;
 }
 
-
-void push(Stack *s,char toPush){
-    if(isFull(*s)){
+void push(Stack *s, char toPush)
+{
+    if (isFull(*s))
+    {
         printf("\nStack is full cannot push.\n");
         return;
     }
-    s->arry[++s->top]=toPush;
+    s->arry[++s->top] = toPush;
 }
 
-
-char pop(Stack *s){
-    if(isEmpty(*s)){
+char pop(Stack *s)
+{
+    if (isEmpty(*s))
+    {
         printf("\nStack is already empty.\n");
-        return;
+        return '\0';
     }
     return s->arry[s->top--];
 }
 
-char peek(Stack s){
-    if(isEmpty(s)){
+char peek(Stack s)
+{
+    if (isEmpty(s))
+    {
         printf("\nNo element present in the stack.\n");
-        return;
+        return '\0';
     }
     return s.arry[s.top];
 }
 
+int isOperand(char toCheck)
+{
+    if ((toCheck >= 'a' && toCheck <= 'z') || (toCheck >= 'A' && toCheck <= 'Z'))
+    {
+        return 1;
+    }
+    return 0;
+}
+
+// the 'break;' is unnecessary in the switch case, but it is added for readability.
+int precedance(char toCheck)
+{
+    switch (toCheck)
+    {
+    case '+':
+    case '-':
+        return 1;
+        break;
+    case '*':
+    case '/':
+    case '%':
+        return 2;
+        break;
+    case '^':
+        return 3;
+        break;
+    default:
+        return -1;
+        break;
+    }
+}
+
+void infixToPostfix(char *infix, char *postfix)
+{
+    Stack s;
+    initializeStack(30,&s);
+    int infixIndex = 0, postfixIndex = 0;
+    while (infix[infixIndex] != '\0')
+    {
+        char currentChar = infix[infixIndex];
+        if (isOperand(currentChar))
+        {
+            postfix[postfixIndex++] = infix[infixIndex++];
+        }
+        else if (currentChar == '(')
+        {
+            push(&s, infix[infixIndex++]);
+        }
+        else if (currentChar == ')')
+        {
+            while (!isEmpty(s) || peek(s) != '(')
+            {
+                postfix[postfixIndex++] = pop(&s);
+            }
+            pop(&s);
+            infixIndex++;
+        }
+        else
+        {
+            while (!isEmpty(s)  &&  precedance(peek(s)) >= precedance(currentChar))
+            {
+                postfix[postfixIndex++] = pop(&s);
+            }
+            push(&s, infix[infixIndex++]);
+        }
+    }
+    while(!isEmpty(s)){
+        postfix[postfixIndex++]=pop(&s);
+    }
+    postfix[postfixIndex]='\0';
+}
 
 int main()
 {
-    Stack s;
-    initializeStack(10, &s);
-
-
-
-
-    for (int x = 0; x < s.size; x++)
-    {
-        printf("%d=>%c \n",x, s.arry[x]);
-    }
-    // free(s.arry);
+    char infix[100], postfix[100];
+    printf("Enter the infix expression: ");
+    scanf("%s", infix);
+    infixToPostfix(infix, postfix);
+    printf("The postfix expression is: %s\n", postfix);
     return 0;
 }
