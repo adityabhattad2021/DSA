@@ -62,6 +62,8 @@
 */
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
 
 typedef struct stack
 {
@@ -128,7 +130,7 @@ char peek(Stack s)
 
 int isOperand(char toCheck)
 {
-    if ((toCheck >= 'a' && toCheck <= 'z') || (toCheck >= 'A' && toCheck <= 'Z'))
+    if ((toCheck >= 'a' && toCheck <= 'z') || (toCheck >= 'A' && toCheck <= 'Z') || (toCheck >= '0' && toCheck <= '9'))
     {
         return 1;
     }
@@ -301,15 +303,40 @@ void infixToPrefix(char *infix, char *prefix)
         prefix[prefixIndex++] = pop(&s);
     }
     prefix[prefixIndex] = '\0';
-    printf("\nExpression before reversing is: %s\n", prefix);
     reverseTheExpression(prefix);
 }
+
+int evaluatePostfix(char* postfix) {
+  Stack s;
+  initializeStack(30,&s);
+
+  int i;
+  int n = strlen(postfix);
+
+  for (i = 0; i < n; i++) {
+    if (isdigit(postfix[i])) {
+      push(&s, postfix[i] - '0');
+    } else {
+      int a = pop(&s);
+      int b = pop(&s);
+      switch (postfix[i]) {
+        case '+': push(&s, b + a); break;
+        case '-': push(&s, b - a); break;
+        case '*': push(&s, b * a); break;
+        case '/': push(&s, b / a); break;
+      }
+    }
+  }
+
+  return pop(&s);
+}
+
 
 int main()
 {
     char infix[100], postfix[100], prefix[100];
-    int choice,toStop=0;
-    
+    int choice, toStop = 0;
+
     while (!toStop)
     {
         printf("\n1. To convert infix to postfix\n");
@@ -324,6 +351,8 @@ int main()
             printf("\nEnter the infix expression: ");
             scanf("%s", infix);
             infixToPostfix(infix, postfix);
+            int result = evaluatePostfix(postfix);
+            printf("Result: %d\n", result);
             printf("The postfix expression is: %s\n", postfix);
             break;
         }
@@ -337,7 +366,7 @@ int main()
         }
         case 3:
         {
-            toStop=1;
+            toStop = 1;
             break;
         }
         }
