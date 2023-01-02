@@ -299,38 +299,86 @@ void infixToPrefix(char *infix, char *prefix)
     }
     while (!isEmpty(s))
     {
-        printf("triggesre\n");
         prefix[prefixIndex++] = pop(&s);
     }
     prefix[prefixIndex] = '\0';
     reverseTheExpression(prefix);
 }
 
-int evaluatePostfix(char* postfix) {
-  Stack s;
-  initializeStack(30,&s);
+int evaluatePostfix(char *postfix)
+{
+    Stack s;
+    initializeStack(30, &s);
 
-  int i;
-  int n = strlen(postfix);
+    int i;
+    int n = strlen(postfix);
 
-  for (i = 0; i < n; i++) {
-    if (isdigit(postfix[i])) {
-      push(&s, postfix[i] - '0');
-    } else {
-      int a = pop(&s);
-      int b = pop(&s);
-      switch (postfix[i]) {
-        case '+': push(&s, b + a); break;
-        case '-': push(&s, b - a); break;
-        case '*': push(&s, b * a); break;
-        case '/': push(&s, b / a); break;
-      }
+    for (i = 0; i < n; i++)
+    {
+        if (isdigit(postfix[i]))
+        {
+            push(&s, postfix[i] - '0');
+        }
+        else
+        {
+            int a = pop(&s);
+            int b = pop(&s);
+            switch (postfix[i])
+            {
+            case '+':
+                push(&s, b + a);
+                break;
+            case '-':
+                push(&s, b - a);
+                break;
+            case '*':
+                push(&s, b * a);
+                break;
+            case '/':
+                push(&s, b / a);
+                break;
+            }
+        }
     }
-  }
 
-  return pop(&s);
+    return pop(&s);
 }
 
+int evaluatePrefix(char *prefix)
+{
+    Stack s;
+    initializeStack(30, &s);
+    int i;
+    int n = strlen(prefix);
+    for (int x = n-1; x >= 0; x--)
+    {
+        if (isdigit(prefix[x]))
+        {
+            push(&s, prefix[x] - '0');
+        }
+        else
+        {
+            int a = pop(&s);
+            int b = pop(&s);
+            switch (prefix[x])
+            {
+            case '+':
+                push(&s, b + a);
+                break;
+            case '-':
+                push(&s, b - a);
+                break;
+            case '*':
+                push(&s, b * a);
+                break;
+            case '/':
+                push(&s, b / a);
+                break;
+            }
+        }
+    }
+    return pop(&s);
+}
 
 int main()
 {
@@ -361,6 +409,8 @@ int main()
             printf("\nEnter the inifx expression: ");
             scanf("%s", infix);
             infixToPrefix(infix, prefix);
+            int result = evaluatePrefix(prefix);
+            printf("Result: %d\n", result);
             printf("\nThe prefix expression is: %s\n", prefix);
             break;
         }
