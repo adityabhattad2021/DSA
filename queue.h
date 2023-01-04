@@ -8,7 +8,7 @@ typedef struct Queue
     int rearIndex;
 } queue;
 
-int initializeQueue(queue *q)
+void initializeQueue(queue *q)
 {
     q->frontIndex = -1;
     q->rearIndex = -1;
