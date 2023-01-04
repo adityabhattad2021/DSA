@@ -1,4 +1,5 @@
-
+#include<stdio.h>
+#include<stdlib.h>
 
 /*
     Binary Tree - A binary tree is a tree data structure in which each node has at most two children, which are referred to as the left child(LC) and right child(RC)
@@ -32,3 +33,25 @@
         Insert/Add = O(n)
         Delete/Remove = O(n)
 */
+
+typedef struct tree_node{
+    int data;
+    struct tree_node *leftChild;
+    struct tree_node *rightChild;
+} TreeNode;
+
+TreeNode *create_tree_node(int data){
+    TreeNode *newNode=(TreeNode *)malloc(sizeof(TreeNode));
+    newNode->data=data;
+    newNode->leftChild=NULL;
+    newNode->rightChild=NULL;
+
+    return newNode;
+}
+
+int main(){
+    TreeNode *root=NULL;
+    root=create_tree_node(21);
+
+    return 0;
+}
