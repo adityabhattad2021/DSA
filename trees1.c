@@ -1,10 +1,10 @@
-#include<stdio.h>
-#include<stdlib.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 /*
     Binary Tree - A binary tree is a tree data structure in which each node has at most two children, which are referred to as the left child(LC) and right child(RC)
 
-    Important Binary Tree Terms & Properties - 
+    Important Binary Tree Terms & Properties -
     1. A binary tree is called STRICT/PROPER binary tree, when each node has 2 or 0 children.
     2. A binary tree is called COMPLETE binary tree if all levels expect the leaf nodes are completely filled and and all nodes are as left as possible.
     3. A binary tree is called PERFECT binary tree if all levels are completely filled with two childrens.
@@ -14,10 +14,9 @@
     6. A binary tree is called BALANCED binary tree, if the difference between the height of left and right subtree for every node is not more than k (usually 1).
 */
 
-
 /*
     Binary Search Tree (BST) - It is a binary tree data structure, in which the values in the left subtrees of every node are smaller and the values in the right subtrees of every node are larger
-    e.g 
+    e.g
                     25
                    /   \
                   19   36
@@ -25,7 +24,7 @@
                 14 23 29 52
     Time complexities:
     - Best cases (For balanced binary trees)
-        Search/Access/Update = O(log(n)), 
+        Search/Access/Update = O(log(n)),
         Insert/Add = O(log(n)),
         Delete/Remove = O(log(n))
     - Worst cases (For unbalanced binary trees)
@@ -34,24 +33,43 @@
         Delete/Remove = O(n)
 */
 
-typedef struct tree_node{
+typedef struct tree_node
+{
     int data;
     struct tree_node *leftChild;
     struct tree_node *rightChild;
 } TreeNode;
 
-TreeNode *create_tree_node(int data){
-    TreeNode *newNode=(TreeNode *)malloc(sizeof(TreeNode));
-    newNode->data=data;
-    newNode->leftChild=NULL;
-    newNode->rightChild=NULL;
+TreeNode *create_tree_node(int data)
+{
+    TreeNode *newNode = (TreeNode *)malloc(sizeof(TreeNode));
+    newNode->data = data;
+    newNode->leftChild = NULL;
+    newNode->rightChild = NULL;
 
     return newNode;
 }
 
-int main(){
-    TreeNode *root=NULL;
-    root=create_tree_node(21);
+int isEmpty(TreeNode *root)
+{
+    if (root == NULL)
+    {
+        return 1;
+    }
+    return 0;
+}
 
+int main()
+{
+    TreeNode *root = NULL;
+    // root = create_tree_node(21);
+    if (isEmpty(root))
+    {
+        printf("\nBinary Search Tree is currently empty.\n");
+    }
+    else
+    {
+        printf("\nBinary Search Tree is not empty.\n");
+    }
     return 0;
 }
