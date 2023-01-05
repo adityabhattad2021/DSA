@@ -50,6 +50,47 @@ TreeNode *create_tree_node(int data)
     return newNode;
 }
 
+// Insertion function for non duplicate elements only.
+void insertNode(TreeNode **root, TreeNode *newNode)
+{
+    if (*root == NULL)
+    {
+        *root = newNode;
+    }
+    else
+    {
+        TreeNode *buffer = NULL;
+        buffer = *root;
+        while (buffer != NULL)
+        {
+            if (buffer->data == newNode->data)
+            {
+                return;
+            }
+            else if ((buffer->data > newNode->data) && (buffer->leftChild == NULL))
+            {
+                buffer->leftChild = newNode;
+                return;
+            }
+            else if (buffer->data > newNode->data)
+            {
+                buffer = buffer->leftChild;
+                continue;
+            }
+            else if ((buffer->data < newNode->data) && (buffer->rightChild == NULL))
+            {
+                buffer->rightChild = newNode;
+                return;
+            }
+            else if (buffer->data < newNode->data)
+            {
+                buffer = buffer->rightChild;
+                continue;
+            }
+        }
+    }
+}
+
 int isEmpty(TreeNode *root)
 {
     if (root == NULL)
@@ -61,7 +102,22 @@ int isEmpty(TreeNode *root)
 
 int main()
 {
-    TreeNode *root = NULL;
+    TreeNode *root = NULL, *temporary_node = NULL;
+    int data;
+    while (1)
+    {
+        printf("\nEnter a number to add in a binary search tree(-999 to stop): ");
+        scanf("%d", &data);
+        if (data == -999)
+        {
+            break;
+        }
+        else
+        {
+            temporary_node=create_tree_node(data);
+            insertNode(&root,temporary_node);
+        }
+    }
     // root = create_tree_node(21);
     if (isEmpty(root))
     {
