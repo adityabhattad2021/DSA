@@ -65,6 +65,7 @@ void insertNode(TreeNode **root, TreeNode *newNode)
         {
             if (buffer->data == newNode->data)
             {
+                printf("\nThis value already exists, enter another value.\n");
                 return;
             }
             else if ((buffer->data > newNode->data) && (buffer->leftChild == NULL))
@@ -100,6 +101,66 @@ int isEmpty(TreeNode *root)
     return 0;
 }
 
+
+void print2DTree(TreeNode *root,int space){
+    static int SPACE=10;
+    if(root==NULL){
+        return;
+    }
+    space+=SPACE;
+    print2DTree(root->rightChild,space);
+    printf("\n");
+    for(int i=SPACE;i<space;i++){
+        printf(" ");
+    }
+    printf(" %d \n",root->data);
+    print2DTree(root->leftChild,space);
+}
+
+/*
+    Binary Tree Traversal Techniques
+    - Tree travesal (also known as tree search and walking tree) refers to the process of visiting (checking and/or updating) each node in the tree data structure, exactly once. Such traversals are classified by the order in which the nodes are visited.
+
+
+    - Depth first search/traversal of binary tree (DFS):
+
+    1. Pre Order (Node, Right, Left):
+        - Access the data part of the current node.
+        - Traverse the left subtree by recursively calling the pre-order function.
+        - Traverse the right subtree by recursively calling the pre-order function.
+    
+    2. In Order (Left, Node, Right):
+        - Traverse the left subtree by recursively calling the in-order function.
+        - Access the data part of the current node.
+        - Traverse the right subtree by recursively calling the in-order function.
+        In BST in-order traversal retrives the key in ascending sorted order.
+    3. Post Order (Left, Right, Node):
+        - Traverse the left subtree by recursively calling the post-order function.
+        - Traverse the right subtree by recursively calling the post-order function.
+        - Access the data part of the current node.
+
+
+    - Breadth first search/ level order (BFS)
+
+    Trees can also be traversed in a level order, where we visit every node on a level before going to a lower level. This search is referred to as breadth-first-search (BFS), as the search tree is brodened as much as possible on each depth before going to the next depth.
+
+    e.g        30
+             /    \
+            18    43
+           /  \  /  \
+          10  25 32  48
+
+        DFS(Depth First Search):
+        Pre-Order Search = 30 18 10 25 43 32 48
+        Post-Order Search = 10 18 25 30 32 43 48
+        In-Order Search = 10 25 18 32 48 43 30
+
+        BFS(Breadth First Search): 30 18 43 10 25 32 48
+
+*/
+
+
+
 int main()
 {
     TreeNode *root = NULL, *temporary_node = NULL;
@@ -127,5 +188,6 @@ int main()
     {
         printf("\nBinary Search Tree is not empty.\n");
     }
+    print2DTree(root,1);
     return 0;
 }
