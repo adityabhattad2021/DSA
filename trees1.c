@@ -173,6 +173,16 @@ void preOrderTraversal(TreeNode *root){
 }
 
 
+// In-Order tree traversal
+void inOrderTraversal(TreeNode *root){
+    if(root==NULL){
+        return;
+    }
+    inOrderTraversal(root->leftChild);
+    printf("%d ",root->data);
+    inOrderTraversal(root->rightChild);
+}
+
 
 int main()
 {
@@ -202,7 +212,9 @@ int main()
         printf("\nBinary Search Tree is not empty.\n");
     }
     print2DTree(root,1);
-    printf("Binary tree in pre-order traversal is: ");
+    printf("\nBinary tree in pre-order traversal is: ");
     preOrderTraversal(root);
+    printf("\nBinary tree in in-order traversal is: ");
+    inOrderTraversal(root);
     return 0;
 }
