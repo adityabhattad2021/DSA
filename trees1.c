@@ -154,9 +154,9 @@ void print2DTree(TreeNode *root,int space){
 
         DFS(Depth First Search):
         Pre-Order Search = 30 18 10 25 43 32 48
-        Post-Order Search = 10 18 25 30 32 43 48
-        In-Order Search = 10 25 18 32 48 43 30
-
+        In-Order Search = 10 18 25 30 32 43 48
+        Post-Order Search = 10 25 18 32 48 43 30
+        
         BFS(Breadth First Search): 30 18 43 10 25 32 48
 
 */
@@ -181,6 +181,16 @@ void inOrderTraversal(TreeNode *root){
     inOrderTraversal(root->leftChild);
     printf("%d ",root->data);
     inOrderTraversal(root->rightChild);
+}
+
+// Post-Order tree traaversal
+void postOrderTraversal(TreeNode *root){
+    if(root==NULL){
+        return;
+    }
+    postOrderTraversal(root->leftChild);
+    postOrderTraversal(root->rightChild);
+    printf("%d ",root->data);
 }
 
 
@@ -216,5 +226,8 @@ int main()
     preOrderTraversal(root);
     printf("\nBinary tree in in-order traversal is: ");
     inOrderTraversal(root);
+    printf("\nBinary tree in post-order traversal is: ");
+    postOrderTraversal(root);
+
     return 0;
 }
