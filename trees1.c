@@ -70,6 +70,7 @@ void insertNode(TreeNode **root, TreeNode *newNode)
             }
             else if ((buffer->data > newNode->data) && (buffer->leftChild == NULL))
             {
+                printf("Inserted at left side.");
                 buffer->leftChild = newNode;
                 return;
             }
@@ -80,6 +81,7 @@ void insertNode(TreeNode **root, TreeNode *newNode)
             }
             else if ((buffer->data < newNode->data) && (buffer->rightChild == NULL))
             {
+                printf("Inserted at right side.");
                 buffer->rightChild = newNode;
                 return;
             }
@@ -103,7 +105,7 @@ int isEmpty(TreeNode *root)
 
 
 void print2DTree(TreeNode *root,int space){
-    static int SPACE=10;
+    static int SPACE=5;
     if(root==NULL){
         return;
     }
@@ -160,6 +162,17 @@ void print2DTree(TreeNode *root,int space){
 */
 
 
+// Pre Order tree traversal
+void preOrderTraversal(TreeNode *root){
+    if(root==NULL){
+        return;
+    }
+    printf("%d ",root->data);
+    preOrderTraversal(root->leftChild);
+    preOrderTraversal(root->rightChild);
+}
+
+
 
 int main()
 {
@@ -189,5 +202,7 @@ int main()
         printf("\nBinary Search Tree is not empty.\n");
     }
     print2DTree(root,1);
+    printf("Binary tree in pre-order traversal is: ");
+    preOrderTraversal(root);
     return 0;
 }
