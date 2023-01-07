@@ -103,20 +103,21 @@ int isEmpty(TreeNode *root)
     return 0;
 }
 
-
-void print2DTree(TreeNode *root,int space){
-    static int SPACE=5;
-    if(root==NULL){
+void print2DTree(TreeNode *root, int space)
+{
+    if (root == NULL)
+    {
         return;
     }
-    space+=SPACE;
-    print2DTree(root->rightChild,space);
+    space += 5;
+    print2DTree(root->rightChild, space);
     printf("\n");
-    for(int i=SPACE;i<space;i++){
+    for (int i = 5; i < space; i++)
+    {
         printf(" ");
     }
-    printf(" %d \n",root->data);
-    print2DTree(root->leftChild,space);
+    printf("%d\n", root->data);
+    print2DTree(root->leftChild, space);
 }
 
 /*
@@ -130,12 +131,13 @@ void print2DTree(TreeNode *root,int space){
         - Access the data part of the current node.
         - Traverse the left subtree by recursively calling the pre-order function.
         - Traverse the right subtree by recursively calling the pre-order function.
-    
+
     2. In Order (Left, Node, Right):
         - Traverse the left subtree by recursively calling the in-order function.
         - Access the data part of the current node.
         - Traverse the right subtree by recursively calling the in-order function.
         In BST in-order traversal retrives the key in ascending sorted order.
+
     3. Post Order (Left, Right, Node):
         - Traverse the left subtree by recursively calling the post-order function.
         - Traverse the right subtree by recursively calling the post-order function.
@@ -156,43 +158,78 @@ void print2DTree(TreeNode *root,int space){
         Pre-Order Search = 30 18 10 25 43 32 48
         In-Order Search = 10 18 25 30 32 43 48
         Post-Order Search = 10 25 18 32 48 43 30
-        
+
         BFS(Breadth First Search): 30 18 43 10 25 32 48
 
 */
 
-
 // Pre Order tree traversal
-void preOrderTraversal(TreeNode *root){
-    if(root==NULL){
+void preOrderTraversal(TreeNode *root)
+{
+    if (root == NULL)
+    {
         return;
     }
-    printf("%d ",root->data);
+    printf("%d ", root->data);
     preOrderTraversal(root->leftChild);
     preOrderTraversal(root->rightChild);
 }
 
-
 // In-Order tree traversal
-void inOrderTraversal(TreeNode *root){
-    if(root==NULL){
+void inOrderTraversal(TreeNode *root)
+{
+    if (root == NULL)
+    {
         return;
     }
     inOrderTraversal(root->leftChild);
-    printf("%d ",root->data);
+    printf("%d ", root->data);
     inOrderTraversal(root->rightChild);
 }
 
 // Post-Order tree traaversal
-void postOrderTraversal(TreeNode *root){
-    if(root==NULL){
+void postOrderTraversal(TreeNode *root)
+{
+    if (root == NULL)
+    {
         return;
     }
     postOrderTraversal(root->leftChild);
     postOrderTraversal(root->rightChild);
-    printf("%d ",root->data);
+    printf("%d ", root->data);
 }
 
+// Search Operation on Binary Tree
+// Time Complexity: O(log(n))
+// Iterative Approach
+void search_element(TreeNode *root, int toFind)
+{
+    if (root == NULL)
+    {
+        printf("\nTree is empty.\n");
+    }
+    TreeNode *temp = NULL;
+    temp = root;
+    while (temp != NULL)
+    {
+        if (temp->data == toFind)
+        {
+            printf("\nElement is present in the binary search tree.\n");
+            return;
+        }
+        else if (temp->data < toFind)
+        {
+            temp = temp->rightChild;
+            continue;
+        }
+        else if (temp->data > toFind)
+        {
+            temp = temp->leftChild;
+            continue;
+        }
+    }
+    printf("\nElement not found.\n");
+}
 
 int main()
 {
@@ -208,8 +245,8 @@ int main()
         }
         else
         {
-            temporary_node=create_tree_node(data);
-            insertNode(&root,temporary_node);
+            temporary_node = create_tree_node(data);
+            insertNode(&root, temporary_node);
         }
     }
     // root = create_tree_node(21);
@@ -221,13 +258,24 @@ int main()
     {
         printf("\nBinary Search Tree is not empty.\n");
     }
-    print2DTree(root,1);
+    print2DTree(root, 1);
     printf("\nBinary tree in pre-order traversal is: ");
     preOrderTraversal(root);
     printf("\nBinary tree in in-order traversal is: ");
     inOrderTraversal(root);
     printf("\nBinary tree in post-order traversal is: ");
     postOrderTraversal(root);
+    int element;
+    while (1)
+    {
+        printf("Enter the element to search(-999 to stop): ");
+        scanf("%d",&element);
+        if(element==-999){
+            break;
+        }
+        search_element(root,element);
+    }
+    
 
     return 0;
 }
