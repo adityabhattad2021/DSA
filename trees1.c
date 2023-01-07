@@ -231,6 +231,28 @@ void search_element(TreeNode *root, int toFind)
     printf("\nElement not found.\n");
 }
 
+void recursive_search_element(TreeNode *root, int toFind)
+{
+    if (root == NULL)
+    {
+        printf("\nElement not found.\n");
+        return;
+    }
+    else if (root->data == toFind)
+    {
+        printf("\nElement is present in the binary tree.\n");
+        return;
+    }
+    else if (root->data < toFind)
+    {
+        recursive_search_element(root->rightChild, toFind);
+    }
+    else if (root->data > toFind)
+    {
+        recursive_search_element(root->leftChild, toFind);
+    }
+}
+
 int main()
 {
     TreeNode *root = NULL, *temporary_node = NULL;
@@ -268,14 +290,14 @@ int main()
     int element;
     while (1)
     {
-        printf("Enter the element to search(-999 to stop): ");
-        scanf("%d",&element);
-        if(element==-999){
+        printf("\nEnter the element to search(-999 to stop): ");
+        scanf("%d", &element);
+        if (element == -999)
+        {
             break;
         }
-        search_element(root,element);
+        recursive_search_element(root, element);
     }
-    
 
     return 0;
 }
