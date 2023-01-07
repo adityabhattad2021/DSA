@@ -283,7 +283,34 @@ int find_height_of_binary_tree(TreeNode *root)
     }
     else
     {
-        return right_height + 1; 
+        return right_height + 1;
+    }
+}
+
+void print_a_level(TreeNode *root, int level)
+{
+    if (root == NULL)
+    {
+        return;
+    }
+    else if (level == 0)
+    {
+        printf("%d ", root->data);
+    }
+    else
+    {
+        print_a_level(root->leftChild, level - 1);
+        print_a_level(root->rightChild, level - 1);
+    }
+}
+
+// Level Order Tree Binary Tree Traversal
+void levelOrderTraversal(TreeNode *root)
+{
+    int height_of_tree = find_height_of_binary_tree(root);
+    for (int x = 0; x <= height_of_tree; x++)
+    {
+        print_a_level(root,x);
     }
 }
 
@@ -321,6 +348,8 @@ int main()
     inOrderTraversal(root);
     printf("\nBinary tree in post-order traversal is: ");
     postOrderTraversal(root);
+    printf("\nBinary tree in level-order traversal is: ");
+    levelOrderTraversal(root);
     int element;
     while (1)
     {
@@ -332,6 +361,6 @@ int main()
         }
         recursive_search_element(root, element);
     }
-
+    printf("\nHeight of the binary tree is %d.\n", find_height_of_binary_tree(root));
     return 0;
 }
