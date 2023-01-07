@@ -134,7 +134,7 @@ void print2D(TreeNode *root)
 {
     if (!isEmpty(root))
     {
-    // Pass initial space count as 0
+        // Pass initial space count as 0
         print2DUtil(root, 0);
     }
     else
@@ -379,7 +379,6 @@ TreeNode *delete_a_value(TreeNode *root, int valueToDelete)
             {
                 if (root->leftChild == NULL)
                 {
-
                     TreeNode *temp = NULL;
                     temp = root->rightChild;
                     free(root);
@@ -394,7 +393,6 @@ TreeNode *delete_a_value(TreeNode *root, int valueToDelete)
                 }
                 else
                 {
-
                     TreeNode *temp = NULL;
                     temp = return_min_node(root->rightChild);
                     root->data = temp->data;
@@ -411,65 +409,154 @@ TreeNode *delete_a_value(TreeNode *root, int valueToDelete)
     }
 }
 
+// For Iterative Tree traversal we need to mantain our own stack.
+typedef struct stack
+{
+    int topIndex;
+    int size;
+    TreeNode *nodeStack;
+} Stack;
+
+void initializeStack(Stack *nodeStack, int size)
+{
+    nodeStack->size = size;
+    nodeStack->nodeStack = (TreeNode *)malloc(sizeof(TreeNode) * nodeStack->size);
+    nodeStack->topIndex = -1;
+}
+
+int isStackEmpty(Stack nodeStack)
+{
+    if (nodeStack.topIndex == -1)
+    {
+        return 1;
+    }
+    return 0;
+}
+
+int isStackFull(Stack nodeStack)
+{
+    if (nodeStack.topIndex > nodeStack.size - 2)
+    {
+        return 1;
+    }
+    return 0;
+}
+
+void pushInStack(Stack *nodeStack, TreeNode node)
+{
+    if (!isStackFull(*nodeStack))
+    {
+        nodeStack->topIndex += 1;
+        nodeStack->nodeStack[nodeStack->topIndex] = node;
+    }
+}
+
+TreeNode popFromStack(Stack *nodeStack)
+{
+    if (!isStackEmpty(*nodeStack))
+    {
+        TreeNode temp = nodeStack->nodeStack[nodeStack->topIndex];
+        nodeStack->topIndex -= 1;
+        return temp;
+    }
+    exit(1);
+}
+
+TreeNode peekInStack(Stack nodeStack)
+{
+    if (!isStackEmpty(nodeStack))
+    {
+        return nodeStack.nodeStack[nodeStack.topIndex];
+    }
+}
+
+// void testTreeNodeStack()
+// {
+//     TreeNode *root = NULL;
+//     root = create_tree_node(21);
+//     Stack s;
+//     initializeStack(&s, 1);
+//     pushInStack(&s, *root);
+//     printf("\nThe value of the element in the stack is %d.\n", (peekInStack(s)).data);
+//     if (isStackEmpty(s))
+//     {
+//         printf("\nStack is empty\n");
+//     }
+//     else
+//     {
+//         printf("\nStack is not empty.\n");
+//     }
+//     printf("\nThe element that was popped is %d.\n", (popFromStack(&s)).data);
+//     if (isStackEmpty(s))
+//     {
+//         printf("\nStack is empty\n");
+//     }
+//     else
+//     {
+//         printf("\nStack is not empty.\n");
+//     }
+// }
+
 int main()
 {
-    TreeNode *root = NULL, *temporary_node = NULL;
-    int data;
-    while (1)
-    {
-        printf("\nEnter a number to add in a binary search tree(-999 to stop): ");
-        scanf("%d", &data);
-        if (data == -999)
-        {
-            break;
-        }
-        else
-        {
-            temporary_node = create_tree_node(data);
-            insertNode(&root, temporary_node);
-        }
-    }
-    // root = create_tree_node(21);
-    if (isEmpty(root))
-    {
-        printf("\nBinary Search Tree is currently empty.\n");
-    }
-    else
-    {
-        printf("\nBinary Search Tree is not empty.\n");
-    }
-    print2D(root);
-    printf("\nBinary tree in pre-order traversal is: ");
-    preOrderTraversal(root);
-    printf("\nBinary tree in in-order traversal is: ");
-    inOrderTraversal(root);
-    printf("\nBinary tree in post-order traversal is: ");
-    postOrderTraversal(root);
-    printf("\nBinary tree in level-order traversal is: ");
-    levelOrderTraversal(root);
-    int element;
-    while (1)
-    {
-        printf("\nEnter the element to search(-999 to stop): ");
-        scanf("%d", &element);
-        if (element == -999)
-        {
-            break;
-        }
-        recursive_search_element(root, element);
-    }
-    printf("\nHeight of the binary tree is %d.\n", find_height_of_binary_tree(root));
-    int elementToDelete;
-    while (1)
-    {
-        printf("Enter the element to delete(-999 to stop): ");
-        scanf("%d", &elementToDelete);
-        if (elementToDelete == -999)
-        {
-            break;
-        }
-        root = delete_a_value(root, elementToDelete);
-        print2D(root);
-    }
+    // TreeNode *root = NULL, *temporary_node = NULL;
+    // int data;
+    // while (1)
+    // {
+    //     printf("\nEnter a number to add in a binary search tree(-999 to stop): ");
+    //     scanf("%d", &data);
+    //     if (data == -999)
+    //     {
+    //         break;
+    //     }
+    //     else
+    //     {
+    //         temporary_node = create_tree_node(data);
+    //         insertNode(&root, temporary_node);
+    //     }
+    // }
+    // // root = create_tree_node(21);
+    // if (isEmpty(root))
+    // {
+    //     printf("\nBinary Search Tree is currently empty.\n");
+    // }
+    // else
+    // {
+    //     printf("\nBinary Search Tree is not empty.\n");
+    // }
+    // print2D(root);
+    // printf("\nBinary tree in pre-order traversal is: ");
+    // preOrderTraversal(root);
+    // printf("\nBinary tree in in-order traversal is: ");
+    // inOrderTraversal(root);
+    // printf("\nBinary tree in post-order traversal is: ");
+    // postOrderTraversal(root);
+    // printf("\nBinary tree in level-order traversal is: ");
+    // levelOrderTraversal(root);
+    // int element;
+    // while (1)
+    // {
+    //     printf("\nEnter the element to search(-999 to stop): ");
+    //     scanf("%d", &element);
+    //     if (element == -999)
+    //     {
+    //         break;
+    //     }
+    //     recursive_search_element(root, element);
+    // }
+    // printf("\nHeight of the binary tree is %d.\n", find_height_of_binary_tree(root));
+    // int elementToDelete;
+    // while (1)
+    // {
+    //     printf("Enter the element to delete(-999 to stop): ");
+    //     scanf("%d", &elementToDelete);
+    //     if (elementToDelete == -999)
+    //     {
+    //         break;
+    //     }
+    //     root = delete_a_value(root, elementToDelete);
+    //     print2D(root);
+    // }
+    testTreeNodeStack();
     return 0;
 }
