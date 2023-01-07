@@ -103,21 +103,37 @@ int isEmpty(TreeNode *root)
     return 0;
 }
 
-void print2DTree(TreeNode *root, int space)
+// It basically follows reverse In-Order Treversal Techinique(Right, Node, Left) for printing.
+void print2DUtil(TreeNode *root, int space)
 {
+    // Base case
     if (root == NULL)
-    {
         return;
-    }
-    space += 5;
-    print2DTree(root->rightChild, space);
+
+    // Increase distance between levels
+    space += 10;
+
+    // Process right child first
+    print2DUtil(root->rightChild, space);
+
+    // Print current node after space
+    // count
     printf("\n");
-    for (int i = 5; i < space; i++)
+    for (int i = 10; i < space; i++)
     {
         printf(" ");
     }
     printf("%d\n", root->data);
-    print2DTree(root->leftChild, space);
+
+    // Process left child
+    print2DUtil(root->leftChild, space);
+}
+
+// Wrapper over print2DUtil()
+void print2D(TreeNode *root)
+{
+    // Pass initial space count as 0
+    print2DUtil(root, 0);
 }
 
 /*
@@ -253,6 +269,24 @@ void recursive_search_element(TreeNode *root, int toFind)
     }
 }
 
+int find_height_of_binary_tree(TreeNode *root)
+{
+    if (root == NULL)
+    {
+        return -1;
+    }
+    int left_height = find_height_of_binary_tree(root->leftChild);
+    int right_height = find_height_of_binary_tree(root->rightChild);
+    if (left_height > right_height)
+    {
+        return left_height + 1;
+    }
+    else
+    {
+        return right_height + 1; 
+    }
+}
+
 int main()
 {
     TreeNode *root = NULL, *temporary_node = NULL;
@@ -280,7 +314,7 @@ int main()
     {
         printf("\nBinary Search Tree is not empty.\n");
     }
-    print2DTree(root, 1);
+    print2D(root);
     printf("\nBinary tree in pre-order traversal is: ");
     preOrderTraversal(root);
     printf("\nBinary tree in in-order traversal is: ");
