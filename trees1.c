@@ -132,8 +132,15 @@ void print2DUtil(TreeNode *root, int space)
 // Wrapper over print2DUtil()
 void print2D(TreeNode *root)
 {
+    if (!isEmpty(root))
+    {
     // Pass initial space count as 0
-    print2DUtil(root, 0);
+        print2DUtil(root, 0);
+    }
+    else
+    {
+        printf("\nBinary tree is empty.\n");
+    }
 }
 
 /*
@@ -147,22 +154,26 @@ void print2D(TreeNode *root)
         - Access the data part of the current node.
         - Traverse the left subtree by recursively calling the pre-order function.
         - Traverse the right subtree by recursively calling the pre-order function.
+        - Time Complexity= O(n)
 
     2. In Order (Left, Node, Right):
         - Traverse the left subtree by recursively calling the in-order function.
         - Access the data part of the current node.
         - Traverse the right subtree by recursively calling the in-order function.
+        - Time Complexity= O(n)
         In BST in-order traversal retrives the key in ascending sorted order.
 
     3. Post Order (Left, Right, Node):
         - Traverse the left subtree by recursively calling the post-order function.
         - Traverse the right subtree by recursively calling the post-order function.
         - Access the data part of the current node.
+        - Time Complexity= O(n)
 
 
     - Breadth first search/ level order (BFS)
 
     Trees can also be traversed in a level order, where we visit every node on a level before going to a lower level. This search is referred to as breadth-first-search (BFS), as the search tree is brodened as much as possible on each depth before going to the next depth.
+    - Time Complexity= O(n)
 
     e.g        30
              /    \
@@ -175,7 +186,7 @@ void print2D(TreeNode *root)
         In-Order Search = 10 18 25 30 32 43 48
         Post-Order Search = 10 25 18 32 48 43 30
 
-        BFS(Breadth First Search): 30 18 43 10 25 32 48
+        BFS(Breadth First Search)/Level Order traversal: 30 18 43 10 25 32 48
 
 */
 
@@ -218,11 +229,12 @@ void postOrderTraversal(TreeNode *root)
 // Search Operation on Binary Tree
 // Time Complexity: O(log(n))
 // Iterative Approach
-void search_element(TreeNode *root, int toFind)
+int search_element(TreeNode *root, int toFind)
 {
     if (root == NULL)
     {
         printf("\nTree is empty.\n");
+        return 0;
     }
     TreeNode *temp = NULL;
     temp = root;
@@ -230,8 +242,7 @@ void search_element(TreeNode *root, int toFind)
     {
         if (temp->data == toFind)
         {
-            printf("\nElement is present in the binary search tree.\n");
-            return;
+            return 1;
         }
         else if (temp->data < toFind)
         {
@@ -244,7 +255,7 @@ void search_element(TreeNode *root, int toFind)
             continue;
         }
     }
-    printf("\nElement not found.\n");
+    return 0;
 }
 
 void recursive_search_element(TreeNode *root, int toFind)
@@ -287,6 +298,7 @@ int find_height_of_binary_tree(TreeNode *root)
     }
 }
 
+// Helper function for "levelOrderTraversal".
 void print_a_level(TreeNode *root, int level)
 {
     if (root == NULL)
@@ -310,7 +322,92 @@ void levelOrderTraversal(TreeNode *root)
     int height_of_tree = find_height_of_binary_tree(root);
     for (int x = 0; x <= height_of_tree; x++)
     {
-        print_a_level(root,x);
+        print_a_level(root, x);
+    }
+}
+
+/*
+    Delete node algorithms
+    1. For a leaf node or node with one child -
+        a. Traverse the leaf node/node with single child to be deleted(lets say n).
+        b. Check if n has left child(n->leftChild!=NULL).
+           - If it does not, link the right child(n->rightChild) with the parent of node n.
+        c.If n has a left child then check if n has right child.
+            - If it does not, link the left child to the parent of node n.
+
+    2.  For a node with two childs -
+        a. Traverse to the node with 2 childs to be deleted(n).
+        b.
+           1.Find the smallest node (nMin) in the right sub tree of n.
+           or
+           2. Find the largest node (nMax) in the left sub tree of n.
+        c. Replace this node (nMin or nMax) with the node to be deleted (replace n with nMin)
+        d. Now delete nMin(or nMax) using delete process again.
+*/
+
+// Helper function for deleting a node.
+TreeNode *return_min_node(TreeNode *root)
+{
+    TreeNode *temp = NULL;
+    temp = root;
+    while (temp->leftChild != NULL)
+    {
+        temp = temp->leftChild;
+    }
+    return temp;
+}
+
+TreeNode *delete_a_value(TreeNode *root, int valueToDelete)
+{
+    if (search_element(root, valueToDelete))
+    {
+        if (root == NULL)
+        {
+            return root;
+        }
+        else
+        {
+            if (root->data > valueToDelete)
+            {
+                root->leftChild = delete_a_value(root->leftChild, valueToDelete);
+            }
+            else if (root->data < valueToDelete)
+            {
+                root->rightChild = delete_a_value(root->rightChild, valueToDelete);
+            }
+            else
+            {
+                if (root->leftChild == NULL)
+                {
+
+                    TreeNode *temp = NULL;
+                    temp = root->rightChild;
+                    free(root);
+                    return temp;
+                }
+                else if (root->rightChild == NULL)
+                {
+                    TreeNode *temp = NULL;
+                    temp = root->leftChild;
+                    free(root);
+                    return temp;
+                }
+                else
+                {
+
+                    TreeNode *temp = NULL;
+                    temp = return_min_node(root->rightChild);
+                    root->data = temp->data;
+                    root->rightChild = delete_a_value(root->rightChild, temp->data);
+                }
+            }
+            return root;
+        }
+    }
+    else
+    {
+        printf("\nValue to delete not present in the tree.\n");
+        return root;
     }
 }
 
@@ -362,5 +459,17 @@ int main()
         recursive_search_element(root, element);
     }
     printf("\nHeight of the binary tree is %d.\n", find_height_of_binary_tree(root));
+    int elementToDelete;
+    while (1)
+    {
+        printf("Enter the element to delete(-999 to stop): ");
+        scanf("%d", &elementToDelete);
+        if (elementToDelete == -999)
+        {
+            break;
+        }
+        root = delete_a_value(root, elementToDelete);
+        print2D(root);
+    }
     return 0;
 }
