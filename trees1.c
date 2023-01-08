@@ -42,7 +42,7 @@ typedef struct tree_node
 
 TreeNode *create_tree_node(int data)
 {
-    TreeNode *newNode = (TreeNode *)malloc(sizeof(TreeNode));
+    TreeNode *newNode = malloc(sizeof(TreeNode));
     newNode->data = data;
     newNode->leftChild = NULL;
     newNode->rightChild = NULL;
@@ -414,13 +414,13 @@ typedef struct stack
 {
     int topIndex;
     int size;
-    TreeNode *nodeStack;
+    TreeNode **nodeStack;
 } Stack;
 
 void initializeStack(Stack *nodeStack, int size)
 {
     nodeStack->size = size;
-    nodeStack->nodeStack = (TreeNode *)malloc(sizeof(TreeNode *) * nodeStack->size);
+    nodeStack->nodeStack = malloc(sizeof(TreeNode *) * nodeStack->size);
     nodeStack->topIndex = -1;
 }
 
@@ -447,7 +447,7 @@ void pushInStack(Stack *nodeStack, TreeNode *node)
     if (!isStackFull(*nodeStack))
     {
         nodeStack->topIndex += 1;
-        nodeStack->nodeStack[nodeStack->topIndex] = *node;
+        nodeStack->nodeStack[nodeStack->topIndex] = node;
     }
 }
 
@@ -456,19 +456,20 @@ TreeNode *popFromStack(Stack *nodeStack)
     if (!isStackEmpty(*nodeStack))
     {
         TreeNode *temp = NULL;
-        temp = &nodeStack->nodeStack[nodeStack->topIndex];
+        temp = nodeStack->nodeStack[nodeStack->topIndex];
         nodeStack->topIndex -= 1;
         return temp;
     }
-    exit(1);
+    return NULL;
 }
 
 TreeNode *peekInStack(Stack nodeStack)
 {
     if (!isStackEmpty(nodeStack))
     {
-        return &nodeStack.nodeStack[nodeStack.topIndex];
+        return nodeStack.nodeStack[nodeStack.topIndex];
     }
+    return NULL;
 }
 
 void testTreeNodeStack()
@@ -549,44 +550,27 @@ void iterativeInOrderTreeTraversal(TreeNode *root)
 void iterativePostOrderTreeTraversal(TreeNode *root)
 {
     Stack StackToTraverse, StackToPrint;
-    TreeNode *temp = NULL, *toPrint = NULL;
+    TreeNode *temp = NULL,*toPrint=NULL;
     temp = root;
     initializeStack(&StackToTraverse, 50);
     initializeStack(&StackToPrint, 50);
-    while (temp != NULL || !isStackEmpty(StackToTraverse) || !isStackEmpty(StackToPrint))
+    pushInStack(&StackToTraverse, temp);
+    while (!isStackEmpty(StackToTraverse))
     {
-        if (temp != NULL)
+        temp = popFromStack(&StackToTraverse);
+        pushInStack(&StackToPrint, temp);
+        if (temp->leftChild != NULL)
         {
-            pushInStack(&StackToTraverse, temp);
-            temp = temp->leftChild;
+            pushInStack(&StackToTraverse, temp->leftChild);
         }
-        else
+        if (temp->rightChild != NULL)
         {
-            if (!isStackEmpty(StackToPrint))
-            {
-                if (peekInStack(StackToPrint)->rightChild != peekInStack(StackToTraverse))
-                {
-                    while (!isStackEmpty(StackToPrint))
-                    {
-                        temp = popFromStack(&StackToPrint);
-                        printf("%d ", temp->data);
-                    }
-                    temp = NULL;
-                }
-                else
-                {
-                    temp = popFromStack(&StackToTraverse);
-                    pushInStack(&StackToPrint, temp);
-                    temp=NULL;
-                }
-            }
-            else
-            {
-                temp = popFromStack(&StackToTraverse);
-                pushInStack(&StackToPrint, temp);
-                temp = temp->rightChild;
-            }
+            pushInStack(&StackToTraverse, temp->rightChild);
         }
+    }
+    while(!isStackEmpty(StackToPrint)){
+        toPrint=popFromStack(&StackToPrint);
+        printf("%d ",toPrint->data);
     }
 }
 
