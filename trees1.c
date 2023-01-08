@@ -532,10 +532,60 @@ void iterativeInOrderTreeTraversal(TreeNode *root)
         {
             pushInStack(&stack, temp);
             temp = temp->leftChild;
-        } else {
-            temp=popFromStack(&stack);
-            printf("%d ",temp->data);
-            temp=temp->rightChild;
+        }
+        else
+        {
+            temp = popFromStack(&stack);
+            printf("%d ", temp->data);
+            temp = temp->rightChild;
+        }
+    }
+}
+
+
+
+
+// Incorrect 
+void iterativePostOrderTreeTraversal(TreeNode *root)
+{
+    Stack StackToTraverse, StackToPrint;
+    TreeNode *temp = NULL, *toPrint = NULL;
+    temp = root;
+    initializeStack(&StackToTraverse, 50);
+    initializeStack(&StackToPrint, 50);
+    while (temp != NULL || !isStackEmpty(StackToTraverse) || !isStackEmpty(StackToPrint))
+    {
+        if (temp != NULL)
+        {
+            pushInStack(&StackToTraverse, temp);
+            temp = temp->leftChild;
+        }
+        else
+        {
+            if (!isStackEmpty(StackToPrint))
+            {
+                if (peekInStack(StackToPrint)->rightChild != peekInStack(StackToTraverse))
+                {
+                    while (!isStackEmpty(StackToPrint))
+                    {
+                        temp = popFromStack(&StackToPrint);
+                        printf("%d ", temp->data);
+                    }
+                    temp = NULL;
+                }
+                else
+                {
+                    temp = popFromStack(&StackToTraverse);
+                    pushInStack(&StackToPrint, temp);
+                    temp=NULL;
+                }
+            }
+            else
+            {
+                temp = popFromStack(&StackToTraverse);
+                pushInStack(&StackToPrint, temp);
+                temp = temp->rightChild;
+            }
         }
     }
 }
@@ -578,6 +628,8 @@ int main()
     iterativeInOrderTreeTraversal(root);
     printf("\nBinary tree in post-order traversal is: ");
     postOrderTraversal(root);
+    printf("\nBinary tree in iterative post-order traversal is: ");
+    iterativePostOrderTreeTraversal(root);
 
     printf("\nBinary tree in level-order traversal is: ");
     levelOrderTraversal(root);
