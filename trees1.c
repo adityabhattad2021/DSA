@@ -463,11 +463,11 @@ TreeNode *popFromStack(Stack *nodeStack)
     exit(1);
 }
 
-TreeNode peekInStack(Stack nodeStack)
+TreeNode *peekInStack(Stack nodeStack)
 {
     if (!isStackEmpty(nodeStack))
     {
-        return nodeStack.nodeStack[nodeStack.topIndex];
+        return &nodeStack.nodeStack[nodeStack.topIndex];
     }
 }
 
@@ -478,7 +478,7 @@ void testTreeNodeStack()
     Stack s;
     initializeStack(&s, 1);
     pushInStack(&s, root);
-    printf("\nThe value of the element in the stack is %d.\n", (peekInStack(s)).data);
+    printf("\nThe value of the element in the stack is %d.\n", (peekInStack(s))->data);
     if (isStackEmpty(s))
     {
         printf("\nStack is empty\n");
@@ -520,7 +520,25 @@ void iterativePreOrderTreeTraversal(TreeNode *root)
     }
 }
 
-
+void iterativeInOrderTreeTraversal(TreeNode *root)
+{
+    Stack stack;
+    initializeStack(&stack, 50);
+    TreeNode *temp = NULL;
+    temp = root;
+    while (temp != NULL || !isStackEmpty(stack))
+    {
+        if (temp != NULL)
+        {
+            pushInStack(&stack, temp);
+            temp = temp->leftChild;
+        } else {
+            temp=popFromStack(&stack);
+            printf("%d ",temp->data);
+            temp=temp->rightChild;
+        }
+    }
+}
 
 int main()
 {
@@ -556,9 +574,10 @@ int main()
     iterativePreOrderTreeTraversal(root);
     printf("\nBinary tree in in-order traversal is: ");
     inOrderTraversal(root);
+    printf("\nBinary tree in iterative in-order traversal is: ");
+    iterativeInOrderTreeTraversal(root);
     printf("\nBinary tree in post-order traversal is: ");
     postOrderTraversal(root);
-    
 
     printf("\nBinary tree in level-order traversal is: ");
     levelOrderTraversal(root);
