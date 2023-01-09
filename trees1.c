@@ -543,10 +543,6 @@ void iterativeInOrderTreeTraversal(TreeNode *root)
     }
 }
 
-
-
-
-// Incorrect 
 void iterativePostOrderTreeTraversal(TreeNode *root)
 {
     Stack StackToTraverse, StackToPrint;
