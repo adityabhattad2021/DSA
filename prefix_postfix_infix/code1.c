@@ -75,8 +75,8 @@ typedef struct stack
 
 typedef struct doubly_node{
     char data;
-    struct node *next;
-    struct node *previous;
+    struct doubly_node *next;
+    struct doubly_node *previous;
 } DoublyNode;
 
 // Every number will have its seperate linked list.
@@ -90,7 +90,7 @@ void initializeNewNumberList(NumberOrOperator *n){
     n->tail=NULL;
 }
 
-DoublyNode *create_new_node(char data){
+DoublyNode *create_new_node_doubly(char data){
     DoublyNode *newNode=(DoublyNode *)malloc(sizeof(DoublyNode));
     newNode->data=data;
     newNode->next=NULL;
@@ -101,7 +101,7 @@ DoublyNode *create_new_node(char data){
 
 void add_at_end_of_number_or_operator(NumberOrOperator *n,char data){
     DoublyNode *newNode=NULL;
-    newNode=create_new_node(data);
+    newNode=create_new_node_doubly(data);
 
     if(n->head==NULL && n->tail==NULL){
         n->head=newNode;
@@ -115,7 +115,7 @@ void add_at_end_of_number_or_operator(NumberOrOperator *n,char data){
         DoublyNode *temp=NULL;
         temp=n->tail;
         
-        n->tail=n->tail->next;
+        n->tail=newNode;
         
         temp->next=n->tail;
         n->tail->previous=temp;
@@ -136,7 +136,7 @@ void initializeExpression(Expression *e){
 }
 
 // Each node of this singly linked list will contain the pointer to a doubly linked list.
-Expression *create_new_node(NumberOrOperator *toAdd){
+SinglyNode *create_new_node_singly(NumberOrOperator *toAdd){
     SinglyNode *newNode=(SinglyNode *)malloc(sizeof(SinglyNode));
 
     newNode->element=toAdd;
@@ -147,7 +147,7 @@ Expression *create_new_node(NumberOrOperator *toAdd){
 
 void add_at_end_of_expression(Expression *expression,NumberOrOperator *toAdd){
     SinglyNode *newNode=NULL;
-    newNode = create_new_node(toAdd);
+    newNode = create_new_node_singly(toAdd);
 
     if(expression->head==NULL){
         expression->head=newNode;
@@ -160,8 +160,6 @@ void add_at_end_of_expression(Expression *expression,NumberOrOperator *toAdd){
         temp->next=newNode;
     }
 }
-
-
 
 
 void initializeStack(int size, Stack *s)
@@ -437,8 +435,71 @@ int evaluatePostfix(char *postfix)
 }
 
 
-int evaluatePostfix(char *infix){
+int evaluatePostfixVersion2(char *infix){
     Stack s;
+    Expression postfix;
+    
+
+    initializeStack(30,&s);
+    initializeExpression(&postfix);
+    int infixIndex=0;
+    while(infix[infixIndex]!='\0'){
+        char currentChar=infix[infixIndex];
+        if(isOperand(currentChar)){
+            NumberOrOperator num_or_operator;
+            initializeNewNumberList(&num_or_operator);
+            while(isOperand(currentChar)){
+                add_at_end_of_number_or_operator(&num_or_operator,currentChar);
+                infixIndex++;
+                currentChar=infix[infixIndex];
+            }
+            add_at_end_of_expression(&postfix,&num_or_operator);
+        }else if(currentChar=='('){
+            push(&s,infix[infixIndex++]);
+        }else if(currentChar==')'){
+            while(!isEmpty(s) && peek(s) != '('){
+                char temp=pop(&s);
+                NumberOrOperator num_or_operator;
+                initializeNewNumberList(&num_or_operator);
+                add_at_end_of_number_or_operator(&num_or_operator,temp);
+                add_at_end_of_expression(&postfix,&num_or_operator);
+            }if(peek(s)=='('){
+                pop(&s);
+                infixIndex++;
+            }
+        }else{
+            while(!isEmpty(s) && precedance(peek(s))>=precedance(currentChar)){
+                char temp=pop(&s);
+                NumberOrOperator num_or_operator;
+                initializeNewNumberList(&num_or_operator);
+                add_at_end_of_number_or_operator(&num_or_operator,temp);
+                add_at_end_of_expression(&postfix,&num_or_operator);
+            }
+            push(&s,infix[infixIndex++]);
+        }
+    }
+    while(!isEmpty(s)){
+        char temp=pop(&s);
+        NumberOrOperator num_or_operator;
+        initializeNewNumberList(&num_or_operator);
+        add_at_end_of_number_or_operator(&num_or_operator,temp);
+        add_at_end_of_expression(&postfix,&num_or_operator);
+    }
+
+
+    // Testing
+    SinglyNode *temp=NULL;
+    temp=postfix.head;
+    while(temp!=NULL){
+        printf("\nElement: ");
+        DoublyNode *d_temp=NULL;
+        d_temp=temp->element->head;
+        while(d_temp){
+            printf("%c ",d_temp->data);
+            d_temp=d_temp->next;
+        }
+        temp=temp->next;
+    }
 
 }
 
@@ -498,10 +559,11 @@ int main()
         {
             printf("\nEnter the infix expression: ");
             scanf("%s", infix);
-            infixToPostfix(infix, postfix);
-            int result = evaluatePostfix(postfix);
-            printf("Result: %d\n", result);
-            printf("The postfix expression is: %s\n", postfix);
+            evaluatePostfixVersion2(infix);
+            // infixToPostfix(infix, postfix);
+            // int result = evaluatePostfix(postfix);
+            // printf("Result: %d\n", result);
+            // printf("The postfix expression is: %s\n", postfix);
             break;
         }
         case 2:
