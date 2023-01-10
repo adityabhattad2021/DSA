@@ -99,7 +99,7 @@ DoublyNode *create_new_node(char data){
     return newNode;
 }
 
-void add_at_end(NumberOrOperator *n,char data){
+void add_at_end_of_number_or_operator(NumberOrOperator *n,char data){
     DoublyNode *newNode=NULL;
     newNode=create_new_node(data);
 
@@ -119,6 +119,45 @@ void add_at_end(NumberOrOperator *n,char data){
         
         temp->next=n->tail;
         n->tail->previous=temp;
+    }
+}
+
+typedef struct singly_node{
+    struct doubly_linked_list *element;
+    struct singly_node *next;
+} SinglyNode;
+
+typedef struct singly_linked_list{
+    struct singly_node *head;
+} Expression;
+
+void initializeExpression(Expression *e){
+    e->head=NULL;
+}
+
+// Each node of this singly linked list will contain the pointer to a doubly linked list.
+Expression *create_new_node(NumberOrOperator *toAdd){
+    SinglyNode *newNode=(SinglyNode *)malloc(sizeof(SinglyNode));
+
+    newNode->element=toAdd;
+    newNode->next=NULL;
+
+    return newNode;
+}
+
+void add_at_end_of_expression(Expression *expression,NumberOrOperator *toAdd){
+    SinglyNode *newNode=NULL;
+    newNode = create_new_node(toAdd);
+
+    if(expression->head==NULL){
+        expression->head=newNode;
+    }else{
+        SinglyNode *temp=NULL;
+        temp=expression->head;
+        while(temp->next!=NULL){
+            temp=temp->next;
+        }
+        temp->next=newNode;
     }
 }
 
