@@ -72,6 +72,59 @@ typedef struct stack
     char *arry;
 } Stack;
 
+
+typedef struct doubly_node{
+    char data;
+    struct node *next;
+    struct node *previous;
+} DoublyNode;
+
+// Every number will have its seperate linked list.
+typedef struct doubly_linked_list{
+    struct doubly_node *head;
+    struct doubly_node *tail;
+} NumberOrOperator;
+
+void initializeNewNumberList(NumberOrOperator *n){
+    n->head=NULL;
+    n->tail=NULL;
+}
+
+DoublyNode *create_new_node(char data){
+    DoublyNode *newNode=(DoublyNode *)malloc(sizeof(DoublyNode));
+    newNode->data=data;
+    newNode->next=NULL;
+    newNode->previous=NULL;
+
+    return newNode;
+}
+
+void add_at_end(NumberOrOperator *n,char data){
+    DoublyNode *newNode=NULL;
+    newNode=create_new_node(data);
+
+    if(n->head==NULL && n->tail==NULL){
+        n->head=newNode;
+        n->tail=newNode;
+    }else if(n->head==n->tail){
+        n->tail=newNode;
+        
+        n->head->next=n->tail;
+        n->tail->previous=n->head;
+    }else{
+        DoublyNode *temp=NULL;
+        temp=n->tail;
+        
+        n->tail=n->tail->next;
+        
+        temp->next=n->tail;
+        n->tail->previous=temp;
+    }
+}
+
+
+
+
 void initializeStack(int size, Stack *s)
 {
     s->top = -1;
@@ -343,6 +396,14 @@ int evaluatePostfix(char *postfix)
 
     return pop(&s);
 }
+
+
+int evaluatePostfix(char *infix){
+    Stack s;
+
+}
+
+
 
 int evaluatePrefix(char *prefix)
 {
