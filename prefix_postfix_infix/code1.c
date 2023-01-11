@@ -446,23 +446,23 @@ int evaluatePostfixVersion2(char *infix){
     while(infix[infixIndex]!='\0'){
         char currentChar=infix[infixIndex];
         if(isOperand(currentChar)){
-            NumberOrOperator num_or_operator;
-            initializeNewNumberList(&num_or_operator);
+            NumberOrOperator *num_or_operator=malloc(sizeof(NumberOrOperator));
+            initializeNewNumberList(num_or_operator);
             while(isOperand(currentChar)){
-                add_at_end_of_number_or_operator(&num_or_operator,currentChar);
+                add_at_end_of_number_or_operator(num_or_operator,currentChar);
                 infixIndex++;
                 currentChar=infix[infixIndex];
             }
-            add_at_end_of_expression(&postfix,&num_or_operator);
+            add_at_end_of_expression(&postfix,num_or_operator);
         }else if(currentChar=='('){
             push(&s,infix[infixIndex++]);
         }else if(currentChar==')'){
             while(!isEmpty(s) && peek(s) != '('){
                 char temp=pop(&s);
-                NumberOrOperator num_or_operator;
-                initializeNewNumberList(&num_or_operator);
-                add_at_end_of_number_or_operator(&num_or_operator,temp);
-                add_at_end_of_expression(&postfix,&num_or_operator);
+                NumberOrOperator *num_or_operator=malloc(sizeof(NumberOrOperator));
+                initializeNewNumberList(num_or_operator);
+                add_at_end_of_number_or_operator(num_or_operator,temp);
+                add_at_end_of_expression(&postfix,num_or_operator);
             }if(peek(s)=='('){
                 pop(&s);
                 infixIndex++;
@@ -470,20 +470,20 @@ int evaluatePostfixVersion2(char *infix){
         }else{
             while(!isEmpty(s) && precedance(peek(s))>=precedance(currentChar)){
                 char temp=pop(&s);
-                NumberOrOperator num_or_operator;
-                initializeNewNumberList(&num_or_operator);
-                add_at_end_of_number_or_operator(&num_or_operator,temp);
-                add_at_end_of_expression(&postfix,&num_or_operator);
+                NumberOrOperator *num_or_operator=malloc(sizeof(NumberOrOperator));
+                initializeNewNumberList(num_or_operator);
+                add_at_end_of_number_or_operator(num_or_operator,temp);
+                add_at_end_of_expression(&postfix,num_or_operator);
             }
             push(&s,infix[infixIndex++]);
         }
     }
     while(!isEmpty(s)){
         char temp=pop(&s);
-        NumberOrOperator num_or_operator;
-        initializeNewNumberList(&num_or_operator);
-        add_at_end_of_number_or_operator(&num_or_operator,temp);
-        add_at_end_of_expression(&postfix,&num_or_operator);
+        NumberOrOperator *num_or_operator=malloc(sizeof(NumberOrOperator));
+        initializeNewNumberList(num_or_operator);
+        add_at_end_of_number_or_operator(num_or_operator,temp);
+        add_at_end_of_expression(&postfix,num_or_operator);
     }
 
 
