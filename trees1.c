@@ -94,6 +94,19 @@ void insertNode(TreeNode **root, TreeNode *newNode)
     }
 }
 
+TreeNode *recursiveInsertNode(TreeNode *root,TreeNode *newNode){
+    if(root==NULL){
+        return newNode;
+    }else if(root->data<newNode->data){
+        root->rightChild=recursiveInsertNode(root->rightChild,newNode);
+    }else if(root->data>newNode->data){
+        root->leftChild=recursiveInsertNode(root->leftChild,newNode);
+    }else{
+        printf("\nDuplicate found, cannot insert!\n");
+    }
+    return root;
+}
+
 int isEmpty(TreeNode *root)
 {
     if (root == NULL)
@@ -570,6 +583,9 @@ void iterativePostOrderTreeTraversal(TreeNode *root)
     }
 }
 
+
+
+
 int main()
 {
     TreeNode *root = NULL, *temporary_node = NULL;
@@ -585,7 +601,7 @@ int main()
         else
         {
             temporary_node = create_tree_node(data);
-            insertNode(&root, temporary_node);
+            root=recursiveInsertNode(root,temporary_node);
         }
     }
     // root = create_tree_node(21);

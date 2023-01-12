@@ -93,6 +93,18 @@ typedef struct doubly_linked_list
     struct doubly_node *tail;
 } NumberOrOperator;
 
+typedef struct singly_node
+{
+    struct doubly_linked_list *element;
+    struct singly_node *next;
+} SinglyNode;
+
+typedef struct singly_linked_list
+{
+    struct singly_node *head;
+} Expression;
+
+
 void initializeNewNumberList(NumberOrOperator *n)
 {
     n->head = NULL;
@@ -138,16 +150,6 @@ void add_at_end_of_number_or_operator(NumberOrOperator *n, char data)
     }
 }
 
-typedef struct singly_node
-{
-    struct doubly_linked_list *element;
-    struct singly_node *next;
-} SinglyNode;
-
-typedef struct singly_linked_list
-{
-    struct singly_node *head;
-} Expression;
 
 void initializeExpression(Expression *e)
 {
