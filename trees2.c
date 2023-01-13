@@ -307,6 +307,24 @@ void inOrderTraversal(TreeNode *root)
     inOrderTraversal(root->rightChild);
 }
 
+void preOrderTraversal(TreeNode *root){
+    if(root==NULL){
+        return;
+    }
+    printf("%d ",root->data);
+    preOrderTraversat(root->leftChild);
+    preOrderTraversal(root->rightChild);
+}
+
+void postOrderTraversal(TreeNode *root){
+    if(root==NULL){
+        return;
+    }
+    postOrderTraversal(root->leftChild);
+    postOrderTraversal(root->rightChild);
+    printf("%d ",root->data);
+}
+
 int main()
 {
     TreeNode *root = NULL, *temporary_node = NULL;
