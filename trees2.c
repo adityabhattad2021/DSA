@@ -110,7 +110,7 @@ TreeNode *recursiveInsertNode(TreeNode *root, TreeNode *newNode)
     }
 
     int balanceFactor = getBalancedFactor(root);
-    printf("\n Balance factor is %d.\n",balanceFactor);
+    printf("\n Balance factor is %d.\n", balanceFactor);
 
     if (balanceFactor > 1 && newNode->data < root->leftChild->data)
     {
@@ -131,6 +131,120 @@ TreeNode *recursiveInsertNode(TreeNode *root, TreeNode *newNode)
         return leftRotate(root);
     }
     return root;
+}
+
+int search_element(TreeNode *root, int toFind)
+{
+    if (root == NULL)
+    {
+        printf("\nTree is empty.\n");
+        return 0;
+    }
+    TreeNode *temp = NULL;
+    temp = root;
+    while (temp != NULL)
+    {
+        if (temp->data == toFind)
+        {
+            return 1;
+        }
+        else if (temp->data > toFind)
+        {
+            temp = temp->leftChild;
+            continue;
+        }
+        else if (temp->data < toFind)
+        {
+            temp = temp->rightChild;
+            continue;
+        }
+    }
+    return 0;
+}
+
+TreeNode *return_min_node(TreeNode *root)
+{
+    TreeNode *temp = NULL;
+    temp = root;
+    while (temp->rightChild != NULL)
+    {
+        temp = temp->rightChild;
+    }
+    return temp;
+}
+
+TreeNode *delete_a_value(TreeNode *root, int valueToDelete)
+{
+    if (search_element(root, valueToDelete))
+    {
+        if (root == NULL)
+        {
+            return root;
+        }
+        else
+        {
+            if (root->data > valueToDelete)
+            {
+                root->leftChild = delete_a_value(root->leftChild, valueToDelete);
+            }
+            else if (root->data < valueToDelete)
+            {
+                root->rightChild = delete_a_value(root->rightChild, valueToDelete);
+            }
+            else
+            {
+                if (root->rightChild == NULL)
+                {
+                    TreeNode *temp = NULL;
+                    temp = root->leftChild;
+                    free(root);
+                    return temp;
+                }
+                else if (root->leftChild == NULL)
+                {
+                    TreeNode *temp = NULL;
+                    temp = root->rightChild;
+                    free(root);
+                    return temp;
+                }
+                else
+                {
+                    TreeNode *temp = NULL;
+                    temp = return_min_node(root);
+                    root->data = temp->data;
+                    root->rightChild = delete_a_value(root->rightChild, temp->data);
+                }
+            }
+
+            int balancingFactor = getBalancedFactor(root);
+
+            if (balancingFactor == 2 && getBalancedFactor(root->leftChild) >= 0)
+            {
+                return rightRotate(root);
+            }
+            else if (balancingFactor == 2 && getBalancedFactor(root->leftChild) == -1)
+            {
+                root->leftChild = leftRotate(root->leftChild);
+                return rightRotate(root);
+            }
+            else if (balancingFactor == -2 && getBalancedFactor(root->rightChild) <= 0)
+            {
+                return leftRotate(root);
+            }
+            else if (balancingFactor == -2 && getBalancedFactor(root->rightChild) == 1)
+            {
+                root->rightChild = rightRotate(root->rightChild);
+                return leftRotate(root);
+            }
+
+            return root;
+        }
+    }
+    else
+    {
+        printf("\nElement not found!\n");
+        return root;
+    }
 }
 
 int isEmpty(TreeNode *root)
@@ -182,12 +296,14 @@ void print2D(TreeNode *root)
     }
 }
 
-void inOrderTraversal(TreeNode *root){
-    if(root==NULL){
+void inOrderTraversal(TreeNode *root)
+{
+    if (root == NULL)
+    {
         return;
     }
     inOrderTraversal(root->leftChild);
-    printf("%d ",root->data);
+    printf("%d ", root->data);
     inOrderTraversal(root->rightChild);
 }
 
@@ -208,6 +324,17 @@ int main()
             temporary_node = create_new_node(data);
             root = recursiveInsertNode(root, temporary_node);
         }
+    }
+    while (1)
+    {
+        printf("Enter a number to delete(-999 to stop): ");
+        scanf("%d", &data);
+        if (data == -999)
+        {
+            break;
+        }
+        root = delete_a_value(root, data);
+        print2D(root);
     }
     // root = create_tree_node(21);
     print2D(root);
