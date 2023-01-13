@@ -307,22 +307,49 @@ void inOrderTraversal(TreeNode *root)
     inOrderTraversal(root->rightChild);
 }
 
-void preOrderTraversal(TreeNode *root){
-    if(root==NULL){
+void preOrderTraversal(TreeNode *root)
+{
+    if (root == NULL)
+    {
         return;
     }
-    printf("%d ",root->data);
+    printf("%d ", root->data);
     preOrderTraversat(root->leftChild);
     preOrderTraversal(root->rightChild);
 }
 
-void postOrderTraversal(TreeNode *root){
-    if(root==NULL){
+void postOrderTraversal(TreeNode *root)
+{
+    if (root == NULL)
+    {
         return;
     }
     postOrderTraversal(root->leftChild);
     postOrderTraversal(root->rightChild);
-    printf("%d ",root->data);
+    printf("%d ", root->data);
+}
+
+void recursive_search(TreeNode *root, int elementToFind)
+{
+    if (root == NULL)
+    {
+        printf("\nElement not found.\n");
+    }
+    else
+    {
+        if (root->data == elementToFind)
+        {
+            printf("\nElement is present in the binary tree.\n");
+        }
+        else if (root->data > elementToFind)
+        {
+            recursive_search(root->leftChild, elementToFind);
+        }
+        else if (root->data < elementToFind)
+        {
+            recursive_search(root->rightChild, elementToFind);
+        }
+    }
 }
 
 int main()
