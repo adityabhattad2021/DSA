@@ -57,7 +57,7 @@ void linearSearch(MinHeap *h, int toFind)
     {
         if (h->arry[x] == toFind)
         {
-            printf("\nElement found at index %d.\n",x);
+            printf("\nElement found at index %d.\n", x);
             return;
         }
     }
@@ -72,7 +72,6 @@ void print_heap_arry(MinHeap h)
         printf("%d ", h.arry[x]);
     }
 }
-
 
 int find_index_of_parent(int index_of_element)
 {
@@ -99,6 +98,57 @@ void insert_in_a_heap(int data, MinHeap *h)
     }
 }
 
+int find_index_of_left_child(int index_of_element)
+{
+    return (2 * index_of_element) + 1;
+}
+
+int find_index_of_right_child(int index_of_element)
+{
+    return (2 * index_of_element) + 2;
+}
+
+
+// Here we directly use call by value instead of call by refrence because no direct element of the structure is to be need to be changed. (i.e. capacity,currentSize and pointer to the address of the first element of the array). We only change the values inside the array which are anyways refrenced by the pointer.
+void heapify(MinHeap h, int root)
+{
+    int leftChild = find_index_of_left_child(root);
+    int rightChild = find_index_of_right_child(root);
+    int index_of_smallest_element = root;
+    if (leftChild < h.currentSize && h.arry[leftChild] < h.arry[index_of_smallest_element])
+    {
+        index_of_smallest_element = leftChild;
+    }
+    if (rightChild < h.currentSize && h.arry[rightChild] < h.arry[index_of_smallest_element])
+    {
+        index_of_smallest_element = rightChild;
+    }
+    if (index_of_smallest_element != root)
+    {
+        int temp = h.arry[root];
+        h.arry[root] = h.arry[index_of_smallest_element];
+        h.arry[index_of_smallest_element] = temp;
+        heapify(h, index_of_smallest_element);
+    }
+}
+
+int extractMin(MinHeap *h){
+    if(h->currentSize==0){
+        printf("\nMin heap is currently empty.\n");
+        return -999;
+    }
+    else if(h->currentSize==1){
+        h->currentSize--;
+        return h->arry[h->currentSize];
+    }else{
+        int min_element=h->arry[0];
+        h->currentSize--;
+        h->arry[0]=h->arry[h->currentSize];
+        heapify(*h,0);
+        return min_element;
+    }
+}
+
 int main()
 {
     MinHeap min_heap;
@@ -114,5 +164,7 @@ int main()
         }
         insert_in_a_heap(data, &min_heap);
     }
+    print_heap_arry(min_heap);
+    printf("\nThe minimum element inside the heap was %d.\n",extractMin(&min_heap));
     print_heap_arry(min_heap);
 }
