@@ -36,13 +36,12 @@
 */
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
 
 typedef struct min_heap
 {
-    int *arry;
-    int currentSize;
-    int capacity;
+    int *arry;       // Pointer to the array of each element in the heap.
+    int currentSize; // Current number of elements in the min heap.
+    int capacity;    // Maximum possible size of the min heap.
 } MinHeap;
 
 void CreateMinHeap(int capacity, MinHeap *h)
@@ -58,7 +57,7 @@ void linearSearch(MinHeap *h, int toFind)
     {
         if (h->arry[x] == toFind)
         {
-            printf("\nElement found at index %d.\n");
+            printf("\nElement found at index %d.\n",x);
             return;
         }
     }
@@ -74,7 +73,46 @@ void print_heap_arry(MinHeap h)
     }
 }
 
-int heap_height(MinHeap h)
+
+int find_index_of_parent(int index_of_element)
 {
-    return ceil(log2(h.currentSize + 1)) - 1;
+    int index_of_parent = (index_of_element - 1) / 2;
+    return index_of_parent;
+}
+
+void insert_in_a_heap(int data, MinHeap *h)
+{
+    if (h->currentSize == h->capacity)
+    {
+        printf("\nHeap is currently full, cannot insert.\n");
+        return;
+    }
+    h->currentSize++;
+    int index_to_insert = h->currentSize - 1;
+    h->arry[index_to_insert] = data;
+    while (index_to_insert != 0 && h->arry[find_index_of_parent(index_to_insert)] > h->arry[index_to_insert])
+    {
+        int temp = h->arry[find_index_of_parent(index_to_insert)];
+        h->arry[find_index_of_parent(index_to_insert)] = h->arry[index_to_insert];
+        h->arry[index_to_insert] = temp;
+        index_to_insert = find_index_of_parent(index_to_insert);
+    }
+}
+
+int main()
+{
+    MinHeap min_heap;
+    CreateMinHeap(20, &min_heap);
+    while (1)
+    {
+        int data;
+        printf("Add Elements to insert in a min heap(-999 to stop): ");
+        scanf("%d", &data);
+        if (data == -999)
+        {
+            break;
+        }
+        insert_in_a_heap(data, &min_heap);
+    }
+    print_heap_arry(min_heap);
 }
