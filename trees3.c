@@ -108,7 +108,6 @@ int find_index_of_right_child(int index_of_element)
     return (2 * index_of_element) + 2;
 }
 
-
 // Here we directly use call by value instead of call by refrence because no direct element of the structure is to be need to be changed. (i.e. capacity,currentSize and pointer to the address of the first element of the array). We only change the values inside the array which are anyways refrenced by the pointer.
 void heapify(MinHeap h, int root)
 {
@@ -132,21 +131,41 @@ void heapify(MinHeap h, int root)
     }
 }
 
-int extractMin(MinHeap *h){
-    if(h->currentSize==0){
+int extractMin(MinHeap *h)
+{
+    if (h->currentSize == 0)
+    {
         printf("\nMin heap is currently empty.\n");
         return -999;
     }
-    else if(h->currentSize==1){
+    else if (h->currentSize == 1)
+    {
         h->currentSize--;
         return h->arry[h->currentSize];
-    }else{
-        int min_element=h->arry[0];
+    }
+    else
+    {
+        int min_element = h->arry[0];
         h->currentSize--;
-        h->arry[0]=h->arry[h->currentSize];
-        heapify(*h,0);
+        h->arry[0] = h->arry[h->currentSize];
+        heapify(*h, 0);
         return min_element;
     }
+}
+
+void delete_a_key(MinHeap *h, int index_to_delete)
+{
+    h->arry[index_to_delete] = -999;
+
+    while (index_to_delete != 0 && h->arry[find_index_of_parent(index_to_delete)] > h->arry[index_to_delete])
+    {
+        int temp = h->arry[index_to_delete];
+        h->arry[index_to_delete] = h->arry[find_index_of_parent(index_to_delete)];
+        h->arry[find_index_of_parent(index_to_delete)] = temp;
+
+        index_to_delete=find_index_of_parent(index_to_delete);
+    };
+    extractMin(h);
 }
 
 int main()
@@ -165,6 +184,23 @@ int main()
         insert_in_a_heap(data, &min_heap);
     }
     print_heap_arry(min_heap);
-    printf("\nThe minimum element inside the heap was %d.\n",extractMin(&min_heap));
+    printf("\nThe minimum element inside the heap was %d.\n", extractMin(&min_heap));
     print_heap_arry(min_heap);
+    while (1)
+    {
+        int index;
+        printf("\nEnter the index of the element to delete(-999 to stop): ");
+        scanf("%d", &index);
+        if (index == -999)
+        {
+            break;
+        }
+        if (index < 0 || index >= min_heap.currentSize)
+        {
+            printf("\nInvalid Index.\n");
+            continue;
+        }
+        delete_a_key(&min_heap, index);
+        print_heap_arry(min_heap);
+    }
 }
