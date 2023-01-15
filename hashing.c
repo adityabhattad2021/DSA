@@ -44,7 +44,7 @@ Node *create_new_node(int data)
 void insert_a_value(HashTable table, int value)
 {
     int generatedHash = hash(value);
-    Node *temp = NULL, *temp1 = NULL;
+    Node *temp = NULL;
     temp = table.array[generatedHash];
 
     if (temp == NULL)
@@ -53,13 +53,11 @@ void insert_a_value(HashTable table, int value)
     }
     else
     {
-        while (temp != NULL && temp->data < value)
+        while (temp->next != NULL)
         {
-            temp1 = temp;
             temp = temp->next;
         }
-        temp1->next = create_new_node(value);
-        temp1->next->next = temp;
+        temp->next=create_new_node(value);
     }
 }
 
@@ -68,9 +66,11 @@ int main()
     HashTable table;
     initializeHashTable(&table, 20);
     insert_a_value(table, 12);
-    insert_a_value(table, 22);
     insert_a_value(table, 32);
-    insert_a_value(table, 23);
+    insert_a_value(table, 22);
+    insert_a_value(table, 22);
+    insert_a_value(table, 2);
+    insert_a_value(table, 42);
     insert_a_value(table, 6);
     insert_a_value(table, 8);
     insert_a_value(table, 29);
@@ -78,12 +78,13 @@ int main()
     insert_a_value(table, 34);
     for (int x = 0; x < table.size; x++)
     {
-        Node *temp=NULL;
-        temp=table.array[x];
-        printf("\nRow %d: ",x);
-        while(temp!=NULL){
-            printf("%d ",temp->data);
-            temp=temp->next;
+        Node *temp = NULL;
+        temp = table.array[x];
+        printf("\nRow %d: ", x);
+        while (temp != NULL)
+        {
+            printf("%d ", temp->data);
+            temp = temp->next;
         }
     }
 }
