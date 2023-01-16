@@ -44,9 +44,9 @@ Node *create_new_node(int data)
 void insert_a_value(HashTable table, int value)
 {
     int generatedHash = hash(value);
-    Node *temp = NULL;
+    Node *temp = NULL,*head=NULL,*temp1=NULL;
     temp = table.array[generatedHash];
-
+    head=table.array[generatedHash];
     if (temp == NULL)
     {
         table.array[generatedHash] = create_new_node(value);
@@ -59,6 +59,20 @@ void insert_a_value(HashTable table, int value)
         }
         temp->next=create_new_node(value);
     }
+}
+
+void search_a_value(HashTable table,int value){
+    int generatedHash=hash(value);
+    Node *temp=NULL;
+    temp=table.array[generatedHash];
+    while(temp){
+        if(temp->data==value){
+            printf("\nElement found in the hashtable.\n");
+            return;
+        }
+        temp=temp->next;
+    }
+    printf("\nElement not found.\n");
 }
 
 int main()
@@ -86,5 +100,14 @@ int main()
             printf("%d ", temp->data);
             temp = temp->next;
         }
+    }
+    while(1){
+        int data;
+        printf("Enter the value to find in the hash table(-999 to stop): ");
+        scanf("%d",&data);
+        if(data==-999){
+            break;
+        }
+        search_a_value(table,data);
     }
 }
