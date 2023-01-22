@@ -163,18 +163,131 @@ void list_traversal(Node *head)
     }
 }
 
-int main()
+typedef struct queue
 {
     Node *head;
-    head = NULL;
-    insert_from_beginning(&head, 21);
-    insert_from_beginning(&head, 32);
-    insert_from_beginning(&head, 43);
-    insert_from_beginning(&head, 25);
-    remove_from_beginning(&head);
-    insert_from_end(&head, 48);
-    insert_from_end(&head, 85);
-    insert_from_end(&head, 64);
-    remove_from_end(&head);
-    list_traversal(head);
+    Node *tail;
+} Queue;
+
+void initializeQueue(Queue *q)
+{
+    q->head = NULL;
+    q->tail = NULL;
+}
+
+int isQueueEmpty(Queue q)
+{
+    if (q.head == NULL && q.tail == NULL)
+    {
+        return 1;
+    }
+    return 0;
+}
+
+void enqueue(Queue *q, int data)
+{
+    Node *newNode = create_new_node(data);
+    if (q->head == NULL && q->tail == NULL)
+    {
+        q->head = newNode;
+        q->tail = newNode;
+    }
+    else
+    {
+        if (q->head == q->tail)
+        {
+            q->tail = newNode;
+            q->head->next = q->tail;
+            return;
+        }
+        q->tail->next = newNode;
+        q->tail = q->tail->next;
+    }
+}
+
+int dequeue(Queue *q)
+{
+    int toReturn;
+    if (isQueueEmpty(*q))
+    {
+        printf("\nQueue is already empty.\n");
+        exit(1);
+    }
+    if (q->head == q->tail)
+    {
+        toReturn = q->head->data;
+        free(q->head);
+        q->head = NULL;
+        q->tail = NULL;
+    }
+    else
+    {
+        Node *temp = NULL;
+        temp = q->head;
+        q->head = q->head->next;
+        toReturn = temp->data;
+        free(temp);
+        temp = NULL;
+    }
+    return toReturn;
+}
+
+// Breadth first traversal
+void BFT(int matrix[][7], int start, int number_of_ele)
+{
+    Queue q;
+    initializeQueue(&q);
+    int visited[7] = {0, 0, 0, 0, 0, 0, 0};
+    int i;
+    printf("%d ", start);
+    enqueue(&q, start);
+    visited[start] = 1;
+    while (!isQueueEmpty(q))
+    {
+        i = dequeue(&q);
+        for (int j = 1; j < number_of_ele; j++)
+        {
+            if (matrix[i][j] == 1 && visited[j] == 0)
+            {
+                printf("%d ", j);
+                enqueue(&q, j);
+                visited[j] = 1;
+            }
+        }
+    }
+}
+
+// Depth First Trversal
+void DFT(int matrix[][7], int start, int num_of_ele)
+{
+    static int visited[7] = {0};
+    if (visited[start] == 0)
+    {
+        printf("%d ", start);
+        visited[start] = 1;
+        for (int j = 1; j < num_of_ele; j++)
+        {
+            if (matrix[start][j] == 1 && visited[j] == 0)
+            {
+                DFT(matrix,j,num_of_ele);
+            }
+        }
+    }
+}
+
+int main()
+{
+    int adjencency_matrix[][7] = {{0, 0, 0, 0, 0, 0, 0},
+                                  {0, 0, 1, 1, 0, 0, 0},
+                                  {0, 1, 0, 0, 1, 0, 0},
+                                  {0, 1, 0, 0, 1, 0, 0},
+                                  {0, 0, 1, 1, 0, 1, 1},
+                                  {0, 0, 0, 0, 1, 0, 0},
+                                  {0, 0, 0, 0, 1, 0, 0}};
+
+    // Breadth first traversal
+    // BFT(adjencency_matrix, 1, 7);
+
+    // Depth First Trversal
+    DFT(adjencency_matrix, 2, 7);
 }
