@@ -1,9 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-
-
-
 typedef struct node
 {
     struct node *previous;
@@ -178,18 +175,52 @@ void print_the_list(Node *head)
     }
 }
 
-void count_number_of_nodes(Node *head){
-    if(head==NULL){
+void print_the_list_in_reverse(Node *head)
+{
+    if (head == NULL)
+    {
+        return;
+    }
+    print_the_list_in_reverse(head->next);
+    printf("\n(%p ,%d, %p)", head->previous, head->data, head->next);
+}
+
+// Using bubble sort
+void sort_the_list(Node *head)
+{
+    Node *tempX = NULL, *tempY = NULL;
+    tempX = head;
+    while (tempX->next != NULL)
+    {
+        tempY = head;
+        while (tempY->next != NULL)
+        {
+            if (tempY->data > tempY->next->data)
+            {
+                int temp = tempY->data;
+                tempY->data = tempY->next->data;
+                tempY->next->data = temp;
+            }
+            tempY = tempY->next;
+        }
+        tempX = tempX->next;
+    }
+}
+
+void count_number_of_nodes(Node *head)
+{
+    if (head == NULL)
+    {
         printf("\nThe doubly linked list is empty.\n");
         return;
     }
-    int counter=0;
-    Node *ptr=NULL;
-    ptr=head;
-    while(ptr!=NULL){
+    int counter = 0;
+    Node *ptr = NULL;
+    ptr = head;
+    while (ptr != NULL)
+    {
         counter++;
-        ptr=ptr->next;
+        ptr = ptr->next;
     }
-    printf("\nNumber of elements in doubly linked list are: %d.\n",counter);
+    printf("\nNumber of elements in doubly linked list are: %d.\n", counter);
 }
-
