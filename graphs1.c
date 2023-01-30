@@ -79,7 +79,7 @@ typedef struct graph_vertex
 
 typedef struct singly_linked_list_node
 {
-    Vertex vertex;
+    Vertex *vertex;
     struct singly_linked_list_node *next;
 } SLLNode;
 
@@ -89,7 +89,7 @@ typedef struct graph_graph
     SLLNode *head;
 } Graph;
 
-SLLNode *create_new_singly_node(Vertex vertex)
+SLLNode *create_new_singly_node(Vertex *vertex)
 {
     SLLNode *newNode = (SLLNode *)malloc(sizeof(SLLNode));
     newNode->vertex = vertex;
@@ -102,7 +102,7 @@ void initializeGraph(Graph *graph)
 }
 
 // Here the graph will contain singly linked list which will contain doubly linkes list.
-void addNewSinglyNode(Graph *sll, Vertex vertex)
+void addNewSinglyNode(Graph *sll, Vertex *vertex)
 {
     SLLNode *newNode = create_new_singly_node(vertex);
     if (sll->head == NULL)
@@ -160,15 +160,18 @@ void setVertexId(Vertex *v, int vertex_id)
 
 void setVertexName(Vertex *v, char vertex_name[])
 {
+    v->vertexName = malloc(100 * sizeof(char));
     int vertexNameLen = 0;
     while (vertex_name[vertexNameLen] != '\0')
     {
         vertexNameLen++;
     }
-    for (int x = 0; x < vertexNameLen; x++)
+    int x;
+    for (x = 0; x < vertexNameLen; x++)
     {
         v->vertexName[x] = vertex_name[x];
     }
+    v->vertexName[x] = '\0';
 }
 
 int getVertexId(Vertex v)
@@ -181,8 +184,34 @@ char *getVertexName(Vertex v)
     return v.vertexName;
 }
 
+void addVertexToGraph(Graph *graph){
+    int vertex_id;
+    char *vertex_name=(char*)malloc(sizeof(char)*100);
+    printf("Enter the vertex id: ");
+    scanf("%d",&vertex_id);
+    printf("Enter vertex name: ");
+    scanf("%s",vertex_name);
+    Vertex *v=(Vertex *)malloc(sizeof(Vertex));
+    setVertexId(v,vertex_id);
+    setVertexName(v,vertex_name);
+    if(graph->head!=NULL){
+        SLLNode *temp=NULL;
+        temp=graph->head;
+        while(temp){
+            if(temp->vertex->vertexId==vertex_id){
+                printf("\nVertex already exists.\n");
+                return;
+            }
+            temp=temp->next;
+        }
+    }
+    addNewSinglyNode(graph,v);
+}
+
 int main()
 {
+    Graph graph;
+    initializeGraph(&graph);
     int toStop = 0;
     while (!toStop)
     {
@@ -205,6 +234,7 @@ int main()
         {
         case 1:
         {
+            addVertexToGraph(&graph);
             break;
         }
         case 2:
