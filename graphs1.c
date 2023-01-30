@@ -1,17 +1,11 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 typedef struct graph_edge
 {
     int destination_vertex_ID;
     int weight;
 } Edge;
-
-typedef struct graph_vertex
-{
-    int vertexId;
-    char vertexName[100];
-    // Pointer to the head of the doubly linked list.
-} Vertex;
 
 /*---------------------------------------------------------*/
 
@@ -34,7 +28,7 @@ void initializeDLL(DLL *dll)
     dll->head = NULL;
 }
 
-DLLNode *create_new_node(Edge edge)
+DLLNode *create_new_doubly_node(Edge edge)
 {
     DLLNode *newNode = (DLLNode *)malloc(sizeof(DLLNode));
     newNode->edge = edge;
@@ -43,9 +37,9 @@ DLLNode *create_new_node(Edge edge)
     return newNode;
 }
 
-void addNewNode(DLL *dll, Edge edge)
+void addNewDoublyNode(DLL *dll, Edge edge)
 {
-    DLLNode *newNode = create_new_node(edge);
+    DLLNode *newNode = create_new_doubly_node(edge);
     if (dll->head == NULL)
     {
         dll->head = newNode;
@@ -67,6 +61,69 @@ void addNewNode(DLL *dll, Edge edge)
             }
             temp->next = newNode;
             newNode->previous = temp;
+        }
+    }
+}
+
+/*---------------------------------------------------------*/
+
+/*---------------------------------------------------------*/
+
+typedef struct graph_vertex
+{
+    int vertexId;
+    char *vertexName;
+    // Pointer to the head of the doubly linked list.
+    DLL edgeList;
+} Vertex;
+
+typedef struct singly_linked_list_node
+{
+    Vertex vertex;
+    struct singly_linked_list_node *next;
+} SLLNode;
+
+typedef struct graph_graph
+{
+    // Pointer to head of a singly linked list.
+    SLLNode *head;
+} Graph;
+
+SLLNode *create_new_singly_node(Vertex vertex)
+{
+    SLLNode *newNode = (SLLNode *)malloc(sizeof(SLLNode));
+    newNode->vertex = vertex;
+    newNode->next = NULL;
+    return newNode;
+}
+void initializeGraph(Graph *graph)
+{
+    graph->head = NULL;
+}
+
+// Here the graph will contain singly linked list which will contain doubly linkes list.
+void addNewSinglyNode(Graph *sll, Vertex vertex)
+{
+    SLLNode *newNode = create_new_singly_node(vertex);
+    if (sll->head == NULL)
+    {
+        sll->head = newNode;
+    }
+    else
+    {
+        if (sll->head->next == NULL)
+        {
+            sll->head->next = newNode;
+        }
+        else
+        {
+            SLLNode *temp = NULL;
+            temp = sll->head;
+            while (temp->next != NULL)
+            {
+                temp = temp->next;
+            }
+            temp->next = newNode;
         }
     }
 }
@@ -96,8 +153,103 @@ int getEdgeWeight(Edge e)
     return e.weight;
 }
 
+void setVertexId(Vertex *v, int vertex_id)
+{
+    v->vertexId = vertex_id;
+}
+
+void setVertexName(Vertex *v, char vertex_name[])
+{
+    int vertexNameLen = 0;
+    while (vertex_name[vertexNameLen] != '\0')
+    {
+        vertexNameLen++;
+    }
+    for (int x = 0; x < vertexNameLen; x++)
+    {
+        v->vertexName[x] = vertex_name[x];
+    }
+}
+
+int getVertexId(Vertex v)
+{
+    return v.vertexId;
+}
+
+char *getVertexName(Vertex v)
+{
+    return v.vertexName;
+}
+
 int main()
 {
-
+    int toStop = 0;
+    while (!toStop)
+    {
+        printf("\nChoose from the following operations.");
+        printf("\n1. Add a vertex.");
+        printf("\n2. Update a vertex.");
+        printf("\n3. Delete a vertex.");
+        printf("\n4. Add an edge.");
+        printf("\n5. Update an edge.");
+        printf("\n6. Delete an edge.");
+        printf("\n7. Check if two vertices are connected.");
+        printf("\n8. Print all the connected vertices of the vertex.");
+        printf("\n9. Print entire graph.");
+        printf("\n10. Clear Terminal.");
+        printf("\n11. Stop");
+        printf("\nEnter your choice: ");
+        int choice;
+        scanf("%d", &choice);
+        switch (choice)
+        {
+        case 1:
+        {
+            break;
+        }
+        case 2:
+        {
+            break;
+        }
+        case 3:
+        {
+            break;
+        }
+        case 4:
+        {
+            break;
+        }
+        case 5:
+        {
+            break;
+        }
+        case 6:
+        {
+            break;
+        }
+        case 7:
+        {
+            break;
+        }
+        case 8:
+        {
+            break;
+        }
+        case 9:
+        {
+            break;
+        }
+        case 10:
+        {
+            system("clear");
+            break;
+        }
+        case 11:
+        {
+            toStop = 1;
+            break;
+        }
+        }
+    }
     return 0;
 }
