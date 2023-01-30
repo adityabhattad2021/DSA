@@ -184,28 +184,58 @@ char *getVertexName(Vertex v)
     return v.vertexName;
 }
 
-void addVertexToGraph(Graph *graph){
+void addVertexToGraph(Graph *graph)
+{
     int vertex_id;
-    char *vertex_name=(char*)malloc(sizeof(char)*100);
+    char *vertex_name = (char *)malloc(sizeof(char) * 100);
     printf("Enter the vertex id: ");
-    scanf("%d",&vertex_id);
+    scanf("%d", &vertex_id);
     printf("Enter vertex name: ");
-    scanf("%s",vertex_name);
-    Vertex *v=(Vertex *)malloc(sizeof(Vertex));
-    setVertexId(v,vertex_id);
-    setVertexName(v,vertex_name);
-    if(graph->head!=NULL){
-        SLLNode *temp=NULL;
-        temp=graph->head;
-        while(temp){
-            if(temp->vertex->vertexId==vertex_id){
+    scanf("%s", vertex_name);
+    Vertex *v = (Vertex *)malloc(sizeof(Vertex));
+    setVertexId(v, vertex_id);
+    setVertexName(v, vertex_name);
+    initializeDLL(&(v->edgeList));
+    if (graph->head != NULL)
+    {
+        SLLNode *temp = NULL;
+        temp = graph->head;
+        while (temp)
+        {
+            if (temp->vertex->vertexId == vertex_id)
+            {
                 printf("\nVertex already exists.\n");
                 return;
             }
-            temp=temp->next;
+            temp = temp->next;
         }
     }
-    addNewSinglyNode(graph,v);
+    addNewSinglyNode(graph, v);
+}
+
+void printEntireGraph(Graph graph)
+{
+    if (graph.head == NULL)
+    {
+        printf("\nGraph is empty.\n");
+    }
+    else
+    {
+        SLLNode *temp1 = NULL;
+        temp1 = graph.head;
+        while (temp1)
+        {
+            printf("\nVertex Name: %s,Vertex Id: %d", temp1->vertex->vertexName, temp1->vertex->vertexId);
+            DLLNode *temp2 = NULL;
+            temp2 = temp1->vertex->edgeList.head;
+            while (temp2)
+            {
+                printf("%d ", temp2->edge.destination_vertex_ID);
+                temp2 = temp2->next;
+            }
+            temp1 = temp1->next;
+        }
+    }
 }
 
 int main()
@@ -267,6 +297,7 @@ int main()
         }
         case 9:
         {
+            printEntireGraph(graph);
             break;
         }
         case 10:
