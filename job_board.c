@@ -159,6 +159,54 @@ void addCandidateToJobTitle(allJobs *all_jobs, char *title, Candidate *newCandid
         newNode->next = NULL;
         temp2->next = newNode;
     }
+    // Sort the list according to the skill level.
+    jobCandidateList *temp = NULL;
+    temp = all_jobs->head;
+    while (temp)
+    {
+        if (strcmp(temp->job->job_title, title) == 0)
+        {
+            sortList(temp->job);
+            return;
+        }
+        temp = temp->next;
+    }
+}
+
+
+/// @brief Sort the list of candidate according to the skill level.
+/// @param list: The list to be sorted. 
+void sortList(listOfCandidate *list)
+{
+    if (list->head == NULL)
+    {
+        return;
+    }
+    else
+    {
+        Candidate *temp = NULL;
+        temp = list->head;
+        while (temp->next != NULL)
+        {
+            Candidate *temp2 = NULL;
+            temp2 = temp->next;
+            while (temp2)
+            {
+                if (temp->skill_level < temp2->skill_level)
+                {
+                    float tempSkill = temp->skill_level;
+                    temp->skill_level = temp2->skill_level;
+                    temp2->skill_level = tempSkill;
+                    char tempName[100];
+                    strcpy(tempName, temp->candidateName);
+                    strcpy(temp->candidateName, temp2->candidateName);
+                    strcpy(temp2->candidateName, tempName);
+                }
+                temp2 = temp2->next;
+            }
+            temp = temp->next;
+        }
+    }
 }
 
 void printAllJobs(allJobs all_jobs)
