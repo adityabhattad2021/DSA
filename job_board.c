@@ -223,6 +223,7 @@ void addCandidateToJobTitle(allJobs *all_jobs, char *title, Candidate *newCandid
 /// @return The removed candidate.
 Candidate *removeCandidates(allJobs *all_jobs, char *forTitle)
 {
+
     jobCandidateList *temp = NULL;
     temp = all_jobs->head;
     while (temp)
@@ -231,6 +232,14 @@ Candidate *removeCandidates(allJobs *all_jobs, char *forTitle)
         {
             Candidate *temp1 = NULL, *temp2 = NULL;
             temp1 = temp->job->head;
+            if(temp1==NULL){
+                printf("No candidate available");
+                return temp1;
+            }
+            if(temp1->next==NULL){
+                temp->job->head=NULL;
+                return temp1;
+            }
             while (temp1->next->next != NULL)
             {
                 temp1 = temp1->next;
@@ -243,6 +252,7 @@ Candidate *removeCandidates(allJobs *all_jobs, char *forTitle)
         temp = temp->next;
     }
     printf("\nNo candidate found for the given job title.\n");
+    return NULL;
 }
 
 void printAllJobs(allJobs all_jobs)
@@ -273,6 +283,7 @@ void initializeQueue(candidateQueue *candidate_queue)
 queueNode *createNodeQueueNode(char *candidateName, float candidateSkillLevel)
 {
     queueNode *newNode = (queueNode *)malloc(sizeof(queueNode));
+    newNode->candidateName=malloc(sizeof(char));
     strcpy(newNode->candidateName, candidateName);
     newNode->skill_level = candidateSkillLevel;
     newNode->next = NULL;
@@ -282,7 +293,7 @@ queueNode *createNodeQueueNode(char *candidateName, float candidateSkillLevel)
 
 int isEmpty(candidateQueue cq)
 {
-    if (cq->head == NULL && cq->tail == NULL)
+    if (cq.head == NULL && cq.tail == NULL)
     {
         return 1;
     }
@@ -316,6 +327,7 @@ queueNode *dequeue(candidateQueue *cq)
     if (isEmpty(*cq))
     {
         printf("\nNo candidate found.\n");
+        exit(1);
     }
     else if (cq->head = cq->tail)
     {
@@ -335,31 +347,71 @@ queueNode *dequeue(candidateQueue *cq)
 int main()
 {
     allJobs all_jobs;
+    candidateQueue cq;
     initializeAllJobs(&all_jobs);
+    initializeQueue(&cq);
+    int choice;
     while (1)
     {
-        printf("Enter the job title: ");
-        char jobTitle[100];
-        scanf("%s", jobTitle);
-        printf("Enter the name of the candidate: ");
-        char name[100];
-        scanf("%s", name);
-        printf("Enter candidate skill level: ");
-        float skill;
-        scanf("%f", &skill);
-        Candidate *newCandidate = createNewCandidate(name, skill);
-        addCandidateToJobTitle(&all_jobs, jobTitle, newCandidate);
-        printf("To stop press -999, else any other number: ");
-        int toStop;
-        scanf("%d", &toStop);
-        if (toStop == -999)
+        printf("\nWelcome to job board!");
+        printf("\nPress 1 if you are candidate.");
+        printf("\nPress 2 if you are recruter.");
+        printf("\nPress 3 to quit.");
+        printf("\nEnter your choice: ");
+        scanf("%d", &choice);
+        if (choice == 1)
+        {
+            system("clear");
+            printf("Enter the job title: ");
+            char jobTitle[100];
+            scanf("%s", jobTitle);
+            printf("Enter your name: ");
+            char name[100];
+            scanf("%s", name);
+            printf("Enter your skill level alloted in the test: ");
+            float skill;
+            scanf("%f", &skill);
+            Candidate *newCandidate = createNewCandidate(name, skill);
+            addCandidateToJobTitle(&all_jobs, jobTitle, newCandidate);
+        }
+        else if (choice == 2)
+        {
+            system("clear");
+            char role[100];
+            int numOfCandidate;
+            printf("Enter the role for which you need candidates:");
+            scanf("%s", role);
+            printf("How many candidates do you want: ");
+            scanf("%d", &numOfCandidate);
+            for (int x = 0; x < numOfCandidate; x++)
+            {
+                Candidate *removedCandidate = NULL;
+                removedCandidate = removeCandidates(&all_jobs, role);
+                if(removedCandidate==NULL){
+                    break;
+                }
+                enqueue(&cq, removedCandidate->candidateName, removedCandidate->skill_level);
+            }
+            system("clear");
+            printf("\nThis are the candidate with the highest skill level for the role: ");
+            queueNode *candidate = NULL;
+            for (int x = 0; x < numOfCandidate && !isEmpty(cq); x++)
+            {
+                candidate = dequeue(&cq);
+                printf("\n\nCandidate %d", x + 1);
+                printf("\n\t%s", candidate->candidateName);
+                printf("\n\t%.2f", candidate->skill_level);
+            }
+            int num;
+            printf("\nPress 1 for next screen: ");
+            scanf("%d",&num);
+        }
+        else
         {
             break;
         }
+        
     }
-    Candidate *removedCandidate = NULL;
-    removedCandidate = removeCandidates(&all_jobs, "SDE1");
-    printAllJobs(all_jobs);
-    printf("\nThe removed candidate was: %s", removedCandidate->candidateName);
+
     return 0;
 }
