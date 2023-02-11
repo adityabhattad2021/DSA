@@ -18,7 +18,6 @@ typedef struct doubly_linked_list
     struct doubly_linked_list_node *head;
 } listOfCandidate;
 
-// TODO: change to more appropriate name.
 typedef struct singly_linked_list_node
 {
     struct doubly_linked_list *job;
@@ -29,6 +28,20 @@ typedef struct singly_linked_list
 {
     struct singly_linked_list_node *head;
 } allJobs;
+
+/// @brief This will hold the candidate in queue for perticular order.
+typedef struct queue_node
+{
+    char *candidateName;
+    float skill_level;
+    struct queue_node *next;
+} queueNode;
+
+typedef struct queue_of_candidate
+{
+    queueNode *head;
+    queueNode *tail;
+} candidateQueue;
 
 void initializeAllJobs(allJobs *list)
 {
@@ -131,7 +144,7 @@ void sortList(listOfCandidate *list)
             temp2 = temp->next;
             while (temp2)
             {
-                if (temp->skill_level  >temp2->skill_level)
+                if (temp->skill_level > temp2->skill_level)
                 {
                     float tempSkill = temp->skill_level;
                     temp->skill_level = temp2->skill_level;
@@ -251,6 +264,74 @@ void printAllJobs(allJobs all_jobs)
     }
 }
 
+void initializeQueue(candidateQueue *candidate_queue)
+{
+    candidate_queue->head = NULL;
+    candidate_queue->tail = NULL;
+}
+
+queueNode *createNodeQueueNode(char *candidateName, float candidateSkillLevel)
+{
+    queueNode *newNode = (queueNode *)malloc(sizeof(queueNode));
+    strcpy(newNode->candidateName, candidateName);
+    newNode->skill_level = candidateSkillLevel;
+    newNode->next = NULL;
+
+    return newNode;
+}
+
+int isEmpty(candidateQueue cq)
+{
+    if (cq->head == NULL && cq->tail == NULL)
+    {
+        return 1;
+    }
+    return 0;
+}
+
+void enqueue(candidateQueue *cq, char *cName, float cSkill)
+{
+    queueNode *newNode = createNodeQueueNode(cName, cSkill);
+    if (isEmpty(*cq))
+    {
+        cq->head = newNode;
+        cq->tail = newNode;
+    }
+    else
+    {
+        if (cq->head == cq->tail)
+        {
+            cq->head->next = newNode;
+            cq->tail = newNode;
+            return;
+        }
+        cq->tail->next = newNode;
+        cq->tail = newNode;
+    }
+}
+
+queueNode *dequeue(candidateQueue *cq)
+{
+    queueNode *toReturn = NULL;
+    if (isEmpty(*cq))
+    {
+        printf("\nNo candidate found.\n");
+    }
+    else if (cq->head = cq->tail)
+    {
+        toReturn = cq->head;
+        cq->head = NULL;
+        cq->tail = NULL;
+    }
+    else
+    {
+        toReturn = cq->head;
+        cq->head = cq->head->next;
+        toReturn->next = NULL;
+    }
+    return toReturn;
+}
+
 int main()
 {
     allJobs all_jobs;
@@ -276,9 +357,9 @@ int main()
             break;
         }
     }
-    Candidate *removedCandidate=NULL;
-    removedCandidate=removeCandidates(&all_jobs,"SDE1");
+    Candidate *removedCandidate = NULL;
+    removedCandidate = removeCandidates(&all_jobs, "SDE1");
     printAllJobs(all_jobs);
-    printf("\nThe removed candidate was: %s",removedCandidate->candidateName);
+    printf("\nThe removed candidate was: %s", removedCandidate->candidateName);
     return 0;
 }
