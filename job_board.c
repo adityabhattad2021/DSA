@@ -113,6 +113,41 @@ void printListOfCandidate(listOfCandidate list)
     }
 }
 
+/// @brief Sort the list of candidate according to the skill level.
+/// @param list: The list to be sorted.
+void sortList(listOfCandidate *list)
+{
+    if (list->head == NULL)
+    {
+        return;
+    }
+    else
+    {
+        Candidate *temp = NULL;
+        temp = list->head;
+        while (temp->next != NULL)
+        {
+            Candidate *temp2 = NULL;
+            temp2 = temp->next;
+            while (temp2)
+            {
+                if (temp->skill_level  >temp2->skill_level)
+                {
+                    float tempSkill = temp->skill_level;
+                    temp->skill_level = temp2->skill_level;
+                    temp2->skill_level = tempSkill;
+                    char tempName[100];
+                    strcpy(tempName, temp->candidateName);
+                    strcpy(temp->candidateName, temp2->candidateName);
+                    strcpy(temp2->candidateName, tempName);
+                }
+                temp2 = temp2->next;
+            }
+            temp = temp->next;
+        }
+    }
+}
+
 /// @brief Add a new doubly linked list not in its resepective doubly linked list according to the job title.
 /// @param headOfList: The list of all jobs (i.e. singly linked list containing doubly linked list).
 /// @param newCandidate: The candidate to add.
@@ -120,7 +155,6 @@ void addCandidateToJobTitle(allJobs *all_jobs, char *title, Candidate *newCandid
 {
     if (all_jobs->head == NULL)
     {
-        printf("asdasd");
         listOfCandidate *newList = NULL;
         newList = (listOfCandidate *)malloc(sizeof(listOfCandidate));
         initializeListOfCandidate(newList);
@@ -141,9 +175,10 @@ void addCandidateToJobTitle(allJobs *all_jobs, char *title, Candidate *newCandid
             if (strcmp(temp->job->job_title, title) == 0)
             {
                 addCandidate(temp->job, newCandidate);
+                sortList(temp->job);
                 return;
             }
-            temp=temp->next;
+            temp = temp->next;
         }
         listOfCandidate *newList = NULL;
         newList = (listOfCandidate *)malloc(sizeof(listOfCandidate));
@@ -164,49 +199,37 @@ void addCandidateToJobTitle(allJobs *all_jobs, char *title, Candidate *newCandid
     temp = all_jobs->head;
     while (temp)
     {
-        if (strcmp(temp->job->job_title, title) == 0)
-        {
-            sortList(temp->job);
-            return;
-        }
+        sortList(temp->job);
         temp = temp->next;
     }
 }
 
-
-/// @brief Sort the list of candidate according to the skill level.
-/// @param list: The list to be sorted. 
-void sortList(listOfCandidate *list)
+/// @brief Removes the last candidate from the give title for all jobs.
+/// @param all_jobs: pointer to all the jobs.
+/// @param forTitle: the job title to remove candidate from.
+/// @return The removed candidate.
+Candidate *removeCandidates(allJobs *all_jobs, char *forTitle)
 {
-    if (list->head == NULL)
+    jobCandidateList *temp = NULL;
+    temp = all_jobs->head;
+    while (temp)
     {
-        return;
-    }
-    else
-    {
-        Candidate *temp = NULL;
-        temp = list->head;
-        while (temp->next != NULL)
+        if (strcmp(temp->job->job_title, forTitle) == 0)
         {
-            Candidate *temp2 = NULL;
-            temp2 = temp->next;
-            while (temp2)
+            Candidate *temp1 = NULL, *temp2 = NULL;
+            temp1 = temp->job->head;
+            while (temp1->next->next != NULL)
             {
-                if (temp->skill_level < temp2->skill_level)
-                {
-                    float tempSkill = temp->skill_level;
-                    temp->skill_level = temp2->skill_level;
-                    temp2->skill_level = tempSkill;
-                    char tempName[100];
-                    strcpy(tempName, temp->candidateName);
-                    strcpy(temp->candidateName, temp2->candidateName);
-                    strcpy(temp2->candidateName, tempName);
-                }
-                temp2 = temp2->next;
+                temp1 = temp1->next;
             }
-            temp = temp->next;
+            temp2 = temp1->next;
+            temp1->next = NULL;
+            temp2->previous = NULL;
+            return temp2;
         }
+        temp = temp->next;
     }
+    printf("\nNo candidate found for the given job title.\n");
 }
 
 void printAllJobs(allJobs all_jobs)
@@ -218,13 +241,13 @@ void printAllJobs(allJobs all_jobs)
         printf("\n%s-->", temp->job->job_title);
         Candidate *temp2 = NULL;
         temp2 = temp->job->head;
-        while (temp2)
+        while (temp2->next)
         {
-            printf("%s->",temp2->candidateName);
-            temp2=temp2->next;
+            printf("Name: %s,Skill: %.2f->", temp2->candidateName, temp2->skill_level);
+            temp2 = temp2->next;
         }
-        
-        temp=temp->next;
+        printf("Name: %s,Skill: %.2f", temp2->candidateName, temp2->skill_level);
+        temp = temp->next;
     }
 }
 
@@ -253,6 +276,9 @@ int main()
             break;
         }
     }
+    Candidate *removedCandidate=NULL;
+    removedCandidate=removeCandidates(&all_jobs,"SDE1");
     printAllJobs(all_jobs);
+    printf("\nThe removed candidate was: %s",removedCandidate->candidateName);
     return 0;
 }
