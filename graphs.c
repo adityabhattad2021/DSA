@@ -55,6 +55,10 @@
 // We will have to use queue and stack to perform Breadth first search and Depth first search on the adjacency matrix of the graph.
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
+
+#define INFINITY 99999999
+#define VERTICES 5
 
 typedef struct node
 {
@@ -151,16 +155,19 @@ int peek(Queue q)
 }
 
 // Breadth first traversal.
-int BFT(Queue *q,int matrix[][7],int size,int start)
+int BFT(Queue *q, int matrix[][7], int size, int start)
 {
-    static int visited[7]={0};
-    printf("%d ",start);
-    visited[start]=1;
-    enqueue(q,start);
-    while(!isQueueEmpty(*q)){
-        int i=dequeue(q);
-        for(int j=1;j<=size;j++){
-            if(matrix[i][j]==1 && visited[j]==0){
+    static int visited[7] = {0};
+    printf("%d ", start);
+    visited[start] = 1;
+    enqueue(q, start);
+    while (!isQueueEmpty(*q))
+    {
+        int i = dequeue(q);
+        for (int j = 1; j <= size; j++)
+        {
+            if (matrix[i][j] == 1 && visited[j] == 0)
+            {
                 printf("%d ", j);
                 enqueue(q, j);
                 visited[j] = 1;
@@ -169,16 +176,56 @@ int BFT(Queue *q,int matrix[][7],int size,int start)
     }
 }
 
-int DFT(Queue *q,int matrix[][7],int size,int start){
-    static int visited[7]={0};
-    printf("%d ",start);
-    visited[start]=7;
-    for(int x=1;x<=size;x++){
-        if(matrix[start][x]==1 && visited[x]==0){
-            DFT(q,matrix,size,x);
+// Depth first traversal.
+int DFT(Queue *q, int matrix[][7], int size, int start)
+{
+    static int visited[7] = {0};
+    printf("%d ", start);
+    visited[start] = 7;
+    for (int x = 1; x <= size; x++)
+    {
+        if (matrix[start][x] == 1 && visited[x] == 0)
+        {
+            DFT(q, matrix, size, x);
         }
     }
 }
+
+
+void primsMinimumSpanningTreeAlgo(int matrix[][VERTICES]){
+    int number_of_edges;
+    int selected_edges[VERTICES];
+    for(int x=0;x<VERTICES;x++){
+        selected_edges[x]=false;
+    }
+    number_of_edges=0;
+    selected_edges[0]=true;
+    int row;int col;
+    printf("Edge   :   Weight\n");
+    while(number_of_edges<VERTICES-1){
+        int min = INFINITY;
+        row=0;
+        col=0;
+        for(int i=0;i<VERTICES;i++){
+            if(selected_edges[i]==true){
+                for(int j=0;j<VERTICES;j++){
+                    if(selected_edges[j]==false && matrix[i][j]!=0){
+                        if(min>matrix[i][j]){
+                            row=i;
+                            col=j;
+                        }
+                    }
+                }
+            }
+        }
+        printf("%d - %d  :   %d\n",row,col,matrix[row][col]);
+        selected_edges[col]=true;
+        number_of_edges++;
+    }
+}
+
+
+
 
 int main()
 {
@@ -192,11 +239,20 @@ int main()
     Queue q;
     initializeQueue(&q);
 
-    printf("\nBreadth first traversal of the graph is: ");
-    BFT(&q,adjencency_matrix,7,1);
+    int weighted_adjacency_matrix[VERTICES][VERTICES] = {
+        {0, 9, 75, 0, 0},
+        {9, 0, 95, 19, 42},
+        {75, 95, 0, 51, 66},
+        {0, 19, 51, 0, 31},
+        {0, 42, 66, 31, 0}};
 
-    printf("\nDepth first traversal of the graph is: ");
-    DFT(&q,adjencency_matrix,7,1);
+    // printf("\nBreadth first traversal of the graph is: ");
+    // BFT(&q, adjencency_matrix, 7, 1);
+
+    // printf("\nDepth first traversal of the graph is: ");
+    // DFT(&q, adjencency_matrix, 7, 1);
+
+    primsMinimumSpanningTreeAlgo(weighted_adjacency_matrix);
 
     return 0;
 }
