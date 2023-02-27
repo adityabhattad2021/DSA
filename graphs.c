@@ -159,10 +159,23 @@ int BFT(Queue *q,int matrix[][7],int size,int start)
     enqueue(q,start);
     while(!isQueueEmpty(*q)){
         int i=dequeue(q);
-        for(int x=1;x<=size;x++){
-            if(matrix[start][x]==1 && visited[x]==0){
-                BFT(q,matrix,size,x);
+        for(int j=1;j<=size;j++){
+            if(matrix[i][j]==1 && visited[j]==0){
+                printf("%d ", j);
+                enqueue(q, j);
+                visited[j] = 1;
             }
+        }
+    }
+}
+
+int DFT(Queue *q,int matrix[][7],int size,int start){
+    static int visited[7]={0};
+    printf("%d ",start);
+    visited[start]=7;
+    for(int x=1;x<=size;x++){
+        if(matrix[start][x]==1 && visited[x]==0){
+            DFT(q,matrix,size,x);
         }
     }
 }
@@ -179,9 +192,11 @@ int main()
     Queue q;
     initializeQueue(&q);
 
-    printf("Breadth first traversal of the graph is: ");
-    BFT(&q,adjencency_matrix,7,6);
+    printf("\nBreadth first traversal of the graph is: ");
+    BFT(&q,adjencency_matrix,7,1);
 
+    printf("\nDepth first traversal of the graph is: ");
+    DFT(&q,adjencency_matrix,7,1);
 
     return 0;
 }
