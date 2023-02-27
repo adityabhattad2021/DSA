@@ -59,6 +59,7 @@
 
 #define INFINITY 99999999
 #define VERTICES 5
+#define VERTICES1 7
 
 typedef struct node
 {
@@ -191,41 +192,92 @@ int DFT(Queue *q, int matrix[][7], int size, int start)
     }
 }
 
-
-void primsMinimumSpanningTreeAlgo(int matrix[][VERTICES]){
+void primsMinimumSpanningTreeAlgo(int matrix[][VERTICES])
+{
     int number_of_edges;
     int selected_edges[VERTICES];
-    for(int x=0;x<VERTICES;x++){
-        selected_edges[x]=false;
+    for (int x = 0; x < VERTICES; x++)
+    {
+        selected_edges[x] = false;
     }
-    number_of_edges=0;
-    selected_edges[0]=true;
-    int row;int col;
+    number_of_edges = 0;
+    selected_edges[0] = true;
+    int row;
+    int col;
     printf("Edge   :   Weight\n");
-    while(number_of_edges<VERTICES-1){
+    while (number_of_edges < VERTICES - 1)
+    {
         int min = INFINITY;
-        row=0;
-        col=0;
-        for(int i=0;i<VERTICES;i++){
-            if(selected_edges[i]==true){
-                for(int j=0;j<VERTICES;j++){
-                    if(selected_edges[j]==false && matrix[i][j]!=0){
-                        if(min>matrix[i][j]){
-                            row=i;
-                            col=j;
+        row = 0;
+        col = 0;
+        for (int i = 0; i < VERTICES; i++)
+        {
+            if (selected_edges[i] == true)
+            {
+                for (int j = 0; j < VERTICES; j++)
+                {
+                    if (selected_edges[j] == false && matrix[i][j] != 0)
+                    {
+                        if (min > matrix[i][j])
+                        {
+                            min = matrix[i][j];
+                            row = i;
+                            col = j;
                         }
                     }
                 }
             }
         }
-        printf("%d - %d  :   %d\n",row,col,matrix[row][col]);
-        selected_edges[col]=true;
+        printf("%d - %d  :   %d\n", row, col, matrix[row][col]);
+        selected_edges[col] = true;
         number_of_edges++;
     }
 }
 
+int selectMinVertex(int value[],int processed[]){
+    int minimum=INFINITY;
+    int vertex;
+    for(int i=0;i<VERTICES1;i++){
+        if(processed[i]==false && value[i]<minimum){
+            vertex=i;
+            minimum=value[i];
+        }
+    }
+    return vertex;
+}
+
+void dijkstraAlgorithm(int matrix[][VERTICES1]){
+    int parent[VERTICES1];
+    int value[VERTICES1];
+    int processed[VERTICES1];
+
+    for(int i=0;i<VERTICES1;i++){
+        value[i]=INFINITY;
+        processed[i]=false;
+    }
+
+    // Starting vertex.
+    parent[0]=-1;
+    value[0]=0;
+
+    for(int i=0;i<VERTICES1-1;i++){
+        int U=selectMinVertex(value,processed);
+        processed[U]=true;
+
+        for(int j=0;j<VERTICES1;j++){
+           if(matrix[U][j]!=0 && processed[j]==false && value[U]!=INFINITY && value[U]+matrix[U][j]<value[j]){
+            value[j]=value[U]+matrix[U][j];
+            parent[j]=U;
+           } 
+        }
+    }
+
+    for(int i=1;i<VERTICES1;i++){
+        printf("U->V: %d->%d wt = %d\n",parent[i],i,matrix[parent[i]][i]);
+    }
 
 
+}
 
 int main()
 {
@@ -239,12 +291,20 @@ int main()
     Queue q;
     initializeQueue(&q);
 
-    int weighted_adjacency_matrix[VERTICES][VERTICES] = {
-        {0, 9, 75, 0, 0},
-        {9, 0, 95, 19, 42},
-        {75, 95, 0, 51, 66},
-        {0, 19, 51, 0, 31},
-        {0, 42, 66, 31, 0}};
+    int weighted_adjacency_matrix[VERTICES][VERTICES] = {{0, 9, 75, 0, 0},
+                                                         {9, 0, 95, 19, 42},
+                                                         {75, 95, 0, 51, 66},
+                                                         {0, 19, 51, 0, 31},
+                                                         {0, 42, 66, 31, 0}};
+
+    int weighted_adjacency_matrix1[VERTICES1][VERTICES1] = {
+        {0, 0, 1, 2, 0, 0, 0},
+        {0, 0, 2, 0, 0, 3, 0},
+        {1, 2, 0, 1, 3, 0, 0},
+        {2, 0, 1, 0, 0, 0, 1},
+        {0, 0, 3, 0, 0, 2, 0},
+        {0, 3, 0, 0, 2, 0, 1},
+        {0, 0, 0, 1, 0, 1, 0}};
 
     // printf("\nBreadth first traversal of the graph is: ");
     // BFT(&q, adjencency_matrix, 7, 1);
@@ -252,7 +312,9 @@ int main()
     // printf("\nDepth first traversal of the graph is: ");
     // DFT(&q, adjencency_matrix, 7, 1);
 
-    primsMinimumSpanningTreeAlgo(weighted_adjacency_matrix);
+    // primsMinimumSpanningTreeAlgo(weighted_adjacency_matrix);
+
+    dijkstraAlgorithm(weighted_adjacency_matrix1);
 
     return 0;
 }
