@@ -183,6 +183,30 @@ void heapSort(int arry[], int arry_size)
 }
 
 
+
+// ------------------------------------------------
+// Creating Priority Queue using MinHeap.
+typedef struct priority_queue{
+    MinHeap *min_heap;
+} PriorityQueue;
+ 
+
+void CreatePriorityQueue(PriorityQueue *q,int size){
+    MinHeap *h=NULL;
+    h=(MinHeap *)malloc(sizeof(MinHeap));
+    CreateMinHeap(size,h);
+    q->min_heap=h;
+}
+
+int add_to_queue(int data,PriorityQueue *q){
+    insert_in_a_heap(data,q->min_heap);
+}
+
+int dequeue(PriorityQueue *q){
+    return extractMin(q->min_heap);
+}
+
+
 int main()
 {
     MinHeap min_heap;
@@ -230,4 +254,25 @@ int main()
     {
         printf("%d ", arry[x]);
     }
+
+    // For priority queue.
+    PriorityQueue Queue;
+    CreatePriorityQueue(&Queue,10);
+    while (1)
+    {
+        int data;
+        printf("Add Elements to insert in a min heap(-999 to stop): ");
+        scanf("%d", &data);
+        if (data == -999)
+        {
+            break;
+        }
+        add_to_queue(data,&Queue);
+    }
+    printf("\nDequeued elements are: ");
+    printf("%d\n",dequeue(&Queue));
+    printf("%d\n",dequeue(&Queue));
+    printf("%d\n",dequeue(&Queue));
+    printf("%d\n",dequeue(&Queue));
+    printf("%d\n",dequeue(&Queue));
 }
