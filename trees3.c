@@ -168,6 +168,21 @@ void delete_a_key(MinHeap *h, int index_to_delete)
     extractMin(h);
 }
 
+void heapSort(int arry[], int arry_size)
+{
+    MinHeap h;
+    CreateMinHeap(arry_size, &h);
+    for (int x = 0; x < arry_size; x++)
+    {
+        insert_in_a_heap(arry[x], &h);
+    }
+    for (int x = 0; x < arry_size; x++)
+    {
+        arry[x] = extractMin(&h);
+    }
+}
+
+
 int main()
 {
     MinHeap min_heap;
@@ -202,5 +217,17 @@ int main()
         }
         delete_a_key(&min_heap, index);
         print_heap_arry(min_heap);
+    }
+    int arry[] = {3, 2, 1, 5, 6, 9, 12, 15, 14, 0, 4};
+    printf("\nBefore Sorting: ");
+    for (int x = 0; x < 11; x++)
+    {
+        printf("%d ", arry[x]);
+    }
+    heapSort(arry, 11);
+    printf("\nAfter Sorting: ");
+    for (int x = 0; x < 11; x++)
+    {
+        printf("%d ", arry[x]);
     }
 }
