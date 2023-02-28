@@ -172,7 +172,7 @@ void quickSort(int arr[], int startingIndex, int endingIndex)
     Recursively divides array in 2, sort, re-combine
     It is not adaptive
     It is stable
-    Time Complexity : O(n log(2))
+    Time Complexity : O(n log(n))
     Space Complexity : O(n)
 */
 // Helper Function.(To get the idea of merge clearly)
@@ -282,15 +282,21 @@ void shellSort(int arry[], int size)
 {
     for (int gap = size / 2; gap > 0; gap /= 2)
     {
-        for (int x = gap; x < size; x++)
+        for (int y = gap; y < size; y++)
         {
-            int temp = arry[x];
-            int y = 0;
-            for (y = x; y >= gap && arry[y - gap] > temp; y -= gap)
+            for (int x = y - gap; x >= 0; x -= gap)
             {
-                arry[y] = arry[y - gap];
+                if (arry[x + gap] > arry[x])
+                {
+                    break;
+                }
+                else
+                {
+                    int temp = arry[x + gap];
+                    arry[x + gap] = arry[x];
+                    arry[x] = temp;
+                }
             }
-            arry[y] = temp;
         }
     }
 }
@@ -417,7 +423,7 @@ int main()
     {
         printf(" %d ", array[x]);
     }
-    radixSort(array, sizeOfArray);
+    shellSort(array, sizeOfArray);
     printf("\nSorted array is   : ");
     for (int x = 0; x < sizeOfArray; x++)
     {
