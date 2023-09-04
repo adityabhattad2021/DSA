@@ -9,11 +9,11 @@ public class App {
     public static void main(String[] args) throws Exception {
         // Get the current working directory
         String currentDirectory = System.getProperty("user.dir");
-
+        System.out.println(currentDirectory);
         // Read data from CSV files into Integer arrays
-        Integer[] to_compute0 = readCSV(currentDirectory + "/time_calc/data/file1.csv", "numbers");
-        Integer[] to_compute1 = readCSV(currentDirectory + "/time_calc/data/file2.csv", "volume");
-        Integer[] to_compute2 = readCSV(currentDirectory + "/time_calc/data/file3.csv", "volume");
+        Integer[] to_compute0 = readCSV("../data/file1.csv", "numbers");
+        Integer[] to_compute1 = readCSV("../data/file2.csv", "volume");
+        Integer[] to_compute2 = readCSV("../data/file3.csv", "volume");
 
         // Create an instance of ComputeHelper
         ComputeHelper ch = new ComputeHelper();
@@ -39,7 +39,7 @@ public class App {
         timeforDivideAndConquer.add(calculateTime(ch::divideAndConquer, to_compute2, "divide and conquer"));
 
         // Writing observations to a .csv file
-        FileWriter fileWriter = new FileWriter(currentDirectory + "/time_calc/data/observations.csv");
+        FileWriter fileWriter = new FileWriter("../data/observations.csv");
         try {
             fileWriter.write("length,time of brute force,time for divide and conquer\n");
             for (int x = 0; x < timeforBruteForce.size(); x++) {
