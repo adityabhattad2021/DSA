@@ -1,4 +1,5 @@
 public class ComputeHelper {
+
     public Double[][] primsAlgorithm(Double[][] adjacencyMatrix) {
         int numberOfVertices = adjacencyMatrix.length;
         Double[][] minimum_spanning_tree = new Double[numberOfVertices - 1][3];
