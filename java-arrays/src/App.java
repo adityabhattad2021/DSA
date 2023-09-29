@@ -153,6 +153,23 @@ public class App {
         return missingValue;
     }
 
+
+    public boolean checkIftheStringIsPalindrome(String str){
+        char[] buffer=str.toCharArray();
+        char[] reverseStr= new char[buffer.length];
+        for(int x=0;x<buffer.length;x++){
+            reverseStr[x]=buffer[buffer.length-1-x];
+        }
+        boolean isPalindrome=true;
+        for(int x=0;x<buffer.length;x++){
+            if(buffer[x]!=reverseStr[x]){
+                isPalindrome=false;
+                break;
+            }
+        }
+        return isPalindrome;
+    }
+
     public static void main(String[] args) throws Exception {
         App app = new App();
         Integer[] newArray;
@@ -191,8 +208,15 @@ public class App {
         // newArray[20] = 52;
         // app.printArray(newArray);
 
-        Integer[] theArry = { 2, 4, 1, 5, 6, 3, 7 ,8};
-        System.out.println(app.findMissingInteger(theArry));
+        // Integer[] theArry = { 2, 4, 1, 5, 6, 3, 7 ,8};
+        // System.out.println(app.findMissingInteger(theArry));
+
+        boolean isPalindrome = app.checkIftheStringIsPalindrome("rouor");
+        if(isPalindrome){
+            System.out.println("String is palindrome.");
+        }else{
+            System.out.println("String ain't palindrome.");
+        }
 
     }
 }
