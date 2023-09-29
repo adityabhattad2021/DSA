@@ -146,28 +146,39 @@ public class App {
         }
         Integer missingValue = 0;
         for (int x = 0; x < isPresent.length; x++) {
-            if(!isPresent[x]){
-                missingValue = x + 1; 
+            if (!isPresent[x]) {
+                missingValue = x + 1;
             }
         }
         return missingValue;
     }
 
+    public boolean checkIftheStringIsPalindrome(String str) {
+        // char[] buffer=str.toCharArray();
+        // char[] reverseStr= new char[buffer.length];
+        // for(int x=0;x<buffer.length;x++){
+        // reverseStr[x]=buffer[buffer.length-1-x];
+        // }
+        // boolean isPalindrome=true;
+        // for(int x=0;x<buffer.length;x++){
+        // if(buffer[x]!=reverseStr[x]){
+        // isPalindrome=false;
+        // break;
+        // }
+        // }
+        // return isPalindrome;
 
-    public boolean checkIftheStringIsPalindrome(String str){
-        char[] buffer=str.toCharArray();
-        char[] reverseStr= new char[buffer.length];
-        for(int x=0;x<buffer.length;x++){
-            reverseStr[x]=buffer[buffer.length-1-x];
-        }
-        boolean isPalindrome=true;
-        for(int x=0;x<buffer.length;x++){
-            if(buffer[x]!=reverseStr[x]){
-                isPalindrome=false;
-                break;
+        char[] buffer = str.toCharArray();
+        int start = 0;
+        int end = buffer.length - 1;
+        while (start < end) {
+            if (buffer[start] != buffer[end]) {
+                return false;
             }
+            start++;
+            end--;
         }
-        return isPalindrome;
+        return true;
     }
 
     public static void main(String[] args) throws Exception {
@@ -212,9 +223,9 @@ public class App {
         // System.out.println(app.findMissingInteger(theArry));
 
         boolean isPalindrome = app.checkIftheStringIsPalindrome("rouor");
-        if(isPalindrome){
+        if (isPalindrome) {
             System.out.println("String is palindrome.");
-        }else{
+        } else {
             System.out.println("String ain't palindrome.");
         }
 
