@@ -73,24 +73,23 @@ public class SinglyLinkedList<T> {
             System.out.println("Invalid position: " + pos);
             return;
         }
-        int counter = 0;
-        SinglyLinkedList.ListNode<T> node = new SinglyLinkedList.ListNode<T>(data);
-        SinglyLinkedList.ListNode<T> pointer = head;
-        while (pointer != null) {
-            counter++;
-            if (counter == pos - 1) {
-                if (counter == 0) {
-                    node.next = pointer;
-                    this.head = node;
-                } else if (counter == length) {
-                    pointer.next = node;
-                    this.end = node;
-                } else {
-                    node.next = pointer.next;
-                    pointer.next = node;
-                }
-            }
-            pointer = pointer.next;
+        if(pos==1){
+            this.addNodeAtStart(data);
+            return;
+        }
+        SinglyLinkedList.ListNode<T> newNode=new SinglyLinkedList.ListNode<T>(data);
+        SinglyLinkedList.ListNode<T> holder1=null;
+        SinglyLinkedList.ListNode<T> holder2=this.head;
+        int count=1;
+        while(holder2!=null && count<pos){
+            holder1=holder2;
+            holder2=holder2.next;
+            count++;
+        }
+        holder1.next=newNode;
+        newNode.next=holder2;
+        if(newNode.next==null){
+            this.end=newNode;
         }
     }
 
@@ -111,6 +110,7 @@ public class SinglyLinkedList<T> {
             holder2=holder2.next;
         }
         holder1.next=null;
+        this.end=holder1;
     }
 
     // Delete node at given position
@@ -132,6 +132,36 @@ public class SinglyLinkedList<T> {
         }
         holder1.next=holder2.next;
         holder2.next=null;
+        if(holder1.next==null){
+            this.end=holder1;
+        }
     }
+
+    // Search an element in a singly linked list.
+    public int searchForElement(T ele){
+        SinglyLinkedList.ListNode<T> holder = this.head;
+        int counter=0;
+        while(holder!=null){
+            counter++;
+            if(holder.data.equals(ele)){
+                System.out.println("Element was found at position: "+counter);
+                return counter;
+            }
+            holder=holder.next;
+        }
+        System.out.println("Element not found.");
+        return -1;
+    }
+
+
+
+
+    // Reverse the singly linked list
+    
+    // Find middle element in a singly linked list
+    // Find the nth node from the end of singly linked list.
+    // Remove duplicate from singly linked list
+    // Insert a node in a sorted singly linked list
+
 
 }

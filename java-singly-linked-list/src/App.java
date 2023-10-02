@@ -7,13 +7,14 @@ public class App {
         }
         // sll.addNodeAtStart('M');
         sll.traverseList();
-        sll.getLength();
-
+        
         sll.addAtGivenPos('d', 2);
+        sll.getLength();
         sll.traverseList();
         sll.addAtGivenPos('B', 7);
         sll.traverseList();
-        sll.deleteAtPos(7);
+        sll.searchForElement('X');
+        // sll.deleteAtPos(7);
         sll.traverseList();
     }
 
