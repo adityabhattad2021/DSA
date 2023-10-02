@@ -58,8 +58,8 @@ public class SinglyLinkedList<T> {
         return counter;
     }
 
-    public void printLength(){
-        int length=this.getLength();
+    public void printLength() {
+        int length = this.getLength();
         System.out.println("Length of the list is " + length + ".");
     }
 
@@ -77,142 +77,176 @@ public class SinglyLinkedList<T> {
             System.out.println("Invalid position: " + pos);
             return;
         }
-        if(pos==1){
+        if (pos == 1) {
             this.addNodeAtStart(data);
             return;
         }
-        SinglyLinkedList.ListNode<T> newNode=new SinglyLinkedList.ListNode<T>(data);
-        SinglyLinkedList.ListNode<T> holder1=null;
-        SinglyLinkedList.ListNode<T> holder2=this.head;
-        int count=1;
-        while(holder2!=null && count<pos){
-            holder1=holder2;
-            holder2=holder2.next;
+        SinglyLinkedList.ListNode<T> newNode = new SinglyLinkedList.ListNode<T>(data);
+        SinglyLinkedList.ListNode<T> holder1 = null;
+        SinglyLinkedList.ListNode<T> holder2 = this.head;
+        int count = 1;
+        while (holder2 != null && count < pos) {
+            holder1 = holder2;
+            holder2 = holder2.next;
             count++;
         }
-        holder1.next=newNode;
-        newNode.next=holder2;
-        if(newNode.next==null){
-            this.end=newNode;
+        holder1.next = newNode;
+        newNode.next = holder2;
+        if (newNode.next == null) {
+            this.end = newNode;
         }
     }
 
     // Delete first node of SLL
-    public void deleteFirstNote(){
+    public void deleteFirstNote() {
         SinglyLinkedList.ListNode<T> holder = this.head;
-        this.head=this.head.next;
-        holder.next=null;
+        this.head = this.head.next;
+        holder.next = null;
     }
 
-
     // Delete last node of SLL
-    public void deleteLastNode(){
-        SinglyLinkedList.ListNode<T> holder1=null;
-        SinglyLinkedList.ListNode<T> holder2=this.head;
-        while(holder2.next!=null){
-            holder1=holder2;
-            holder2=holder2.next;
+    public void deleteLastNode() {
+        SinglyLinkedList.ListNode<T> holder1 = null;
+        SinglyLinkedList.ListNode<T> holder2 = this.head;
+        while (holder2.next != null) {
+            holder1 = holder2;
+            holder2 = holder2.next;
         }
-        holder1.next=null;
-        this.end=holder1;
+        holder1.next = null;
+        this.end = holder1;
     }
 
     // Delete node at given position
-    public void deleteAtPos(int pos){
-        if(pos<1 || pos>this.getLength()){
+    public void deleteAtPos(int pos) {
+        if (pos < 1 || pos > this.getLength()) {
             return;
         }
-        if(pos==1){
+        if (pos == 1) {
             this.deleteFirstNote();
             return;
         }
-        SinglyLinkedList.ListNode<T> holder1=null;
-        SinglyLinkedList.ListNode<T> holder2=this.head;
-        int count=1;
-        while(holder2.next!=null && count < pos){
-            holder1=holder2;
-            holder2=holder2.next;
+        SinglyLinkedList.ListNode<T> holder1 = null;
+        SinglyLinkedList.ListNode<T> holder2 = this.head;
+        int count = 1;
+        while (holder2.next != null && count < pos) {
+            holder1 = holder2;
+            holder2 = holder2.next;
             count++;
         }
-        holder1.next=holder2.next;
-        holder2.next=null;
-        if(holder1.next==null){
-            this.end=holder1;
+        holder1.next = holder2.next;
+        holder2.next = null;
+        if (holder1.next == null) {
+            this.end = holder1;
         }
     }
 
     // Search an element in a singly linked list.
-    public int searchForElement(T ele){
+    public int searchForElement(T ele) {
         SinglyLinkedList.ListNode<T> holder = this.head;
-        int counter=0;
-        while(holder!=null){
+        int counter = 0;
+        while (holder != null) {
             counter++;
-            if(holder.data.equals(ele)){
-                System.out.println("Element was found at position: "+counter);
+            if (holder.data.equals(ele)) {
+                System.out.println("Element was found at position: " + counter);
                 return counter;
             }
-            holder=holder.next;
+            holder = holder.next;
         }
         System.out.println("Element not found.");
         return -1;
     }
 
-
-
-
     // Reverse the singly linked list
-    public void reverseTheList(){
-        if(this.getLength()<=1){
+    public void reverseTheList() {
+        if (this.getLength() <= 1) {
             return;
         }
-        if(this.getLength()==2){
-            this.end.next=this.head;
-            this.head=this.end;
-            this.end=this.end.next;
-            this.end.next=null;
+        if (this.getLength() == 2) {
+            this.end.next = this.head;
+            this.head = this.end;
+            this.end = this.end.next;
+            this.end.next = null;
             return;
         }
-        SinglyLinkedList.ListNode<T> holder1=head;
-        SinglyLinkedList.ListNode<T> holder2=holder1.next;
-        SinglyLinkedList.ListNode<T> holder3=holder2.next;
-        while(holder2!=null){
-            holder2.next=holder1;
-            holder1=holder2;
-            holder2=holder3;
-            if(holder3!=null){
-                holder3=holder3.next;
+        SinglyLinkedList.ListNode<T> holder1 = head;
+        SinglyLinkedList.ListNode<T> holder2 = holder1.next;
+        SinglyLinkedList.ListNode<T> holder3 = holder2.next;
+        while (holder2 != null) {
+            holder2.next = holder1;
+            holder1 = holder2;
+            holder2 = holder3;
+            if (holder3 != null) {
+                holder3 = holder3.next;
             }
         }
         // We know holder 3 has to be null, therefore we can use it as temp.
-        holder3=this.head;
-        this.head=this.end;
-        this.end=holder3;
-        this.end.next=null;
+        holder3 = this.head;
+        this.head = this.end;
+        this.end = holder3;
+        this.end.next = null;
     }
 
     // Find middle element in a singly linked list
-    public T findMiddleElement(){
-        double length=this.getLength()/2;
-        double lengthD=(double) this.getLength()/2;
-        double diff=lengthD-length;
+    public T findMiddleElement() {
+        double length = this.getLength() / 2;
+        double lengthD = (double) this.getLength() / 2;
+        double diff = lengthD - length;
         int middle;
-        if(diff==0){
-            middle=(int) length;
-        }else{
-            middle=(int) length+1;
+        if (diff == 0) {
+            middle = (int) length;
+        } else {
+            middle = (int) length + 1;
         }
         SinglyLinkedList.ListNode<T> holder = head;
-        int counter=1;
-        while(counter<middle){
+        int counter = 1;
+        while (counter < middle) {
             counter++;
-            holder=holder.next;
+            holder = holder.next;
         }
         return holder.data;
     }
 
-    // Find the nth node from the end of singly linked list.
-    // Remove duplicate from singly linked list
-    // Insert a node in a sorted singly linked list
+    // Find the nth node from the end of singly linked list. (Without reversing the
+    // list😉)
+    public T findNthNodeFromEnd(int n) {
+        int length = this.getLength();
+        int pos = (length + 1) - n;
+        SinglyLinkedList.ListNode<T> holder = this.head;
+        int counter = 1;
+        while (counter < pos) {
+            counter++;
+            holder = holder.next;
+        }
+        return holder.data;
+    }
 
+    // Remove duplicate from singly linked list (is it possible to do it in time
+    // complexity better than O(n^2)).
+    public void removeDuplicate() {
+        SinglyLinkedList.ListNode<T> holder = this.head;
+        int counter = 1;
+        while (holder != null && holder.next != null) {
+            int counter1 = counter + 1;
+            SinglyLinkedList.ListNode<T> holder1 = holder.next;
+            while (counter1 <= this.getLength()) {
+                boolean flag = false;
+                while (holder1 != null) {
+                    if (holder1.data.equals(holder.data)) {
+                        flag = true;
+                        break;
+                    }
+                    counter1++;
+                    holder1 = holder1.next;
+                }
+                if (flag) {
+                    this.deleteAtPos(counter1);
+                    counter1 = counter + 1;
+                    holder1 = holder.next;
+                }
+            }
+            counter++;
+            holder = holder.next;
+        }
+    }
 
 }
