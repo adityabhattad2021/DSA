@@ -55,8 +55,12 @@ public class SinglyLinkedList<T> {
                 counter++;
             }
         }
-        System.out.println("Length of the list is " + counter + ".");
         return counter;
+    }
+
+    public void printLength(){
+        int length=this.getLength();
+        System.out.println("Length of the list is " + length + ".");
     }
 
     // Insert node at the start
@@ -157,8 +161,55 @@ public class SinglyLinkedList<T> {
 
 
     // Reverse the singly linked list
-    
+    public void reverseTheList(){
+        if(this.getLength()<=1){
+            return;
+        }
+        if(this.getLength()==2){
+            this.end.next=this.head;
+            this.head=this.end;
+            this.end=this.end.next;
+            this.end.next=null;
+            return;
+        }
+        SinglyLinkedList.ListNode<T> holder1=head;
+        SinglyLinkedList.ListNode<T> holder2=holder1.next;
+        SinglyLinkedList.ListNode<T> holder3=holder2.next;
+        while(holder2!=null){
+            holder2.next=holder1;
+            holder1=holder2;
+            holder2=holder3;
+            if(holder3!=null){
+                holder3=holder3.next;
+            }
+        }
+        // We know holder 3 has to be null, therefore we can use it as temp.
+        holder3=this.head;
+        this.head=this.end;
+        this.end=holder3;
+        this.end.next=null;
+    }
+
     // Find middle element in a singly linked list
+    public T findMiddleElement(){
+        double length=this.getLength()/2;
+        double lengthD=(double) this.getLength()/2;
+        double diff=lengthD-length;
+        int middle;
+        if(diff==0){
+            middle=(int) length;
+        }else{
+            middle=(int) length+1;
+        }
+        SinglyLinkedList.ListNode<T> holder = head;
+        int counter=1;
+        while(counter<middle){
+            counter++;
+            holder=holder.next;
+        }
+        return holder.data;
+    }
+
     // Find the nth node from the end of singly linked list.
     // Remove duplicate from singly linked list
     // Insert a node in a sorted singly linked list

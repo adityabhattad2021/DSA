@@ -9,13 +9,16 @@ public class App {
         sll.traverseList();
         
         sll.addAtGivenPos('d', 2);
-        sll.getLength();
+        sll.printLength();
         sll.traverseList();
         sll.addAtGivenPos('B', 7);
+        // sll.addAtGivenPos('B', 7);
         sll.traverseList();
-        sll.searchForElement('X');
-        // sll.deleteAtPos(7);
-        sll.traverseList();
+        Character middle=sll.findMiddleElement();
+        System.out.println("Middle character is: "+middle);
+        // sll.searchForElement('X');
+        // sll.reverseTheList();
+        // sll.traverseList();
     }
 
 }
