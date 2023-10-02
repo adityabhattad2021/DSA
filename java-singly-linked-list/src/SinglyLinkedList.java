@@ -95,7 +95,43 @@ public class SinglyLinkedList<T> {
     }
 
     // Delete first node of SLL
+    public void deleteFirstNote(){
+        SinglyLinkedList.ListNode<T> holder = this.head;
+        this.head=this.head.next;
+        holder.next=null;
+    }
+
+
     // Delete last node of SLL
+    public void deleteLastNode(){
+        SinglyLinkedList.ListNode<T> holder1=null;
+        SinglyLinkedList.ListNode<T> holder2=this.head;
+        while(holder2.next!=null){
+            holder1=holder2;
+            holder2=holder2.next;
+        }
+        holder1.next=null;
+    }
+
     // Delete node at given position
+    public void deleteAtPos(int pos){
+        if(pos<1 || pos>this.getLength()){
+            return;
+        }
+        if(pos==1){
+            this.deleteFirstNote();
+            return;
+        }
+        SinglyLinkedList.ListNode<T> holder1=null;
+        SinglyLinkedList.ListNode<T> holder2=this.head;
+        int count=1;
+        while(holder2.next!=null && count < pos){
+            holder1=holder2;
+            holder2=holder2.next;
+            count++;
+        }
+        holder1.next=holder2.next;
+        holder2.next=null;
+    }
 
 }

@@ -13,5 +13,8 @@ public class App {
         sll.traverseList();
         sll.addAtGivenPos('B', 7);
         sll.traverseList();
+        sll.deleteAtPos(7);
+        sll.traverseList();
     }
+
 }
