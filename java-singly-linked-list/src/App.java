@@ -20,7 +20,7 @@ public class App {
         // System.out.println("The nth character from end is: "+nthFromEnd);
         // sll.removeDuplicate();
         sll.traverseList();
-        sll.removeGivenKey('a');
+        // sll.removeGivenKey('a');
         // ⚠️ Do not run traverse SSL or any other method of SLL, without removing the cycle in the SLL.
         sll.createCycleInSSL();
         boolean hasCycle=sll.detectCycleInSLL();
@@ -33,7 +33,9 @@ public class App {
         if(startNodeOfCycle!=null){
             System.out.println(startNodeOfCycle.data);
         }
-        // sll.traverseList();
+
+        sll.removeTheCycleFromSLL();
+        sll.traverseList();
 
     }
 

@@ -312,7 +312,25 @@ public class SinglyLinkedList<T> {
         return null;
     }
 
-    // Remove a loop
-
+    // Remove a loop from SLL
+    public void removeTheCycleFromSLL(){
+        SinglyLinkedList.ListNode<T> fastPointer=head;
+        SinglyLinkedList.ListNode<T> slowPointer=head;
+        while(fastPointer!=null && fastPointer.next!=null){
+            slowPointer=slowPointer.next;
+            fastPointer=fastPointer.next.next;
+            // Detecting the cycle
+            if(fastPointer==slowPointer){
+                SinglyLinkedList.ListNode<T> temp = head;
+                while(temp.next!=slowPointer.next){
+                    temp=temp.next;
+                    slowPointer=slowPointer.next;
+                }
+                slowPointer.next=null;
+                System.out.println("Successfully removed cycle from😀");
+                return;
+            }
+        }
+    }
 
 }
