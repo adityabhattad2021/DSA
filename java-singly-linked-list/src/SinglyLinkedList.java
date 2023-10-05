@@ -1,3 +1,5 @@
+import java.util.Random;
+
 public class SinglyLinkedList<T> {
 
     public ListNode<T> head;
@@ -248,5 +250,69 @@ public class SinglyLinkedList<T> {
             holder = holder.next;
         }
     }
+
+    // Remove a key from singly linked list.
+    public void removeGivenKey(T key){
+        SinglyLinkedList.ListNode<T> temp = head;
+        int counter=1;
+        while(temp.next!=null){
+            if(temp.data.equals(key)){
+                this.deleteAtPos(counter);
+                return;
+            }
+            temp=temp.next;
+            counter++;
+        }
+    }
+
+    // To detect a loop in singly linked list, first i will have to create a loop in SLL.
+    public void createCycleInSSL(){
+        Random random = new Random();
+        int randomLength=random.nextInt(this.getLength())+1;
+        SinglyLinkedList.ListNode<T> temp = head;
+        for(int x=0;x<randomLength;x++){
+            temp=temp.next;
+        }
+        this.end.next=temp;
+    }
+
+    // Detect a loop in a singly linked list. (Using Flyod Cycle detection algorithm)
+    public boolean detectCycleInSLL(){
+        SinglyLinkedList.ListNode<T> fastPointer=head;
+        SinglyLinkedList.ListNode<T> slowPointer=head;
+        while(fastPointer!=null && fastPointer.next!=null){
+            slowPointer=slowPointer.next;
+            fastPointer=fastPointer.next.next;
+            if(slowPointer==fastPointer){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // Find the start of the loop.
+    public SinglyLinkedList.ListNode<T> getTheStartOfTheCycle(){
+        SinglyLinkedList.ListNode<T> fastPointer=head;
+        SinglyLinkedList.ListNode<T> slowPointer=head;
+        while(fastPointer!=null && fastPointer.next!=null){
+            slowPointer=slowPointer.next;
+            fastPointer=fastPointer.next.next;
+            if(slowPointer==fastPointer){
+                // Get the startNode.
+                SinglyLinkedList.ListNode<T> temp=head;
+                while(temp!=slowPointer){
+                    temp=temp.next;
+                    slowPointer=slowPointer.next;
+                }
+                return temp;
+            }
+        }
+
+        // If there is a cycle this line should never be reached.
+        return null;
+    }
+
+    // Remove a loop
+
 
 }
