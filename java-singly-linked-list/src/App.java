@@ -3,7 +3,6 @@ import java.util.Random;
 public class App {
     public static void main(String[] args) throws Exception {
 
-
         // For generic linked list operations, but some operations like sorting, etc are easier to implement with int data type, therefore, I created an new IntegerSinglyLinkedList.
         // String name="Aitya";
         // SinglyLinkedList<Character> sll=new SinglyLinkedList<>(name.charAt(0));
@@ -43,6 +42,7 @@ public class App {
         // sll.traverseList();
 
         IntegerSinglyLinkedList issl=new IntegerSinglyLinkedList(null);
+        IntegerSinglyLinkedList issl2=new IntegerSinglyLinkedList(null);
 
         Random random = new Random();
 
@@ -51,6 +51,20 @@ public class App {
             IntegerSinglyLinkedList.ListNode newNode=new IntegerSinglyLinkedList.ListNode(randomInt);
             issl.addNodeInSorted(newNode);
         }
+
+        issl.traverseList();
+        System.out.println();
+
+        for(int x=0;x<20;x++){
+            int randomInt=random.nextInt(10)+1;
+            IntegerSinglyLinkedList.ListNode newNode=new IntegerSinglyLinkedList.ListNode(randomInt);
+            issl2.addNodeInSorted(newNode);
+        }
+
+        issl2.traverseList();
+        System.out.println();
+
+        issl.mergeWithAnotherLinkedList(issl2);
 
         issl.traverseList();
 
