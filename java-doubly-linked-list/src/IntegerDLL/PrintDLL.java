@@ -9,7 +9,7 @@ public class PrintDLL extends IntegerDLL {
         }
         PrintDLL.ListNode temp=this.head;
         while(temp!=null){
-            System.out.println(temp.data+" --> ");
+            System.out.print(temp.data+" --> ");
             temp=temp.next;
         }
         System.out.println("null");
@@ -22,7 +22,7 @@ public class PrintDLL extends IntegerDLL {
         }
         PrintDLL.ListNode temp = this.tail;
         while(temp!=null){
-            System.out.println(temp.data+" --> ");
+            System.out.print(temp.data+" --> ");
             temp=temp.previous;
         }
         System.out.println("null");

@@ -15,6 +15,7 @@ public class IntegerDLL extends DoublyLinkedList<Integer> {
             }
             temp.next = data;
             data.previous = temp;
+            this.tail=data;
         }
         this.length += 1;
     }
