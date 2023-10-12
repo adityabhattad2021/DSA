@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 
 public class App {
+
     public static void main(String[] args) throws Exception {
         // Travelling Salesman Problem
         int[][] costMatrix = {
@@ -17,28 +18,29 @@ public class App {
         // }
         // System.out.println();
         // }
-        travellingSalesmanProblem(costMatrix);
+        ArrayList<Integer> otherVertexes=new ArrayList<>();
+        otherVertexes.add(2);
+        otherVertexes.add(3);
+        otherVertexes.add(4);
+        int cost = travellingSalesmanProblem(costMatrix, 1, otherVertexes, 1);
+        System.out.println(cost);
     }
 
-    public static void travellingSalesmanProblem(int[][] costMatix) {
-        int[] selected = {1,0,0,0,0};
-        int startingCost=0;
-        for(int x=1;x<=4;x++){
-            int[] costforStage1={0,Integer.MAX_VALUE,Integer.MAX_VALUE,Integer.MAX_VALUE};
-            for(int y=1;y<=4;y++){
-                if(x!=y){
-                    costforStage1[y]=costMatix[x][y];
-                }
-            }
-            int[] costforStage2={0,Integer.MAX_VALUE,Integer.MAX_VALUE,Integer.MAX_VALUE};
-            for(int y=1;y<=4;y++){
-                for(int z=1;z<=4;z++){
-                    if(y!=1 && y!=z){
-                        int minfromStage1 = Integer.MAX_VALUE;
-                         
-                    }
-                }
-            }
+
+    public static int travellingSalesmanProblem(int[][] costMatix,int startingVertex,ArrayList<Integer> otherElements,int currentVertex) {
+        if(otherElements.isEmpty()){
+            return costMatix[currentVertex-1][startingVertex-1];
         }
+        int min=Integer.MAX_VALUE;
+        for(int x=0;x<=otherElements.size();x++){
+            int nextVertex = otherElements.get(x);
+            int costToNextVertex = costMatix[currentVertex-1][nextVertex-1];
+            ArrayList<Integer> updatedRemainingVertices = new ArrayList<>(otherElements);
+            updatedRemainingVertices.remove(x);
+            int subProblemCost = costToNextVertex + travellingSalesmanProblem(costMatix, startingVertex, updatedRemainingVertices, nextVertex);
+            min = Math.min(min, subProblemCost);
+        }
+        return min;
     }   
+
 }

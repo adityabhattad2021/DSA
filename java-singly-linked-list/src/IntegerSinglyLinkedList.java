@@ -55,9 +55,10 @@ public class IntegerSinglyLinkedList {
         }
     }
 
+
     public void mergeWithAnotherLinkedList(IntegerSinglyLinkedList issl) {
         while (issl.head != null) {
-            // handle the case where head of issl is less that this.head.
+            
             IntegerSinglyLinkedList.ListNode temp1=this.head;
             if (this.head==null || this.head.data >= issl.head.data) {
                 IntegerSinglyLinkedList.ListNode temp = issl.head;
