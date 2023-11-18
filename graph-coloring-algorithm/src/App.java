@@ -11,7 +11,7 @@ public class App {
             {1, 1, 1, 0, 1},
             {1, 1, 1, 1, 0} 
         };
-        char[] frequencies = {'A','B','C','D','E'};
+        char[] frequencies = {'A','B','C','D'};
         List<HashMap<Integer, Character>> options = graphColouring(adjacencyMatrix, frequencies);
         if(options.size()==0){
             System.out.println("No possible way found to color the graphs with the given colors (frequiencies in the context of the question).");
