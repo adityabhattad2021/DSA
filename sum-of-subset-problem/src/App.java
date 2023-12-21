@@ -24,12 +24,11 @@ public class App {
         }
 
         for(int i = index; i < arry.length; i++) {
-            if(getSumOfSubset(subset) + arry[i] > sum) {
-                continue;
+            if(getSumOfSubset(subset) + arry[i] <= sum) {
+                subset.add(subIndex, arry[i]);
+                subsetSum(arry, sum, i + 1, subset, subIndex + 1);
+                subset.remove(subIndex);
             }
-            subset.add(subIndex, arry[i]);
-            subsetSum(arry, sum, i + 1, subset, subIndex + 1);
-            subset.remove(subIndex);
         }
     }
 
