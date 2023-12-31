@@ -14,6 +14,8 @@ public class App {
         minHeap.push(0);
         minHeap.push(5);
 
+        System.out.println(minHeap.peek());
+
         // Printing out elements as they are removed from the heap
         // The elements should come out in ascending order
         System.out.println("Removing elements from the heap:");

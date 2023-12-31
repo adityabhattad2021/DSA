@@ -25,26 +25,22 @@ public class MinHeap {
     }
 
     private void sinkDown() {
-        int parentIndex = 1; // Start from the root
+        int parentIndex = 1; 
         while (true) {
-            int leftChildIndex = 2 * parentIndex ; // Left child index
-            int rightChildIndex = 2 * parentIndex + 1; // Right child index
+            int leftChildIndex = 2 * parentIndex ; 
+            int rightChildIndex = 2 * parentIndex + 1;
             int smallest = parentIndex;
-    
-            // Find the smallest among parent, left child and right child
             if (leftChildIndex < heap.size() && heap.get(leftChildIndex) < heap.get(smallest)) {
                 smallest = leftChildIndex;
             }
             if (rightChildIndex < heap.size() && heap.get(rightChildIndex) < heap.get(smallest)) {
                 smallest = rightChildIndex;
             }
-    
-            // If the smallest is not the parent, swap and continue
             if (smallest != parentIndex) {
                 swap(parentIndex, smallest);
                 parentIndex = smallest;
             } else {
-                break; // Correct position found
+                break;
             }
         }
     }
@@ -56,7 +52,7 @@ public class MinHeap {
     }
 
     public int pop(){
-        if(heap.size()<1){
+        if(heap.size()<=1){
             throw new NoSuchElementException("The heap is empty");
         }
         int ele = heap.get(1);
@@ -64,6 +60,13 @@ public class MinHeap {
         heap.remove(heap.size()-1);
         sinkDown();
         return ele;
+    }
+
+    public int peek(){
+        if(heap.size()<=1){
+            throw new NoSuchElementException("The heap is empty");
+        }
+        return heap.get(1);
     }
 
 }
