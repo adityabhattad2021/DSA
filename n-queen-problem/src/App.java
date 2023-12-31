@@ -4,9 +4,10 @@ public class App {
     }
 
     public static void n_queen(int n){
+        // Graph is by default initialized by zero.
         int[][] graph = new int[n][n];
         int numberOfWays=n_queen(graph, 0, n);
-        System.out.printf("There are %d ways to place the queens on board of size %d x %d.",numberOfWays,n,n);
+        System.out.printf("There are %d ways to place the queens on board of size %d x %d.\n",numberOfWays,n,n);
     }   
     
     public static int n_queen(int[][] graph,int i,int n){

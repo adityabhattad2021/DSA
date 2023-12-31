@@ -35,7 +35,7 @@ public class App {
 
         if (allVisited(visited)) {
             if (matrix[start][original] == 1) {
-                System.out.println("Hamiltonian path for given adjacency matrix is: ");
+                System.out.println("Hamiltonian path for givenadjacency matrix is: ");
                 System.out.print(" " + (1 + original) + "---->");
                 return true;
             } else {
@@ -59,9 +59,9 @@ public class App {
             boolean res = printHamiltonianCycle(matrix, original, index, visited);
             if (res) {
                 System.out.print(" " + (index + 1) + "---->");
+                visited[index] = false;
                 return res;
             }
-            visited[index] = false;
 
         }
         return false;

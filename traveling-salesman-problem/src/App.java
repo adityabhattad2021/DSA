@@ -5,6 +5,7 @@ import java.util.List;
 
 
 class Key {
+    
     public int start;
     public List<Integer> rem;
 
@@ -18,10 +19,11 @@ class Key {
 public class App {
     public static void main(String[] args) throws Exception {
         int[][] adjacencyMatrix = {
-            {0,10,15,20},
-            {5,0,9,10},
-            {6,13,0,12},
-            {8,8,9,0}
+        //   A   B   C   D
+            {0,  10, 15, 20}, // A
+            {5,  0,  9,  10}, // B
+            {6,  13, 0,  12}, // C
+            {8,  8,  9,  0}   // D
         };
         System.out.println(travelingSalesmanSolution(adjacencyMatrix,0));
     }

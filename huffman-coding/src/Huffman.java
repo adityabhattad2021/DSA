@@ -38,6 +38,9 @@ class Encoded {
 
 public class Huffman {
 
+    /*
+     * Encode the string and return the encoded string and the table
+     */
     public Encoded encode(String str,boolean debug) {
         // Step 1: Get number of times the character occour in the string
         Map<Character, Integer> table = countCharOccurance(str);
@@ -117,6 +120,9 @@ public class Huffman {
         return sb.toString();
     }
 
+    /*
+     * Decode the string using the table
+     */
     public String decode(String str,Map<Character,String> fTable){
         StringBuilder sb = new StringBuilder();
         for(int i=0;i<str.length();){
