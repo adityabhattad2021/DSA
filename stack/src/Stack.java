@@ -8,7 +8,7 @@ public class Stack<T> {
         T value;
         StackNode next;
 
-        public StackNode(T value, StackNode next) {
+        StackNode(T value, StackNode next) {
             this.value = value;
             this.next = next;
         }
@@ -31,8 +31,6 @@ public class Stack<T> {
             throw new NoSuchElementException("Stack is empty.");
         }
         T ele = top.value;
-
-        // I guess java garbage collector will take care of it...
         top = top.next;
         return ele;
     }
