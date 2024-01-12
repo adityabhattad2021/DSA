@@ -34,7 +34,7 @@ public class BST<T extends Comparable<T>> implements ITree<T> {
         System.out.println();
     }
 
-    // ****Protoype design pattern usage**** //
+    // ****strategy design pattern usage**** //
     public void setTraversalType(ITraversalType traversalType){
         this.traversalType = traversalType;
     }
