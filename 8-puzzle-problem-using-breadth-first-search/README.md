@@ -1,18 +1,49 @@
-## Getting Started
+# Puzzle Solver
 
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
+## Overview
+This Puzzle Solver is a Java-based solution designed to solve a specific type of puzzle, such as a sliding tile puzzle. It uses a breadth-first search algorithm to explore possible moves from an initial state to reach a defined final state.
 
-## Folder Structure
+## Features
+- Breadth-first search algorithm for exploring possible moves.
+- Ability to define custom start and end states for the puzzle.
+- Debug mode for detailed logging of the puzzle-solving process.
 
-The workspace contains two folders by default, where:
+## Setup and Execution
+To run the Puzzle Solver:
 
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
+1. Compile the Java files.
+2. Run the `Puzzle` class with your desired start and end states.
 
-Meanwhile, the compiled output files will be generated in the `bin` folder by default.
+## How It Works
 
-> If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
+### Class Descriptions
 
-## Dependency Management
+#### Puzzle Class
+- **startState**: The initial state of the puzzle.
+- **finalState**: The goal state of the puzzle.
+- **Puzzle(Integer[] startState, Integer[] finalState)**: Constructor to initialize the puzzle.
+- **solvePuzzle(boolean debug)**: Main method that solves the puzzle and returns the path from the start to the end state.
 
-The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
+#### Node Class
+- **state**: Current state of the puzzle.
+- **parent**: Reference to the parent node.
+- **action**: The action taken to reach the current state.
+- **level**: The depth level of the node in the search tree.
+- **Node(Integer[] state, Node parent, String action, int level)**: Constructor for the Node class.
+- **getMatrix(Integer[] state)**: Static method to format the puzzle state as a 3x3 matrix.
+- **toString()**: Overridden method to return a string representation of the node.
+
+### Algorithm
+The solution utilizes a breadth-first search approach. It starts from the initial state, explores all possible moves, and gradually expands the search tree until it finds the solution or exhausts all possibilities.
+
+## Limitations
+- The current implementation is specifically tailored for a 3x3 puzzle format.
+- The performance might decrease for puzzles with a large number of states due to the breadth-first search approach.
+
+## Future Enhancements
+- Extending support for different puzzle sizes.
+
+
+## Author
+- Aditya Bhattad
+
