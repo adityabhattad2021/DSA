@@ -87,9 +87,26 @@ public class Puzzle {
         return false;
     }
 
+    // Helper function to trace the path for the solution node.
+    private ArrayList<Node> buildSolution(Node finalNode){
+        ArrayList<Node> path = new ArrayList<>();
+        Node temp = finalNode;
+        while (temp != null) {
+            path.add(temp);
+            temp = temp.parent;
+        }
+        Collections.reverse(path); // Reverse the path to get it from start to finish.
+        return path;
+    }
+
     // Solves the puzzle and returns the path from the initial to the final state.
     public ArrayList<Node> solvePuzzle(boolean debug) {
         Node initialNode = new Node(startState, null, "Initial", 0);
+
+        // If initial node is itself the solution node.
+        if (this.isFinalState(initialNode.state))
+            return new ArrayList<Node>(Arrays.asList(initialNode));
+
         Queue<Node> frontier = new LinkedList<>();
         ArrayList<Node> exploredNodes = new ArrayList<>();
         frontier.add(initialNode);
@@ -101,37 +118,32 @@ public class Puzzle {
             exploredNodes.add(currentNode);
 
             if (debug) {
-                System.out.println("\n-------------------------------------------------------------------\nCurrent State: " + Node.getMatrix(currentNode.state) + "Level: " + currentNode.level + "\n-------------------------------------------------------------------\n");
+                System.out.println(
+                        "\n-------------------------------------------------------------------\nCurrent State: "
+                                + Node.getMatrix(currentNode.state) + "Level: " + currentNode.level
+                                + "\n-------------------------------------------------------------------\n");
             }
 
-            if (this.isFinalState(currentNode.state)) {
-                ArrayList<Node> path = new ArrayList<>();
-                Node temp = currentNode;
-                while (temp != null) {
-                    path.add(temp);
-                    temp = temp.parent;
+            // Getting all possible actions from the current state and exploring them.
+            ArrayList<String> possibleActions = this.getAllPossibleActions(currentNode.state);
+            for (String action : possibleActions) {
+                Integer[] newMove = this.executeMove(currentNode.state, action);
+
+                // Check if the newly generated state has already been explored.
+                if (!containsState(exploredNodes, newMove)) {
+                    Node newNode = new Node(newMove, currentNode, action, currentNode.level + 1);
+                    // Check if the required state is the final state.
+                    if (this.isFinalState(newNode.state)) {
+                        return buildSolution(newNode);
+                    }
+
+                    frontier.add(newNode); // Adding the new state to the frontier (Queue) for further exploration.
                 }
-                Collections.reverse(path); // Reverse the path to get it from start to finish.
-                return path;
-            }
-
-        // Getting all possible actions from the current state and exploring them.
-        ArrayList<String> possibleActions = this.getAllPossibleActions(currentNode.state);
-        for (String action : possibleActions) {
-            Integer[] newMove = this.executeMove(currentNode.state, action);
-            
-            // Check if the newly generated state has already been explored.
-            if (!containsState(exploredNodes, newMove)) {
-                Node newNode = new Node(newMove, currentNode, action, currentNode.level + 1);
-                frontier.add(newNode); // Adding the new state to the frontier (Queue) for further exploration.
             }
         }
-    }
 
-    // Return null if no solution is found.
-    return null;
+        // Return null if no solution is found.
+        return null;
     }
 
 }
-
-    
