@@ -24,6 +24,36 @@ public class Puzzle {
         state[j] = temp;
     }
 
+    // Function to calculate the number of inversions in a given state of the puzzle (ignoring 0.)
+private int getInversionCount(Integer[] state) {
+    int inversionCount = 0;
+    
+    for (int x = 0; x < state.length; x++) {
+        for (int y = x + 1; y < state.length; y++) {
+            if (state[x] > 0 && state[y] > 0 && state[x] < state[y]) {
+                inversionCount++;
+            }
+        }
+    }
+    
+    return inversionCount;
+ }
+ 
+ // Function to check whether a puzzle is solvable
+ private boolean isSolvable(Integer[] initialState, Integer[] finalState) {
+    int initialInversionCount = this.getInversionCount(initialState);
+    
+    int finalInversionCount = this.getInversionCount(finalState);
+    
+    // Check whether the initial and final inversion counts have the same parity (both even or both odd)
+    if (finalInversionCount % 2 == initialInversionCount % 2) {
+        return true;
+    } else {
+        return false;
+    }
+ }
+ 
+
     // Executes a move action on the current state of the puzzle and returns the new
     // state.
     private Integer[] executeMove(Integer[] currentState, String action) {
@@ -88,7 +118,7 @@ public class Puzzle {
     }
 
     // Helper function to trace the path for the solution node.
-    private ArrayList<Node> buildSolution(Node finalNode){
+    private ArrayList<Node> buildSolution(Node finalNode) {
         ArrayList<Node> path = new ArrayList<>();
         Node temp = finalNode;
         while (temp != null) {
