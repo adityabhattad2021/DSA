@@ -1,18 +1,19 @@
-## Getting Started
+# A* vs BFS Analysis
 
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
+## Overview
 
-## Folder Structure
+This Java application solves the sliding tile puzzle using A* search algorithm with Misplaced Tiles and Manhattan Distance heuristics, and Breadth-First Search (BFS). It evaluates and compares the efficiency of these methods by counting the number of states generated to reach the solution.
 
-The workspace contains two folders by default, where:
+## Algorithms Used
 
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
+- **A* Search with Misplaced Tiles Heuristic**: Estimates the cost to reach the goal by counting the number of tiles in the wrong position.
+- **A* Search with Manhattan Distance Heuristic**: Estimates the cost to reach the goal by calculating the total distance of the tiles from their goal positions.
+- **Breadth-First Search (BFS)**: Explores neighbor nodes level by level until the goal state is found.
 
-Meanwhile, the compiled output files will be generated in the `bin` folder by default.
+## Observations
 
-> If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
+- **Efficiency**: A* with Manhattan Distance tends to be more efficient, generating fewer states compared to Misplaced Tiles and BFS.
+- **Solvability**: The application checks the solvability of the puzzle before attempting to solve it, ensuring that only solvable instances are processed.
+- **Performance**: The choice of heuristic significantly affects the performance and efficiency of the A* algorithm.
 
-## Dependency Management
 
-The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).

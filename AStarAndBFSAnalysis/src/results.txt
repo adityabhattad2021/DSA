@@ -1,0 +1,4 @@
+Inversion Count           A* (Manhatten Distance) States Generated A* (Misplaced Tiles) States Generated BFS States Generated     
+2                         4                         4                         4                        
+10                        211                       1854                      8670                     
+10                        480                       3513                      36949                    

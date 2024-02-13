@@ -1,3 +1,5 @@
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -164,21 +166,6 @@ public class App {
         return path;
     }
 
-    private static int calculateHeuristic(Integer[] currentState, Integer[] finalState) {
-        int manhattanDistance = 0;
-        int sideLength = (int) Math.sqrt(currentState.length);
-        for (int i = 0; i < currentState.length; i++) {
-            int currentVal = currentState[i];
-            if (currentVal != 0) { // Skip the blank tile
-                int goalIndex = Arrays.asList(finalState).indexOf(currentVal);
-                int currentRow = i / sideLength, currentCol = i % sideLength;
-                int goalRow = goalIndex / sideLength, goalCol = goalIndex % sideLength;
-                manhattanDistance += Math.abs(currentRow - goalRow) + Math.abs(currentCol - goalCol);
-            }
-        }
-        return manhattanDistance;
-    }
-
     private static boolean containsState(ArrayList<Node> explored, Integer[] toCheck) {
         for (Node node : explored) {
             if (Arrays.equals(node.state, toCheck)) {
@@ -197,11 +184,22 @@ public class App {
         return false;
     }
 
-    public static int solveUsingAStar(Integer[] startState, Integer[] finalState) {
+    public static int solveUsingAStar(Integer[] startState, Integer[] finalState, String heuristic) {
         if (isSolvable(startState, finalState)) {
+            IHeuristicFunction heuristicFunction = null;
+            if(heuristic.equals("MisplacedTiles")){
+                heuristicFunction = new MisplacedTiles();
+            }
+            else if(heuristic.equals("ManhattanDistance")){
+                heuristicFunction = new ManhattenDistance();
+            }
+            else{
+                System.out.println("Invalid Heuristic");
+                return -1;
+            }
             PriorityQueue<Node> pq = new PriorityQueue<>();
             int exploredChildren = 1;
-            Node initialNode = new Node(startState, null, "Initial", 0, 0, calculateHeuristic(startState, finalState));
+            Node initialNode = new Node(startState, null, "Initial", 0, 0, heuristicFunction.calculateHeuristicValue(startState, finalState));
             pq.add(initialNode);
             ArrayList<Node> exploredNodes = new ArrayList<>();
 
@@ -236,7 +234,7 @@ public class App {
                     Integer[] newState = executeMove(currentNode.state, action);
 
                     Node newNode = new Node(newState, currentNode, action, currentNode.level + 1, currentNode.g + 1,
-                            calculateHeuristic(newState, finalState));
+                    heuristicFunction.calculateHeuristicValue(newState, finalState));
                     if (!isExplored(newNode, exploredNodes)) {
                         pq.add(newNode);
                     }
@@ -318,20 +316,52 @@ public class App {
         Integer[] startState3 = { 1, 4, 2, 3, 5, 6, 7, 8, 0 };
         Integer[] goalState3 = { 0, 1, 2, 3, 4, 5, 6, 7, 8 };
 
-        int noOfStatesInAStar1 = solveUsingAStar(startState1, goalState1);
+        int inversionCount1 = getInversionCountForNonStandardGoal(startState1, goalState1);
+        int noOfStatesInAStar1MisplacedTiles1 = solveUsingAStar(startState1, goalState1, "MisplacedTiles");
+        int noOfStatesInAStar1ManhattenDistance1 = solveUsingAStar(startState1, goalState1, "ManhattanDistance");
         int noOfStatesInBFS1 = solvePuzzleUsingBFS(startState1, goalState1);
 
-        int noOfStatesInAStar2 = solveUsingAStar(startState2, goalState2);
+        int inversionCount2 = getInversionCountForNonStandardGoal(startState2, goalState2);
+        int noOfStatesInAStar1MisplacedTiles2 = solveUsingAStar(startState2, goalState2, "MisplacedTiles");
+        int noOfStatesInAStar1ManhattenDistance2 = solveUsingAStar(startState2, goalState2, "ManhattanDistance");
         int noOfStatesInBFS2 = solvePuzzleUsingBFS(startState2, goalState2);
 
-        int noOfStatesInAStar3 = solveUsingAStar(startState3, goalState3);
+        int inversionCount3 = getInversionCountForNonStandardGoal(startState3, goalState3);
+        int noOfStatesInAStar1MisplacedTiles3 = solveUsingAStar(startState2, goalState2, "MisplacedTiles");
+        int noOfStatesInAStar1ManhattenDistance3 = solveUsingAStar(startState2, goalState2, "ManhattanDistance");
         int noOfStatesInBFS3 = solvePuzzleUsingBFS(startState3, goalState3);
 
-        System.err.println("No of states in A Star: " + noOfStatesInAStar1);
-        System.err.println("No of states in BFS: " + noOfStatesInBFS1);
-        System.err.println("No of states in A Star: " + noOfStatesInAStar2);
-        System.err.println("No of states in BFS: " + noOfStatesInBFS2);
-        System.err.println("No of states in A Star: " + noOfStatesInAStar3);
-        System.err.println("No of states in BFS: " + noOfStatesInBFS3);
+        System.out.println("Inversion Count: " + inversionCount1);
+        System.out.println("A* States Generated using Misplaced Tiles: " + noOfStatesInAStar1MisplacedTiles1);
+        System.out.println("A* States Generated using Manhattan Distance: " + noOfStatesInAStar1ManhattenDistance1);
+        System.out.println("BFS States Generated: " + noOfStatesInBFS1);
+
+        System.out.println("Inversion Count: " + inversionCount2);
+        System.out.println("A* States Generated using Misplaced Tiles: " + noOfStatesInAStar1MisplacedTiles2);
+        System.out.println("A* States Generated using Manhattan Distance: " + noOfStatesInAStar1ManhattenDistance2);
+        System.out.println("BFS States Generated: " + noOfStatesInBFS2);
+
+        System.out.println("Inversion Count: " + inversionCount3);
+        System.out.println("A* States Generated using Misplaced Tiles: " + noOfStatesInAStar1MisplacedTiles3);
+        System.out.println("A* States Generated using Manhattan Distance: " + noOfStatesInAStar1ManhattenDistance3);
+        System.out.println("BFS States Generated: " + noOfStatesInBFS3);
+
+ 
+        try {
+            FileWriter myWriter = new FileWriter("results.txt");
+
+            
+            myWriter.write(String.format("%-25s %-25s %-25s %-25s\n","Inversion Count", "A* (Manhatten Distance) States Generated","A* (Misplaced Tiles) States Generated", "BFS States Generated"));
+
+            myWriter.write(String.format("%-25s %-25s %-25s %-25s\n",inversionCount1, noOfStatesInAStar1ManhattenDistance1, noOfStatesInAStar1MisplacedTiles1, noOfStatesInBFS1));
+            myWriter.write(String.format("%-25s %-25s %-25s %-25s\n",inversionCount2, noOfStatesInAStar1ManhattenDistance2, noOfStatesInAStar1MisplacedTiles2, noOfStatesInBFS2));
+            myWriter.write(String.format("%-25s %-25s %-25s %-25s\n",inversionCount3, noOfStatesInAStar1ManhattenDistance3, noOfStatesInAStar1MisplacedTiles3, noOfStatesInBFS3));
+
+            myWriter.close();
+            System.out.println("Successfully wrote to the file.");
+        } catch (IOException e) {
+            System.err.println("An error occurred while writing to the file.");
+            e.printStackTrace();
+        }
     }
 }
