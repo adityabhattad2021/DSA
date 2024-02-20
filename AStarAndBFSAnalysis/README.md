@@ -16,4 +16,5 @@ This Java application solves the sliding tile puzzle using A* search algorithm w
 - **Solvability**: The application checks the solvability of the puzzle before attempting to solve it, ensuring that only solvable instances are processed.
 - **Performance**: The choice of heuristic significantly affects the performance and efficiency of the A* algorithm.
 
-
+## Visualization
+![output (1)](https://github.com/adityabhattad2021/DSA/assets/93488388/954bc8b8-9a14-42c7-895d-77988037d05b)
