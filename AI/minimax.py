@@ -15,6 +15,7 @@ class Position:
     def push(self, move):
         return self.moves[move]
 
+
 def minimax(position, depth, maxPlayer):
     if depth==0 or position.is_game_over():
         return position.score, None
@@ -40,7 +41,41 @@ def minimax(position, depth, maxPlayer):
                 min_eval = eval
                 best_move = move
         return min_eval,best_move
+    
 
+
+def minimax_with_alpha_beta_pruning(position,depth,alpha,beta,maxPlayer):
+    # for the leaf node:
+    if depth==0 or position.is_game_over():
+        return position.score,None
+    
+    if maxPlayer:
+        max_eval = float('-inf')
+        best_move = None
+        for move in position.legal_moves():
+            next_position = position.push(move)
+            eval,_ = minimax_with_alpha_beta_pruning(next_position,depth-1,alpha,beta,False)
+            if eval>max_eval:
+                max_eval = eval
+                best_move = move
+            alpha = max(alpha,eval)
+            if beta<=alpha:
+                break
+        return eval,best_move
+    
+    else:
+        min_eval = float('inf')
+        best_move = None
+        for move in position.legal_moves():
+            next_position = position.push(move)
+            eval,_  = minimax_with_alpha_beta_pruning(next_position,depth-1,alpha,beta,True)
+            if eval < min_eval:
+                min_eval = eval
+                best_move = move
+            beta = min(beta,eval)
+            if beta<=alpha:
+                break
+        return eval,best_move
 
 
 def main():
@@ -71,7 +106,7 @@ def main():
 
     # Run the minimax algorithm
     print(f"Starting position: {start_pos.moves}")
-    score, best_move = minimax(start_pos, 3, True)
+    score, best_move = minimax(start_pos, 3,True)
     print(f"Best score: {score}, Best move: {best_move}")
 
 if __name__ == "__main__":
