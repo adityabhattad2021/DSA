@@ -55,11 +55,11 @@ class MinMaxAlgo:
     def generate_tree(self,initial_board):
         _initial_board = initial_board.copy()
         root_node = Node(board=_initial_board,childrens=[],score=None)
-        root_node.score=self.recursive_traverse(root_node,True)
+        root_node.score=self.recursive_traverse(root_node,True,-2,3)
         return root_node
         
 
-    def recursive_traverse(self,node:Node,isMax:bool):
+    def recursive_traverse(self,node:Node,isMax:bool,alpha:int,beta:int):
         board = node.state.copy()
         if self.return_score(node.state)!=0:
             return self.return_score(node.state)
@@ -74,11 +74,14 @@ class MinMaxAlgo:
                     new_board[i]='X'
                     new_node = Node(board=new_board,childrens=[],score=None)
                     node.add_child(new_node)
-                    new_node.score = self.recursive_traverse(new_node,isMax=(not isMax))
+                    new_node.score = self.recursive_traverse(new_node,isMax=(not isMax),alpha=alpha,beta=beta)
                     # ans = max(new_node.score,ans)
                     if new_node.score>ans:
                         node.selected_child=new_node
                         ans = new_node.score
+                        alpha=max(alpha,ans)
+                    if beta<=alpha:
+                        break
             return ans
         else:
             ans = 2
@@ -91,11 +94,14 @@ class MinMaxAlgo:
                     new_board[i]='O'
                     new_node = Node(board=new_board,childrens=[],score=None)
                     node.add_child(new_node)
-                    new_node.score = self.recursive_traverse(new_node,isMax=(not isMax))
+                    new_node.score = self.recursive_traverse(new_node,isMax=(not isMax),alpha=alpha,beta=beta)
                     # ans = min(new_node.score,ans)
                     if new_node.score<ans:
                         node.selected_child=new_node
                         ans = new_node.score
+                        beta=min(beta,ans)
+                    if beta<=alpha:
+                        break
             return ans
         
 class TicTacToe:
@@ -123,7 +129,7 @@ class TicTacToe:
                     print("Its a draw!") 
                 self.print_board()
                 try_again = input("Want to try again? ")
-                if try_again.lower.startswith('y'):
+                if try_again.lower().startswith('y'):
                     self.board = ['-']*9
                     continue
                 break
@@ -178,13 +184,13 @@ class TestMinMax(unittest.TestCase):
     def test_recursive_traverse_x_win(self):
         board = ['X', 'O', 'X', '-', '-', '-', '-', '-', '-']
         node = Node(board=board, childrens=[], score=None)
-        score = self.min_max_algo.recursive_traverse(node, isMax=True)
+        score = self.min_max_algo.recursive_traverse(node, isMax=True,alpha=-2,beta=2)
         self.assertEqual(score, 1)
 
     def test_recursive_traverse_o_win(self):
         board = ['O', 'X', 'O', '-', '-', '-', '-', '-', '-']
         node = Node(board=board, childrens=[], score=None)
-        score = self.min_max_algo.recursive_traverse(node, isMax=False)
+        score = self.min_max_algo.recursive_traverse(node, isMax=False,alpha=-2,beta=2)
         self.assertEqual(score, -1)
 
 
