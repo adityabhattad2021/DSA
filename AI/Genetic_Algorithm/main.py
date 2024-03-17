@@ -60,7 +60,17 @@ def move_right(state):
 
 
 def mhd(state,final_state):
-    pass
+    distance = 0
+    for index in range(len(final_state)):
+        current_val = state[index]
+        if current_val!=0:
+            goal_index = state.index(current_val)
+            current_row = index/3
+            current_col=  index%3
+            goal_row = goal_index/3
+            goal_col = goal_index%3
+            distance+=int(current_row-goal_row)+int(current_col-goal_col)
+    return distance
 
 
 
@@ -72,7 +82,6 @@ def calculate_fitness(state):
 
 def select_best_solutions(state):
     pass
-
 
 def crossover(state):
     pass
