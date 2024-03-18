@@ -23,40 +23,37 @@ def print_board(state):
 def find_blank(state):
     return state.index(0)
 
+def swap(state,index1,index2):
+    temp=state[index1]
+    state[index1]=state[index2]
+    state[index2]=temp
+
 
 def move_up(state):
     blank_index=find_blank(state)
     if blank_index>2:
         new_blank_position = blank_index-3
-        temp = state[new_blank_position]
-        state[new_blank_position]=state[blank_index]
-        state[blank_index]=temp
+        swap(state,new_blank_position,blank_index)
 
 def move_down(state):
     blank_index=find_blank(state)
     if blank_index<6:
         new_blank_position = blank_index+3
-        temp = state[new_blank_position]
-        state[new_blank_position]=state[blank_index]
-        state[blank_index]=temp
+        swap(state,new_blank_position,blank_index)
 
 
 def move_left(state):
     blank_index=find_blank(state)
     if blank_index%3!=0:
-        new_blank_postion = blank_index-1
-        temp = state[new_blank_postion]
-        state[new_blank_postion]=state[blank_index]
-        state[blank_index]=temp
+        new_blank_position = blank_index-1
+        swap(state,new_blank_position,blank_index)
 
 
 def move_right(state):
     blank_index=find_blank(state)
     if blank_index%3!=2:
         new_blank_position = blank_index+2
-        temp = state[new_blank_position]
-        state[new_blank_position]=state[blank_index]
-        state[blank_index]=temp
+        swap(state,new_blank_position,blank_index)
 
 
 def mhd(state,final_state):
@@ -76,6 +73,8 @@ def mhd(state,final_state):
 
 # Genetic Algo functions
 
+import random
+
 def calculate_fitness(state):
     return mhd(state)
 
@@ -90,6 +89,22 @@ def mutate(state):
     pass
 
 def run_genetic_algo():
-    pass
+    # generate initial population
+    start_state=[1, 2, 3, 5,4, 7, 6, 8, 0]
+    goal_state=[0, 1, 2, 3, 4, 5, 6, 7, 8 ]
+
+    directions = ['L','R','U','D']
+    intial_population = []
+
+    for x in directions:
+        for y in directions:
+            intial_population.append(x+y)
 
 
+    random.shuffle(intial_population)
+
+    for i in range(10000):
+
+        solutions
+
+    
