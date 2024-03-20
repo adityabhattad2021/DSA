@@ -1,172 +1,185 @@
-"""
-    Simulate a genetic algoritm to solve 8 puzzle problem. Consider a pair of initial and final states. where the goal state is at minimul depth 10.
-
-    Intial Population->Calculate Fitness->Select Parents->Crossover->Mutate->Repeat (until goal state is reached)
-
-    initial_state = [1, 2, 3, 4, 0, 5, 6, 7, 8]
-
-    final_state = [1, 2, 3, 4, 5, 8, 6, 0, 7]
-
-""" 
+import random
 # Functions for 8 Puzzle
 
-def print_board(state):
-    print("-------------")
-    print(f"| {state[0]} | {state[1]} | {state[2]} |")
-    print("-------------")
-    print(f"| {state[3]} | {state[4]} | {state[5]} |")
-    print("-------------")
-    print(f"| {state[6]} | {state[7]} | {state[8]} |")
-    print("-------------") 
+
+class EightPuzzle:
+
+    def __init__(self,start_state,goal_state):
+        self.start_state = start_state
+        self.goal_state = goal_state
+
+    def print_board(self,state):
+        print("-------------")
+        print(f"| {state[0]} | {state[1]} | {state[2]} |")
+        print("-------------")
+        print(f"| {state[3]} | {state[4]} | {state[5]} |")
+        print("-------------")
+        print(f"| {state[6]} | {state[7]} | {state[8]} |")
+        print("-------------") 
 
 
-def find_blank(state):
-    return state.index(0)
+    def find_blank(self,state):
+        return state.index(0)
 
-def swap(state,index1,index2):
-    temp=state[index1]
-    state[index1]=state[index2]
-    state[index2]=temp
-    
+    def swap(self,state,index1,index2):
+        temp=state[index1]
+        state[index1]=state[index2]
+        state[index2]=temp
+        
 
-def move_up(state):
-    dup = state.copy()
-    blank_index=find_blank(dup)
-    if blank_index>2:
-        new_blank_position = blank_index-3
-        swap(dup,new_blank_position,blank_index)
-    return dup
+    def move_up(self,state):
+        dup = state.copy()
+        blank_index=self.find_blank(dup)
+        if blank_index>2:
+            self.swap(dup,blank_index-3,blank_index)
+        return dup
 
-def move_down(state):
-    dup = state.copy()
-    blank_index=find_blank(dup)
-    if blank_index<6:
-        new_blank_position = blank_index+3
-        swap(dup,new_blank_position,blank_index)
-    return dup
+    def move_down(self,state):
+        dup = state.copy()
+        blank_index=self.find_blank(dup)
+        if blank_index<6:
+            self.swap(dup,blank_index+3,blank_index)
+        return dup
 
-def move_left(state):
-    dup = state.copy()
-    blank_index=find_blank(dup)
-    if blank_index%3!=0:
-        new_blank_position = blank_index-1
-        swap(dup,new_blank_position,blank_index)
-    return dup
+    def move_left(self,state):
+        dup = state.copy()
+        blank_index=self.find_blank(dup)
+        if blank_index%3!=0:
+            self.swap(dup,blank_index-1,blank_index)
+        return dup
 
-def move_right(state):
-    dup = state.copy()
-    blank_index=find_blank(dup)
-    if blank_index%3!=2:
-        new_blank_position = blank_index+1
-        swap(dup,new_blank_position,blank_index)
-    return dup
+    def move_right(self,state):
+        dup = state.copy()
+        blank_index=self.find_blank(dup)
+        if blank_index%3!=2:
+            self.swap(dup, blank_index+1,blank_index)
+        return dup
 
-def mhd(state,final_state):
-    distance = 0
-    for index in range(len(final_state)):
-        current_val = state[index]
-        if current_val!=0:
-            goal_index = final_state.index(current_val)
-            current_row = index/3
-            current_col=  index%3
-            goal_row = goal_index/3
-            goal_col = goal_index%3
-            distance+=abs(int(current_row-goal_row))+abs(int(current_col-goal_col))
-    return distance
+    def mhd(self,state,final_state):
+        distance = 0
+        for index in range(len(final_state)):
+            current_val = state[index]
+            if current_val!=0:
+                goal_index = final_state.index(current_val)
+                current_row = index/3
+                current_col=  index%3
+                goal_row = goal_index/3
+                goal_col = goal_index%3
+                distance+=abs(int(current_row-goal_row))+abs(int(current_col-goal_col))
+        return distance
 
 
 
 # Genetic Algo functions
 
-import random
 
-def calculate_fitness(state,goal_state):
-    return mhd(state,goal_state)
+class GeneticAlgorithm:
+
+    def __init__(self,eight_puzzle:EightPuzzle)->None:
+        self.eight_puzzle = eight_puzzle
 
 
-def select_best_solutions(fitness_map):
-    fitness_map = dict(sorted(fitness_map.items(), key=lambda item: item[1]))
-    return list(fitness_map.keys())[:5]
-    
-
-def crossover(parents):
-    parents = random.sample(parents,2)
-    parent1 = parents[0]
-    parent2 = parents[1]
-    
-    crossover_point = random.randint(0, len(parent1))
-    child1 = parent1[:crossover_point] + parent2[crossover_point:]
-    child2 = parent2[:crossover_point] + parent1[crossover_point:]
-    return [child1,child2]
-
-def mutate(children):
-    mutated_children = []
-    for child in children:
-        child = list(child)
-        child+=random.choice(['L','R','U','D'])
-        mutated_children.append(''.join(child))
-    return mutated_children
-
-def run_genetic_algo():
-    # generate initial population
-    start_state=[1, 2, 3, 5, 4, 7, 6, 8, 0]
-    goal_state=[0, 1, 2, 3, 4, 5, 6, 7, 8 ]
-
-    directions = ['L','R','U','D']
-    initial_population = []
-
-    for x in directions:
-        for y in directions:
-            initial_population.append(x+y)
-
-    random.shuffle(initial_population)
-
-    for generation in range(100000):
-
-        initial_states = []
-        for move in initial_population:
+    def get_states(self,population,start_state):
+        states = []
+        for move in population:
             temp_state = start_state.copy()
             for turn in move:
                 if turn == 'L':
-                    temp_state=move_left(temp_state)
+                    temp_state=self.eight_puzzle.move_left(temp_state)
                 elif turn == 'R':
-                    temp_state=move_right(temp_state)
+                    temp_state=self.eight_puzzle.move_right(temp_state)
                 elif turn == 'U':
-                    temp_state=move_up(temp_state)
+                    temp_state=self.eight_puzzle.move_up(temp_state)
                 elif turn == 'D':
-                    temp_state=move_down(temp_state)
-            if goal_state == temp_state:
+                    temp_state=self.eight_puzzle.move_down(temp_state)
+            
+            states.append(temp_state)
+        states=list(filter(lambda x:x!=None,states))
+        return states
+
+    def calculate_fitness(self,state,goal_state):
+        return self.eight_puzzle.mhd(state,goal_state)
+
+
+    def select_best_solutions(self,fitness_map):
+        fitness_map = dict(sorted(fitness_map.items(), key=lambda item: item[1]))
+        return list(fitness_map.keys())[:5]
+        
+
+    def crossover(self,parents):
+        parents = random.sample(parents,2)
+        parent1 = parents[0]
+        parent2 = parents[1]
+        crossover_point = random.randint(0, len(parent1))
+        child1 = parent1[:crossover_point] + parent2[crossover_point:]
+        child2 = parent2[:crossover_point] + parent1[crossover_point:]
+        return [child1,child2]
+
+    def mutate(self,children,mutation_rate=0.9):
+        mutated_children = []
+        for child in children:
+            child = list(child)
+            if random.random()<mutation_rate:
+                child+=random.choice(['L','R','U','D'])
+            mutated_children.append(''.join(child))
+        return mutated_children
+
+    def generate_population(self,size_of_population):
+        directions = ['L','R','U','D']
+        population = []
+        while len(population)<size_of_population:
+            choices = random.choices(directions,k=random.randint(1,len(directions)))
+            random.shuffle(choices)
+            population.append(''.join(choices))
+
+        random.shuffle(population)
+        return population
+
+    def run(self,max_generations=100000,population_size=10):
+        # generate initial population
+        population = self.generate_population(population_size)
+
+        for generation in range(max_generations):
+
+            # get states
+            states = self.get_states(population,self.eight_puzzle.start_state)
+
+            # check if goal state is reached
+            if self.eight_puzzle.goal_state in states:
                 print("Goal State Reached")
                 print("Start State: ")
-                print_board(start_state)
+                self.eight_puzzle.print_board(self.eight_puzzle.start_state)
                 print("Goal State: ")
-                print_board(goal_state)
-                return
-            initial_states.append(temp_state)
-        initial_states=list(filter(lambda x:x!=None,initial_states))
+                self.eight_puzzle.print_board(self.eight_puzzle.goal_state)
+                index_of_goal_state = states.index(self.eight_puzzle.goal_state)
+                move = population[index_of_goal_state]
+                print("Path: ",move)
+                break
 
-        # calculate fitness
-        fitness_values=[]
-        fitness_values = [calculate_fitness(state,goal_state) for state in initial_states]
-        fitness_map = dict(zip(initial_population,fitness_values))
+            # calculate fitness
+            fitness_values = [self.calculate_fitness(state,self.eight_puzzle.goal_state) for state in states]
+            fitness_map = dict(zip(population,fitness_values))
 
-        print("Generation: ",generation)
-        print("Initial Population: ",initial_population)
+            print("Generation: ",generation)
+            print("Population: ",population)
 
+            # select parents
+            parents = self.select_best_solutions(fitness_map)
 
-        # select parents
-        parents = select_best_solutions(fitness_map)
+            # crossover
+            children = self.crossover(parents)
 
-        # crossover
-        children = crossover(parents)
+            # mutate
+            mutated_children = self.mutate(children)
 
-
-        mutated_children = mutate(children)
-
-        # replace last 2 elements of initial_population with mutated_children
-        initial_population[-2:]=mutated_children
-        random.shuffle(initial_population)
+            # replace last 2 elements of population with mutated_children
+            population[-2:]=mutated_children
+            random.shuffle(population)
 
     
-
-run_genetic_algo()
+if __name__ == "__main__":
+    start_state = [0,1,2,3,4,5,6,7,8]
+    goal_state = [1,2,5,3,4,8,6,7,0]
+    eight_puzzle = EightPuzzle(start_state,goal_state)
+    genetic_algo = GeneticAlgorithm(eight_puzzle)
+    genetic_algo.run()
