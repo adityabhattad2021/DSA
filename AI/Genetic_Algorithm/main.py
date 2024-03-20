@@ -1,5 +1,7 @@
 import random
-# Functions for 8 Puzzle
+
+# for reproducibility
+random.seed(9)
 
 
 class EightPuzzle:
@@ -70,9 +72,6 @@ class EightPuzzle:
 
 
 
-# Genetic Algo functions
-
-
 class GeneticAlgorithm:
 
     def __init__(self,eight_puzzle:EightPuzzle)->None:
@@ -105,12 +104,12 @@ class GeneticAlgorithm:
         fitness_map = dict(sorted(fitness_map.items(), key=lambda item: item[1]))
         return list(fitness_map.keys())[:5]
         
-
     def crossover(self,parents):
         parents = random.sample(parents,2)
         parent1 = parents[0]
         parent2 = parents[1]
-        crossover_point = random.randint(0, len(parent1))
+        smaller = min(len(parent1),len(parent2))
+        crossover_point = random.randint(0, smaller)
         child1 = parent1[:crossover_point] + parent2[crossover_point:]
         child2 = parent2[:crossover_point] + parent1[crossover_point:]
         return [child1,child2]
