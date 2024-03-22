@@ -1,14 +1,43 @@
 import random
+from abc import abstractmethod
 
 # for reproducibility
-random.seed(9)
+random.seed(1000)
+
+class DistanceCalculator:
+    def evaluate(self,state,goal_state):
+        raise NotImplementedError("Subclass must implement abstract method")
+    
+
+class ManhattanDistance(DistanceCalculator):
+    def evaluate(self,state,goal_state):
+        distance = 0
+        for index in range(len(goal_state)):
+            current_val = state[index]
+            if current_val!=0:
+                goal_index = goal_state.index(current_val)
+                current_row = index/3
+                current_col=  index%3
+                goal_row = goal_index/3
+                goal_col = goal_index%3
+                distance+=abs(int(current_row-goal_row))+abs(int(current_col-goal_col))
+        return distance
+
+class MisplacedTiles(DistanceCalculator):
+    def evaluate(self,state,goal_state):
+        misplaced_tiles = 0
+        for index in range(len(goal_state)):
+            if state[index]!=goal_state[index]:
+                misplaced_tiles+=1
+        return misplaced_tiles
 
 
 class EightPuzzle:
 
-    def __init__(self,start_state,goal_state):
+    def __init__(self,start_state,goal_state,distance_calculator:DistanceCalculator)->None:
         self.start_state = start_state
         self.goal_state = goal_state
+        self.distance_calculator = distance_calculator
 
     def print_board(self,state):
         print("-------------")
@@ -57,18 +86,9 @@ class EightPuzzle:
             self.swap(dup, blank_index+1,blank_index)
         return dup
 
-    def mhd(self,state,final_state):
-        distance = 0
-        for index in range(len(final_state)):
-            current_val = state[index]
-            if current_val!=0:
-                goal_index = final_state.index(current_val)
-                current_row = index/3
-                current_col=  index%3
-                goal_row = goal_index/3
-                goal_col = goal_index%3
-                distance+=abs(int(current_row-goal_row))+abs(int(current_col-goal_col))
-        return distance
+    def evaluate(self,state,final_state):
+        return self.distance_calculator.evaluate(state,final_state)
+    
 
 
 
@@ -97,7 +117,7 @@ class GeneticAlgorithm:
         return states
 
     def calculate_fitness(self,state,goal_state):
-        return self.eight_puzzle.mhd(state,goal_state)
+        return self.eight_puzzle.evaluate(state,goal_state)
 
 
     def select_best_solutions(self,fitness_map):
@@ -143,6 +163,9 @@ class GeneticAlgorithm:
             # get states
             states = self.get_states(population,self.eight_puzzle.start_state)
 
+            print("Generation: ",generation)
+            print("Population: ",population)
+
             # check if goal state is reached
             if self.eight_puzzle.goal_state in states:
                 print("Goal State Reached")
@@ -159,8 +182,7 @@ class GeneticAlgorithm:
             fitness_values = [self.calculate_fitness(state,self.eight_puzzle.goal_state) for state in states]
             fitness_map = dict(zip(population,fitness_values))
 
-            print("Generation: ",generation)
-            print("Population: ",population)
+            
 
             # select parents
             parents = self.select_best_solutions(fitness_map)
@@ -179,6 +201,6 @@ class GeneticAlgorithm:
 if __name__ == "__main__":
     start_state = [0,1,2,3,4,5,6,7,8]
     goal_state = [1,2,5,3,4,8,6,7,0]
-    eight_puzzle = EightPuzzle(start_state,goal_state)
+    eight_puzzle = EightPuzzle(start_state,goal_state,ManhattanDistance())
     genetic_algo = GeneticAlgorithm(eight_puzzle)
     genetic_algo.run()
