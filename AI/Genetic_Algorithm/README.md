@@ -21,7 +21,9 @@ The `EightPuzzle` class is responsible for the puzzle's logic. It includes metho
 - Finding the position of the blank tile.
 - Swapping two tiles.
 - Moving the blank tile up, down, left, or right.
-- Calculating the Manhattan Distance (MHD) between the current state and the goal state, which serves as the heuristic for the GA.
+- Calculating the fitness of a given state using either the Manhattan distance or Misplaced Tiles heuristic.
+
+    **To implement the Manhattan distance and Misplaced Tiles heuristics as interchangeable fitness evaluation strategies,  Strategy design pattern has been used.** 
 
 ### GeneticAlgorithm Class
 
