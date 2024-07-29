@@ -1,16 +1,9 @@
 import random
-from abc import abstractmethod
 
-# for reproducibility
-random.seed(1000)
 
-class DistanceCalculator:
-    def evaluate(self,state,goal_state):
-        raise NotImplementedError("Subclass must implement abstract method")
-    
-
-class ManhattanDistance(DistanceCalculator):
-    def evaluate(self,state,goal_state):
+class ManhattanDistance():
+    @staticmethod
+    def evaluate(state,goal_state):
         distance = 0
         for index in range(len(goal_state)):
             current_val = state[index]
@@ -23,8 +16,9 @@ class ManhattanDistance(DistanceCalculator):
                 distance+=abs(int(current_row-goal_row))+abs(int(current_col-goal_col))
         return distance
 
-class MisplacedTiles(DistanceCalculator):
-    def evaluate(self,state,goal_state):
+class MisplacedTiles():
+    @staticmethod
+    def evaluate(state,goal_state):
         misplaced_tiles = 0
         for index in range(len(goal_state)):
             if state[index]!=goal_state[index]:
@@ -32,178 +26,69 @@ class MisplacedTiles(DistanceCalculator):
         return misplaced_tiles
 
 
-class EightPuzzle:
-
-    def __init__(self,start_state,goal_state,distance_calculator:DistanceCalculator)->None:
-        self.start_state = start_state
-        self.goal_state = goal_state
-        self.distance_calculator = distance_calculator
-
-    def print_board(self,state):
-        print("-------------")
-        print(f"| {state[0]} | {state[1]} | {state[2]} |")
-        print("-------------")
-        print(f"| {state[3]} | {state[4]} | {state[5]} |")
-        print("-------------")
-        print(f"| {state[6]} | {state[7]} | {state[8]} |")
-        print("-------------") 
-
-
-    def find_blank(self,state):
-        return state.index(0)
-
-    def swap(self,state,index1,index2):
-        temp=state[index1]
-        state[index1]=state[index2]
-        state[index2]=temp
-        
-
-    def move_up(self,state):
-        dup = state.copy()
-        blank_index=self.find_blank(dup)
-        if blank_index>2:
-            self.swap(dup,blank_index-3,blank_index)
-        return dup
-
-    def move_down(self,state):
-        dup = state.copy()
-        blank_index=self.find_blank(dup)
-        if blank_index<6:
-            self.swap(dup,blank_index+3,blank_index)
-        return dup
-
-    def move_left(self,state):
-        dup = state.copy()
-        blank_index=self.find_blank(dup)
-        if blank_index%3!=0:
-            self.swap(dup,blank_index-1,blank_index)
-        return dup
-
-    def move_right(self,state):
-        dup = state.copy()
-        blank_index=self.find_blank(dup)
-        if blank_index%3!=2:
-            self.swap(dup, blank_index+1,blank_index)
-        return dup
-
-    def evaluate(self,state,final_state):
-        return self.distance_calculator.evaluate(state,final_state)
+class Subject:
     
-
-
-
-class GeneticAlgorithm:
-
-    def __init__(self,eight_puzzle:EightPuzzle)->None:
-        self.eight_puzzle = eight_puzzle
-
-
-    def get_states(self,population,start_state):
-        states = []
-        for move in population:
-            temp_state = start_state.copy()
-            for turn in move:
-                if turn == 'L':
-                    temp_state=self.eight_puzzle.move_left(temp_state)
-                elif turn == 'R':
-                    temp_state=self.eight_puzzle.move_right(temp_state)
-                elif turn == 'U':
-                    temp_state=self.eight_puzzle.move_up(temp_state)
-                elif turn == 'D':
-                    temp_state=self.eight_puzzle.move_down(temp_state)
-            
-            states.append(temp_state)
-        states=list(filter(lambda x:x!=None,states))
-        return states
-
-    def calculate_fitness(self,state,goal_state):
-        return self.eight_puzzle.evaluate(state,goal_state)
-
-
-    def select_best_solutions(self,fitness_map):
-        fitness_map = dict(sorted(fitness_map.items(), key=lambda item: item[1],reverse=True))
-        return list(fitness_map.keys())[:5]
+    def __init__(self,arr,goal_state) -> None:
+        self.arr = arr
+        self.fitness = MisplacedTiles.evaluate(self.arr,goal_state)
         
-    def crossover(self,parents):
-        parents = random.sample(parents,2)
-        parent1 = parents[0]
-        parent2 = parents[1]
-        smaller = min(len(parent1),len(parent2))
-        crossover_point = random.randint(0, smaller)
-        child1 = parent1[:crossover_point] + parent2[crossover_point:]
-        child2 = parent2[:crossover_point] + parent1[crossover_point:]
-        return [child1,child2]
+    def __lt__(self,other):
+        return self.fitness > other.fitness
 
-    def mutate(self,children,mutation_rate=0.9):
-        mutated_children = []
-        for child in children:
-            child = list(child)
-            if random.random()<mutation_rate:
-                child+=random.choice(['L','R','U','D'])
-            mutated_children.append(''.join(child))
-        return mutated_children
+def generate_random_population(size,goal_state):
+    populations=[]
+    for _ in range(size):
+        arr = [x for x in range(9)]
+        random.shuffle(arr)
+        subject = Subject(arr.copy(),goal_state)
+        populations.append(subject)
+    return populations
 
-    def generate_population(self,size_of_population):
-        directions = ['L','R','U','D']
-        population = []
-        while len(population)<size_of_population:
-            choices = random.choices(directions,k=random.randint(1,len(directions)))
-            random.shuffle(choices)
-            population.append(''.join(choices))
 
-        random.shuffle(population)
-        return population
+def select_best_two(population):
+    tournament_size = 5
+    p1 = max(random.sample(population, tournament_size), key=lambda x: x.fitness)
+    p2 = max(random.sample(population, tournament_size), key=lambda x: x.fitness)
+    return p1, p2
 
-    def run(self,max_generations=100000,population_size=10):
-        # generate initial population
-        population = self.generate_population(population_size)
+def crossover(p1,p2):
+    random_index=random.randint(0,len(p1.arr)-1)
+    offspring = p1.arr[:random_index]+p2.arr[random_index:]
+    return offspring
 
-        for generation in range(max_generations):
 
-            # get states
-            states = self.get_states(population,self.eight_puzzle.start_state)
-            
+def mutate(new_born,mutation_rate):
+    if random.random()<mutation_rate:
+        tile1=random.randint(0,len(new_born)-1)
+        tile2=random.randint(0,len(new_born)-1)
+        new_born[tile1],new_born[tile2]=new_born[tile2],new_born[tile1]
 
-            # calculate fitness
-            fitness_values = [self.calculate_fitness(state,self.eight_puzzle.goal_state) for state in states]
-            fitness_map = dict(zip(population,fitness_values))
+def genetic_algo_8_puzzle(population_size,max_generation,mutation_rate,goal_state):
 
-            print("Generation: ",generation)
-            print("Population: ",fitness_map)
+    population = generate_random_population(population_size,goal_state)
 
-            # check if goal state is reached
-            flag = False
-            for _, fitness_value in fitness_map.items():
-                if fitness_value==16:
-                    print("Goal State Reached")
-                    print("Start State: ")
-                    self.eight_puzzle.print_board(self.eight_puzzle.start_state)
-                    print("Goal State: ")
-                    self.eight_puzzle.print_board(self.eight_puzzle.goal_state)
-                    flag = True
-                    break
-            if flag:
-                break
+    for generation in range(1,max_generation):
+        p1,p2=select_best_two(population)
 
-            
+        newborn = crossover(p1,p2)
+        mutate(newborn,mutation_rate)
+        new_subject = Subject(newborn,goal_state)
 
-            # select parents
-            parents = self.select_best_solutions(fitness_map)
+        if new_subject.fitness < min(population).fitness:
+            population[population.index(min(population))]=new_subject
 
-            # crossover
-            children = self.crossover(parents)
+        fittest = max(population)  
 
-            # mutate
-            mutated_children = self.mutate(children)
+        print(f"Generation: {generation}, Fittest: {fittest.arr}, fitness: {fittest.fitness}")
 
-            # replace last 2 elements of population with mutated_children
-            population[-2:]=mutated_children
-            random.shuffle(population)
+        if fittest.fitness==0:
+            print("Solution found.")
+            return fittest
+        
+    print("Could not find the solution.")
+    return fittest
 
-    
-if __name__ == "__main__":
-    start_state = [0,1,2,3,4,5,6,7,8]
-    goal_state = [1,2,5,3,4,8,6,7,0]
-    eight_puzzle = EightPuzzle(start_state,goal_state,ManhattanDistance())
-    genetic_algo = GeneticAlgorithm(eight_puzzle)
-    genetic_algo.run()
+
+if __name__=="__main__":
+    goal_state=[1,2,5,3,4,8,6,7,0]
+    genetic_algo_8_puzzle(100,1000000,0.9,goal_state)
