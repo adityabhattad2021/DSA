@@ -2,7 +2,7 @@ import random
 from abc import abstractmethod
 
 # for reproducibility
-random.seed(1000)
+# random.seed(1000)
 
 class DistanceCalculator:
     def evaluate(self,state,goal_state):
@@ -119,17 +119,50 @@ class GeneticAlgorithm:
     def calculate_fitness(self,state,goal_state):
         return self.eight_puzzle.evaluate(state,goal_state)
 
+    def get_inversion_count(self,state,goal_state):
+        inversion_count = 0
+        for i in range(len(state)-1):
+            for j in range(i+1,len(state)):
+                if goal_state.index(state[i])>goal_state.index(state[j]):
+                    inversion_count+=1
+        return inversion_count
+    
+    def is_solvable(self,state,goal_state):
 
-    def select_best_solutions(self,fitness_map):
-        fitness_map = dict(sorted(fitness_map.items(), key=lambda item: item[1],reverse=True))
-        return list(fitness_map.keys())[:5]
+        # there should be no repeating elements in the state
+        if len(set(state))!=len(state):
+            return False
+
+        inversion_count = self.get_inversion_count(state,goal_state)
+        grid_width = int(len(state)**0.5)
+        if grid_width%2==1:
+            return inversion_count%2==0
+        else:
+            blank_index = state.index(0)
+            blank_row_from_bottom = grid_width - (blank_index/grid_width)
+            return (inversion_count+blank_row_from_bottom)%2!=0
+
+    def select_best_solutions(self, fitness_map):
+        sorted_fitness_map = dict(sorted(fitness_map.items(), key=lambda item: item[1]))
+        filtered_fitness_map = {}
+        for key in sorted_fitness_map.keys():
+            if self.is_solvable(key, self.eight_puzzle.goal_state):
+                filtered_fitness_map[key] = sorted_fitness_map[key]
+        # if len of fitness map is less then 5 add new elements to the fitness map
+        while len(filtered_fitness_map)<5:
+            new_population = self.generate_population(5-len(filtered_fitness_map))
+            new_states = self.get_states(new_population,self.eight_puzzle.start_state)
+            for state in new_states:
+                if self.is_solvable(state,self.eight_puzzle.goal_state):
+                    filtered_fitness_map[tuple(state)] = self.calculate_fitness(state,self.eight_puzzle.goal_state)
+        return list(filtered_fitness_map.keys())[:5]
         
     def crossover(self,parents):
         parents = random.sample(parents,2)
         parent1 = parents[0]
         parent2 = parents[1]
-        smaller = min(len(parent1),len(parent2))
-        crossover_point = random.randint(0, smaller)
+        # smaller = min(len(parent1),len(parent2))
+        crossover_point = random.randint(0, len(parent1))
         child1 = parent1[:crossover_point] + parent2[crossover_point:]
         child2 = parent2[:crossover_point] + parent1[crossover_point:]
         return [child1,child2]
@@ -137,10 +170,16 @@ class GeneticAlgorithm:
     def mutate(self,children,mutation_rate=0.9):
         mutated_children = []
         for child in children:
-            child = list(child)
-            if random.random()<mutation_rate:
-                child+=random.choice(['L','R','U','D'])
-            mutated_children.append(''.join(child))
+            # swap two elements of the state
+            if random.random() < mutation_rate:
+                index1 = random.randint(0,len(child)-1)
+                index2 = random.randint(0,len(child)-1)
+                temp = list(child)
+                temp[index1],temp[index2] = temp[index2],temp[index1]
+                mutated_children.append(temp)
+            else:
+                mutated_children.append(child)
+        mutated_children = [list(child) for child in mutated_children]
         return mutated_children
 
     def generate_population(self,size_of_population):
@@ -154,38 +193,28 @@ class GeneticAlgorithm:
         random.shuffle(population)
         return population
 
-    def run(self,max_generations=100000,population_size=10):
+    def run(self,max_generations=1000,population_size=100):
         # generate initial population
         population = self.generate_population(population_size)
+        states = self.get_states(population,self.eight_puzzle.start_state)
 
         for generation in range(max_generations):
 
-            # get states
-            states = self.get_states(population,self.eight_puzzle.start_state)
-            
+            print("Generation: ",generation)
+            print("Population: ",states)
+
+            # check if goal state is reached
+            if self.eight_puzzle.goal_state in states:
+                print("Goal State Reached")
+                print("Start State: ")
+                self.eight_puzzle.print_board(self.eight_puzzle.start_state)
+                print("Goal State: ")
+                self.eight_puzzle.print_board(self.eight_puzzle.goal_state)
+                break
 
             # calculate fitness
             fitness_values = [self.calculate_fitness(state,self.eight_puzzle.goal_state) for state in states]
-            fitness_map = dict(zip(population,fitness_values))
-
-            print("Generation: ",generation)
-            print("Population: ",fitness_map)
-
-            # check if goal state is reached
-            flag = False
-            for _, fitness_value in fitness_map.items():
-                if fitness_value==16:
-                    print("Goal State Reached")
-                    print("Start State: ")
-                    self.eight_puzzle.print_board(self.eight_puzzle.start_state)
-                    print("Goal State: ")
-                    self.eight_puzzle.print_board(self.eight_puzzle.goal_state)
-                    flag = True
-                    break
-            if flag:
-                break
-
-            
+            fitness_map = dict(zip(tuple(tuple(state) for state in states),fitness_values))
 
             # select parents
             parents = self.select_best_solutions(fitness_map)
@@ -197,8 +226,21 @@ class GeneticAlgorithm:
             mutated_children = self.mutate(children)
 
             # replace last 2 elements of population with mutated_children
-            population[-2:]=mutated_children
-            random.shuffle(population)
+            states[-2:]=mutated_children
+
+            # if population size is less than expected, generate more children
+            if len(states)<population_size:
+                # while we do not get required solvable new states keep generating new children
+                while True:
+                    new_population = self.generate_population(population_size-len(states))
+                    new_states = self.get_states(new_population,self.eight_puzzle.start_state)
+                    for state in new_states:
+                        if self.is_solvable(state,self.eight_puzzle.goal_state):
+                            states.append(state)
+                    if len(states)==population_size:
+                        break
+
+            random.shuffle(states)
 
     
 if __name__ == "__main__":
