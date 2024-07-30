@@ -41,7 +41,8 @@ def _recursive_dfs(adjacency_list,visited,current):
         for element in neighbour_list:
             if element not in visited:
                 _recursive_dfs(adjacency_list,visited,element)
-recursive_dfs = partial(_recursive_dfs,visited = {})
+def recursive_dfs(adjacency_list,current):
+    return _recursive_dfs(adjacency_list,visited={},current=current)
 
 def traverse_bfs(adjacency_list):
     queue = Queue()
